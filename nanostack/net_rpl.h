@@ -44,14 +44,8 @@ extern "C" {
          roots within the instance.  DAGPreference ranges from 0x00
          (least preferred) to 0x07 (most preferred).  The default is 0
          (least preferred). */
-#define BR_DODAG_PREF_0 0
-#define BR_DODAG_PREF_1 1
-#define BR_DODAG_PREF_2 2
-#define BR_DODAG_PREF_3 3
-#define BR_DODAG_PREF_4 4
-#define BR_DODAG_PREF_5 5
-#define BR_DODAG_PREF_6 6
-#define BR_DODAG_PREF_7 7
+#define RPL_DODAG_PREF_MASK         0x07
+#define RPL_DODAG_PREF(n)           ((n) & RPL_DODAG_PREF_MASK)
 
 /* Mode of Operation (MOP): The Mode of Operation (MOP) field identifies
    the mode of operation of the RPL Instance as administratively
@@ -59,21 +53,34 @@ extern "C" {
    who join the DODAG must be able to honor the MOP in order to
    fully participate as a router, or else they must only join as a leaf.
 */
-/**Non-Storing Mode of Operation  */
-#define BR_DODAG_MOP_NON_STORING    8
-/** Storing Mode of Operation with no multicast support */
-#define BR_DODAG_MOP_STORING        16
-
+#define RPL_MODE_MASK               0x38
+#define RPL_MODE_NO_DOWNWARD        0x00
+#define RPL_MODE_NON_STORING        0x08
+#define RPL_MODE_STORING            0x10
+#define RPL_MODE_STORING_MULTICAST  0x18
 
 /* Grounded (G): The Grounded 'G' flag indicates whether the DODAG
    advertised can satisfy the application-defined goal.  If the
    flag is set, the DODAG is grounded.  If the flag is cleared,
    the DODAG is floating.
 */
-#define BR_DODAG_FLOATING           0
-#define BR_DODAG_GROUNDED           0x80
+#define RPL_GROUNDED                0x80
 
-/* Backwards compatibility */
+/** FOR BACKWARDS COMPATIBILITY **/
+#define BR_DODAG_PREF_0             RPL_DODAG_PREF(0)
+#define BR_DODAG_PREF_1             RPL_DODAG_PREF(1)
+#define BR_DODAG_PREF_2             RPL_DODAG_PREF(2)
+#define BR_DODAG_PREF_3             RPL_DODAG_PREF(3)
+#define BR_DODAG_PREF_4             RPL_DODAG_PREF(4)
+#define BR_DODAG_PREF_5             RPL_DODAG_PREF(5)
+#define BR_DODAG_PREF_6             RPL_DODAG_PREF(6)
+#define BR_DODAG_PREF_7             RPL_DODAG_PREF(7)
+#define BR_DODAG_MOP_NON_STORING    RPL_MODE_NON_STORING
+#define BR_DODAG_MOP_STORING        RPL_MODE_STORING
+#define BR_DODAG_FLOATING           0
+#define BR_DODAG_GROUNDED           RPL_GROUNDED
+
+/* Compatibility for even older misspellings */
 #define BR_DODAG_MOP_NON_STRORING   BR_DODAG_MOP_NON_STORING
 #define BR_DODAG_MOP_STRORING       BR_DODAG_MOP_STORING
 #define BR_DODAG_FLOATIN            BR_DODAG_FLOATING

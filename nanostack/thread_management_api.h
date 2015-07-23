@@ -45,6 +45,8 @@ typedef enum {
  *
  * \param interface_id Interface id of the thread network.
  *
+ * \return handle for management interface
+ *
  */
 int thread_management_register(int8_t interface_id);
 
@@ -53,7 +55,7 @@ int thread_management_register(int8_t interface_id);
  * \param interface_id Interface id of the thread network.
  *
  */
-int thread_management_unregister(int8_t interface_id);
+int thread_management_unregister(int8_t instance_id);
 
 /** Callback to inform the result of management set command.
  *
@@ -74,7 +76,7 @@ typedef int (management_set_response_cb)(int8_t interface_id, management_state_e
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_set_network_name(int8_t interface_id, uint8_t *name_ptr, uint8_t name_len, management_set_response_cb *cb_ptr);
+int thread_management_set_network_name(int8_t instance_id, uint8_t *name_ptr, uint8_t name_len, management_set_response_cb *cb_ptr);
 
 /** Set the thread security policy
  *
@@ -86,7 +88,7 @@ int thread_management_set_network_name(int8_t interface_id, uint8_t *name_ptr, u
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_set_security_policy(int8_t interface_id, uint8_t options, uint16_t rotation_time, management_set_response_cb *cb_ptr);
+int thread_management_set_security_policy(int8_t instance_id, uint8_t options, uint16_t rotation_time, management_set_response_cb *cb_ptr);
 
 /** Set the Steering data
  *
@@ -105,7 +107,7 @@ int thread_management_set_security_policy(int8_t interface_id, uint8_t options, 
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_set_steering_data(int8_t interface_id, uint8_t *steering_data_ptr, uint8_t steering_data_len, management_set_response_cb *cb_ptr);
+int thread_management_set_steering_data(int8_t instance_id, uint8_t *steering_data_ptr, uint8_t steering_data_len, management_set_response_cb *cb_ptr);
 
 /** Set the thread commissioning data timestamp
  *
@@ -114,7 +116,7 @@ int thread_management_set_steering_data(int8_t interface_id, uint8_t *steering_d
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_set_commissioning_data_timestamp(int8_t interface_id, uint64_t time, management_set_response_cb *cb_ptr);
+int thread_management_set_commissioning_data_timestamp(int8_t instance_id, uint64_t time, management_set_response_cb *cb_ptr);
 
 /** Set commissioning credentials
  *
@@ -124,7 +126,7 @@ int thread_management_set_commissioning_data_timestamp(int8_t interface_id, uint
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_set_commissioning_credentials(int8_t interface_id, uint8_t PSKc[32], uint8_t PSKc_len, management_set_response_cb *cb_ptr);
+int thread_management_set_commissioning_credentials(int8_t instance_id, uint8_t PSKc[32], uint8_t PSKc_len, management_set_response_cb *cb_ptr);
 
 /** Callback for reading thread management information
  *
@@ -137,7 +139,7 @@ int thread_management_set_commissioning_credentials(int8_t interface_id, uint8_t
  * \param response_message_len Length of message
  *
  */
-typedef int (management_get_response_cb)(int8_t interface_id, management_state_e status, uint8_t *response_message_ptr, uint16_t response_message_len);
+typedef int (management_get_response_cb)(int8_t instance_id, management_state_e status, uint8_t *response_message_ptr, uint16_t response_message_len);
 
 /** Get thread management fields.
  *
@@ -149,7 +151,7 @@ typedef int (management_get_response_cb)(int8_t interface_id, management_state_e
  * \param cb_ptr callback function to inform the result of the operation. Can be NULL if no result code needed.
  *
  */
-int thread_management_info_get(int8_t interface_id, uint8_t *fields_ptr, uint8_t fields_count, management_get_response_cb *cb_ptr);
+int thread_management_info_get(int8_t instance_id, uint8_t *fields_ptr, uint8_t fields_count, management_get_response_cb *cb_ptr);
 
 #ifdef __cplusplus
 }

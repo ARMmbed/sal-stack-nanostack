@@ -31,7 +31,7 @@ For more information on the 6LoWPAN stack architecture, and the protocol and app
 
 6LoWPAN stack eventing system is designed to be minimal and portable. Its main focus is on running in small embedded devices without any help of operating systems. Event based approach allows 6LoWPAN stack based applications to be designed for extremely low power use cases where thread based systems may consume too much battery time. The eventing system is designed to rely entirely on the Platform API so it is possible to port it to run on any operating system when the thread based approach is favored.
 
-The eventing system specifies event handlers called tasklets that form the application logic. The 6LoWPAN stack allows the developer to define multiple tasklets to ease the task of writing complex applications. Each of these tasklets canthen have full access to the network stack and its features through Socket, Eventing and NET APIs.
+The eventing system specifies event handlers called tasklets that form the application logic. The 6LoWPAN stack allows the developer to define multiple tasklets to ease the task of writing complex applications. Each of these tasklets can then have full access to the network stack and its features through Socket, Eventing and NET APIs.
 
 The following example shows the usage of a simple tasklet:
 

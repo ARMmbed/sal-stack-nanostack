@@ -13,7 +13,7 @@ This chapter describes the application usage of the 6LoWPAN Stack. It contains t
 ## Application support
 
 The application running on top of the 6LoWPAN Stack will follow some basic principles. Most crucially, all functions must return following any call. The exact time, that is, how long the application tasklet can block
-the operation varies according to how congested the network is. If the device is a router, meaning that it routes packets to and from other devices, then the network is locally under heavy load where the stack will
+the operation varies according to how congested the network is. If the device is a router, meaning that it routes packets to and from other devices, the network is locally under heavy load and the stack will
 require additional time to perform routing.
 
 ## Transmitting and receiving data
@@ -23,8 +23,8 @@ TCP and UDP/ICMP, respectively.
 
 For UDP/ICMP, a socket is ready to send and receive data following a successful call to `socket_open()` and the `NET_READY` event has been received.
 
-For TCP, when a socket is opened it is in a closed state. It must be set to either a listen or _connect_ state prior to it being used to receive or transmit data. To receive data, the socket can be set to listen mode
-by calling `socket_listen()`. Following the call, the socket can accept an incoming connection from a remote host. To send data, `socket_connect()` is called with a set of arguments. When the socket event has confirmed
+For TCP, when a socket is opened it is in a closed state. It must be set to either _listen_ or _connect_ state before using it for receiving or transmitting data. To receive data, the socket can be set to listen mode
+by calling `socket_listen()`. After that, the socket can accept an incoming connection from a remote host. To send data, `socket_connect()` is called with a set of arguments. When the socket event has confirmed
 the state change of the socket, data can then be sent using `socket_send()`. The function call `socket_close()` is used to close the socket.
 
 ## Features
@@ -49,13 +49,13 @@ There are two sleep modes available:
 - Default sleep mode:
 	* This is where the host node wakes up periodically every ~7.5 seconds to check for packets being relayed from its parent router.
 - Long sleep mode:
-	* This is where the application can control how long the node will sleep by using a timer event or external event such as an external interrupt to trigger the wake up process.
+	* This is where the application can control how long the node will sleep by using a timer event or external event such as an external interrupt to trigger the wake-up process.
 
 ## Hardware requirements
 
 The 6LoWPAN Stack is designed to support most platforms, even those with modest hardware resources. It supports the Cortex-M architecture, ranging from Cortex-M0 to more powerful Cortex-M4 processors.
 
-The minimum recommended code space for a full featured 6LoWPAN Stack is roughly 256KB on a 32-bit processor architecture without the optional security modules; including security components adds approximately 17KB
+The minimum recommended code space for a full featured 6LoWPAN Stack is roughly 256KB on a 32-bit processor architecture without the optional security modules; including the security components adds approximately 17KB
 to the code size.
 
 The data memory requirements are driven mainly by the scalability throughput requirements. Minimal stack features along with a simple application template can be supported on platforms with 8KB of memory. Additional features
@@ -68,11 +68,11 @@ are provided as an example for developers to get familiar with the 6LoWPAN Stack
 
 The 6LoWPAN Stack is built so that it eventually supports multiple toolchains. However, some RF drivers require compiler-specific code or headers. Therefore, driver support per each toolchain varies.
 
-The initial release of ARM 6LoWPAN contains only support for the ARM GCC compiler for ARM Cortex-M class microcontrollers.
+The initial release of ARM 6LoWPAN only supports the ARM GCC compiler for ARM Cortex-M class microcontrollers.
 
 ## Interoperability with the 6LoWPAN Border Router
 
-The 6LoWPAN Stack is designed to operate in RPL-enabled networks, which means that the network must have a 6LoWPAN Border Router access point present.
+The 6LoWPAN Stack is designed to operate in RPL enabled networks, which means that the network must have a 6LoWPAN Border Router access point present.
 
 Each M2M network uses an access point (or edge router) that allows it to connect seamlessly to a standard IP network. ARMs 6LoWPAN Border Router software provides seamless handling of routing packets between
 the 6LoWPAN and the IP network. The 6LoWPAN Border Router software is available as an embedded C implementation running on Cortex M3/M4 processors (see _Figure 2-1_).

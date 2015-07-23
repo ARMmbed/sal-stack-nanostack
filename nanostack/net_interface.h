@@ -389,7 +389,7 @@ extern int8_t arm_nwk_interface_network_driver_set(int8_t nwk_interface_id, int8
  *      * NET_6LOWPAN_MULTI_GP_ADDRESS, Interface register GP16 and GP64 address�s. GP16 is primary address and GP64 is secondary.
  *
  * \param short_address_base Short address base. If application defines value 0-0xfffd 6LoWPAN try to register GP16 address using that address. 0xfffe and 0xffff will generate random 16-bit short address.
- *          Border Router device will define here Short Address if it want to use that.
+ *
  * \param define_new_short_address_at_DAD This parameter is only checked when mode is not NET_6LOWPAN_GP64_ADDRESS and short_address_base is 0-0xfffd. Recommend value is 1 that will enable automatic new address definition at Duplicate Address Detection(DAD). Value 0 will generate Duplicate Adreress Detection error for interface bootstrap.
 Border Router Device will not check that part.
  *

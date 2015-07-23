@@ -174,17 +174,17 @@ In 6LoWPAN network, the following roles are described in RFCs:
 A device running a 6LoWPAN Stack can be configured in runtime to be in one of three modes:
 
 - Router:
-	* Is effectively 6LoWPAN Router (6LR).
+	* Is effectively a 6LoWPAN Router (6LR).
 	* Routes packets to and from other devices in the network.
 	* Typically always-on, that is, radio always on.
 	* Stack automatically reduces power consumption by placing the processor into sleep when in idle, so that no packets are routed or processed.
 - Host:
-	* Is 6LoWPAN node (6LN) with no routing capability.
+	* Is a 6LoWPAN node (6LN) with no routing capability.
 	* Does not route packets to and from other devices in the network.
 	* Typically RF always on.
 	* Can sleep, but parent router does not cache packets destined to this device.
 - Sleepy host:
-Is  6LoWPAN node (6LN) with no routing capability and utilizes prolonged sleep periods.
+	* Is a 6LoWPAN node (6LN) with no routing capability and utilizes prolonged sleep periods.
 	* Does not route packets to and from other devices in the network.
 	* Typically in sleep for prolonged time periods.
 	* Duty cycle often less than 1%.

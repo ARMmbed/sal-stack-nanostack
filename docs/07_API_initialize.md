@@ -13,18 +13,18 @@ This section is an introduction to the 6LoWPAN stack initialization.
 
 To take the 6LoWPAN stack into use, follow these instructions:
 
-1. Initialize the event OS by calling `eventOS_scheduler_init()`.
-2. Initialize the 6LoWPAN stack and platform by calling `net_init_core()`.
-3. Allocate a dynamic tasklet for an application by calling `eventOS_event_handler_create()`.
+1. To initialize the event OS, call `eventOS_scheduler_init()`.
+2. To initialize the 6LoWPAN stack and platform, call `net_init_core()`.
+3. To allocate a dynamic tasklet for an application, call `eventOS_event_handler_create()`.
 4. Configure an interface and network.
 
 ## Stack initialize sequence
 
 Perform stack initialization in the `main( )` function, as follows:
 
-1. Initialize the event OS by calling `eventOS_scheduler_init()`.
-2. Initialize the 6LoWPAN stack by calling `net_init_core()`.
-3. Start the event dispatch loop by calling `eventOS_scheduler_run();`. The 6LoWPAN stack scheduler will now run in an infinite loop.
+1. To initialize the event OS, call `eventOS_scheduler_init()`.
+2. To initialize the 6LoWPAN stack, call `net_init_core()`.
+3. To start the event dispatch loop, call `eventOS_scheduler_run();`. The 6LoWPAN stack scheduler will now run in an infinite loop.
 
 The `eventOS_scheduler_run()` function call starts the processing of the 6LoWPAN stack events. This function is an infinite loop where the processor cannot execute any commands below the `eventOS_scheduler_run()` call.
 
@@ -59,16 +59,16 @@ To effectively use the 6LoWPAN stack, you must run at least one tasklet. Some AP
 
 To configure a network interface, follow these instructions:
 
-1. Create an interface by calling the function `arm_nwk_interface_init()`.
-2. Define the 6LoWPAN bootstrap by calling the function `arm_nwk_interface_configure_6lowpan_bootstrap_set()`.
-3. Configure the 6LoWPAN link layer security by calling the function `arm_nwk_6lowpan_link_layer_security_mode()`.
-4. (Optional) Configure the 6LoWPAN address mode by calling the function  `arm_nwk_6lowpan_gp_address_mode()`.
-5. (Optional) Configure the 6LoWPAN node NWK scan parameters by calling the function  `arm_nwk_6lowpan_link_scan_paramameter_set()`.
-6. (Optional) Configure the 6LoWPAN node NWK scan filters by calling the functions:
+1. To create an interface, call the function `arm_nwk_interface_init()`.
+2. To define the 6LoWPAN bootstrap, call the function `arm_nwk_interface_configure_6lowpan_bootstrap_set()`.
+3. To configure the 6LoWPAN link layer security, call the function `arm_nwk_6lowpan_link_layer_security_mode()`.
+4. (Optional) To configure the 6LoWPAN address mode, call the function  `arm_nwk_6lowpan_gp_address_mode()`.
+5. (Optional) To configure the 6LoWPAN node NWK scan parameters, call the function  `arm_nwk_6lowpan_link_scan_paramameter_set()`.
+6. (Optional) To configure the 6LoWPAN node NWK scan filters, call the functions:
 	* PAN ID:  `arm_nwk_6lowpan_link_panid_filter_for_nwk_scan()`.
 	* Network ID: `arm_nwk_6lowpan_link_nwk_id_filter_for_nwk_scan().`
 	* Protocol ID: `arm_nwk_6lowpan_link_protocol_id_filter_for_nwk_scan()`.
-7. (Optional) Configure the PANA, if it is activated for link layer security, by calling the functions:
+7. (Optional) To configure the PANA, if it is activated for link layer security, call the functions:
 	* Server: `arm_pana_server_library_init()`.
 	* Client: `arm_pana_client_library_init()`.
-8. Start the interface by calling the function `arm_nwk_interface_up()`.
+8. To start the interface, call the function `arm_nwk_interface_up()`.

@@ -162,5 +162,5 @@ has become unusable. It is important to understand that the 6LoWPAN-ND process i
 ### Routing layer
 
 If the device has made the decision to perform local reconfiguration and has updated the 6LoWPAN network information using the 6LoWPAN-ND process, the next step is to (re-)join the RPL DODAG. To achieve this, the device
-will follow the standard RPL network join process as described in _Join a 6LoWPAN network_.
+will follow the standard RPL network join process as described in [_Join a 6LoWPAN network_](#join-a-6lowpan-network).
 

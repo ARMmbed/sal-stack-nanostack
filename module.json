@@ -1,6 +1,6 @@
 {
   "name": "mbed-6lowpan",
-  "version": "0.0.10",
+  "version": "0.0.14",
   "description": "Nanostack",
   "keywords": [
     "nanostack"
@@ -11,10 +11,14 @@
   ],
   "private": true,
   "dependencies": {
-    "mbed-client": "~0.1.3",
-    "mbed-client-libservice": "~2.0.9",
+    "mbed-client-c": "~0.1.6",
+    "mbed-client-libservice": "~3.0.0",
     "coap-service": "~0.0.3",
-    "mbed-6lowpan-eventloop": "~0.0.8"
+    "mbed-6lowpan-eventloop": "~0.0.8",
+    "mbed-client-randlib": "*",
+    "libx509-v3": "*",
+    "mbed-client-ecc": "*",
+    "dtls-ecjpake": "*"
   },
   "targetDependencies": {}
 }
