@@ -121,6 +121,7 @@ The related standards supported by the stack are:
 - RPL:
 	* RFC6553
 	* RFC6551
+	* RFC6550
 	* RFC2473 (parts)
 - ICMPv6:
 	* RFC6775
