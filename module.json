@@ -5,7 +5,7 @@
   "keywords": [
     "nanostack"
   ],
-  "license": "Proprietary, all rights reserved.",
+  "license": "Permissive Binary License",
   "extraIncludes": [
     "nanostack"
   ],
