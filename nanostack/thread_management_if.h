@@ -1,18 +1,5 @@
 /*
  * Copyright (c) 2014-2015 ARM Limited. All rights reserved.
- * Permissive Binary License
- * Redistribution.  Redistribution and use in binary form, without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions must reproduce the above copyright notice and the
- * following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * * No reverse engineering, decompilation, or disassembly of this software
- * is permitted.
- * * In case of redistribution as part of a development kit, the
- * accompanying DEPENDENCIES file, including all dependencies specified
- * therein, are included in the development kit.
  */
 
 #ifndef THREAD_MANAGEMENT_IF_H_
@@ -40,11 +27,13 @@ extern "C" {
 typedef struct link_configuration {
     uint8_t name[16]; /**< Name of the Thread network*/
     uint8_t master_key[16]; /**< Master key of the thread network*/
+    uint8_t PSKc[16]; /**< PSKc value that is calculated from commissioning credentials credentials,XPANID and network name*/
     uint8_t mesh_local_ula_prefix[8]; /**< Mesh local ula prefix*/
-    uint8_t extented_pan_id[8]; /**< Extented pan id*/
+    uint8_t extented_pan_id[8]; /**< Extended pan id*/
+    uint8_t extended_random_mac[8]; /**< Extended random mac which is generated during commissioning*/
     uint8_t steering_data[16]; /**< Dynamic steering data set by commissioning device max length 16*/
     uint8_t steering_data_len; /**< Length of current steering data*/
-    char *PSKc_ptr; /**< Commissioning credentials*/
+    char *PSKc_ptr; /**< Commissioning credentials @TODO think if we need the actual credentials*/
     uint8_t PSKc_len;
     uint32_t key_rotation; /**< Key rotation time in hours*/
     uint32_t key_sequence; /**< Key sequence counter */
@@ -239,6 +228,8 @@ int thread_managenet_print_network_data(int8_t interface_id);
 int thread_management_get_my_ml64(int8_t interface_id, uint8_t *addressPtr);
 int thread_management_get_my_ml16(int8_t interface_id, uint8_t *addressPtr);
 int thread_management_get_my_ml_prefix(int8_t interface_id, uint8_t *prefix);
+int thread_management_get_parent_address(int8_t interface_id, uint8_t *addressPtr);
+int thread_management_get_my_ml_prefix_112(int8_t interface_id, uint8_t *prefix);
 
 /**
  * Get configuration of thread network settings.
@@ -283,6 +274,103 @@ int thread_management_router_select_threshold_values_set(
     int8_t interface_id,
     uint8_t upgradeThreshold,
     uint8_t downgradeThreshold);
+
+/**
+ * Thread Leader max router Id limit set
+ *
+ * This function should use just for test purpose Thread define this by default to 32
+ *
+ * \param interface_id Network Interface
+ * \param maxRouterLimit Min Accepted value is 1 and max 32
+ *
+ * return 0, Set OK
+ * return <0 Set Fail
+ */
+int thread_management_max_accepted_router_id_limit_set(
+    int8_t interface_id,
+    uint8_t maxRouterLimit);
+
+/** Interfaces needed for Native commissioner
+ * current design is:
+ *  - application configures interface to scan available thread networks where to join
+ *      - time passes if we connect it should be good if we connect on-mesh commissioning is used
+ *  - application configures interface to begin native commissioner interfaces scans
+ *  - application selects some network where to connect
+ *  - stack connects to that network -> interface UP event sent
+ *  - application starts using commissioning API to send COMM_PET.req message triggering DTLS handshake
+ *      - commission api queries leader address and native info and uses the one that works.
+ *
+ *
+ */
+
+typedef struct commissioning_link_configuration {
+    uint8_t name[16]; /**< Name of the Thread network utf8 string nul terminated if shorter than 16*/
+    uint8_t extented_pan_id[8]; /**< Extented pan id*/
+    uint16_t panId; /**< network id*/
+    uint8_t Protocol_id; /**< current protocol id*/
+    uint8_t version; /**< current protocol version*/
+    uint8_t rfChannel; /**< current rf channel*/
+} commissioning_link_configuration_s;
+
+/** Native commissioner network scan result callback
+ *
+ * This callback is called when found some networks that allow native commissioner to join.
+ * pointers are valid during this call.
+ *
+ * \param interface interface id of this thread instance.
+ *
+ */
+typedef void thread_management_native_commissioner_select_cb(int8_t interface_id, uint8_t count, commissioning_link_configuration_s *link_ptr );
+
+/** Native commissioner network scan start
+ *
+ * starts network scan mode to find networks where device can become as native commissioner.
+ * this stops the normal thread joining process and informs the application the list of available networks.
+ *
+ * \param interface interface id of this thread instance.
+ *
+ */
+int thread_management_native_commissioner_start(int8_t interface_id, thread_management_native_commissioner_select_cb *cb_ptr);
+
+/** Native commissioner network scan stop
+ *
+ * stops network scan mode and continues the normal joining process.
+ *
+ * \param interface interface id of this thread instance.
+ *
+ */
+int thread_management_native_commissioner_stop(int8_t interface_id);
+
+/** native commissioner connect
+ *
+ * Connects to specific thread network to become active native commissioner.
+ *
+ * This function can be called in any time. when network scan is made the available native commissioner networks are informed
+ * using the callback.
+ *
+ * if connection fails we continue network scans to find new network. After successful connection the interface up event is sent.
+ * TODO do we need backup timers or blacklist if PSKc fails. who is responsible for triggering new scans?
+ *
+ * Matching of thread network is made using Network name, Xpanid, panid, TODO channel?? or not? gives channel flexibility
+ *
+ * \param interface interface id of this thread instance.
+ *
+ */
+int thread_management_native_commissioner_connect(int8_t interface_id, commissioning_link_configuration_s *link_ptr, uint8_t *PSKc_ptr);
+
+/**
+ * gets the address of native commissioner parent and the commissioning port for that connection
+ *
+ * \param interface_id Network Interface
+ * \param address_ptr address buffer (16 bytes) where to send commission messages
+ * \param port return the port for commissioner
+ * \param PSKc_ptr return buffer for the PSKc (16 bytes) for this network instance
+ *
+ * return 0, address OK
+ * return <0 fail
+ */
+int thread_management_native_commissioner_get_connection_info(int8_t interface_id, uint8_t *address_ptr, uint16_t *port, uint8_t *PSKc_ptr);
+
 
 #ifdef __cplusplus
 }

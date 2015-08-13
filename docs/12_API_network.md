@@ -109,9 +109,37 @@ until it is explicitly changed by the application, or if the device is power-cyc
 The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27-bits are used to set the channels to be scanned, 
 as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
 
-The default value is `0x07FFF800` which scans channels 11 to 26. For example, to scan only channels 11 and 26, the value would be `0x02000800`. The exact function call would then be as follows:
+```
+int8_t arm_nwk_6lowpan_link_scan_paramameter_set
+(
+	int8_t nwk_interface_id,
+	uint32_t channel_mask,
+	uint8_t scan_time
+)
+```
+where:
 
-`int8_t arm_nwk_6lowpan_link_scan_paramameter_set(uin32_t channel_mask, 0x02000800)`
+<dl>
+<dt><code>nwk_interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>channel_mask</code></dt>
+<dd>Value 0-0xFFFFFFFF to determine which channels to scan.</dd>
+
+<dt><code>scan_time</code></dt>
+<dd>Time in seconds to find a network</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0 Success.</dd>
+<dd>-1 Unknown interface ID.</dd>
+<dd>-3 Too long scan time.</dd>
+<dd>-4 Interface is not active.</dd>
+
+</dl>
+
+The default value is `0x07FFF800` which scans channels 11 to 26. For example, to scan only channels 11 and 26, the value would be `0x04000800`. The exact function call would then be as follows:
+
+`int8_t arm_nwk_6lowpan_link_scan_paramameter_set(12, 0x04000800, 3)`
 
 **Note**
 
@@ -489,7 +517,7 @@ where:
 <dd>Defines the security mode for the link layer:</dd>
 <dd><code>NET_SEC_MODE_NO_SECURITY</code>, security is disabled.</dd>
 <dd><code>NET_SEC_MODE_PSK_LINK_SECURITY</code>, security is enabled with selected mode and PSK key info.</dd>
-<dd><code>NET_SEC_MODE_PANA_NWK_AUTHENTICATION</code>, link layer keys are defined by the PANA authentication server.</dd>
+<dd><code>NET_SEC_MODE_PANA_LINK_SECURITY</code>, link layer keys are defined by the PANA authentication server.</dd>
 
 <dt><code>sec_level</code></dt>
 <dd>Supported values are 1 to 7. This parameter is only checked when the mode is <code>NET_SEC_MODE_NO_SECURITY</code>.</dd>
@@ -531,7 +559,7 @@ where:
 <dd>Defines the register mode of the 6LoWPAN global address:</dd>
 <dd><code>NET_6LOWPAN_GP64_ADDRESS</code>, the interface only registers GP64.</dd>
 <dd><code>NET_6LOWPAN_GP16_ADDRESS</code>, the interface only registers GP16.</dd>
-<dd><code>NET_SEC_MODE_PANA_NWK_AUTHENTICATION</code>, the interface registers both GP16 (primary) and GP64 (secondary) addresses.</dd>
+<dd><code>NET_6LOWPAN_MULTI_GP_ADDRESS</code>, the interface registers both GP16 (primary) and GP64 (secondary) addresses.</dd>
 
 <dt><code>short_address_base</code></dt>
 <dd>Short address base. If an application defines the value <code>0-0xFFD</code>, 6LoWPAN tries to register the GP16 address using that address. <code>0xFFFE</code> and <code>0xFFFF</code> generate a random 16-bit short address. If the border router wants to use a short address, it defines it here.</dd>

@@ -1,18 +1,5 @@
 /*
  * Copyright (c) 2014-2015 ARM Limited. All rights reserved.
- * Permissive Binary License
- * Redistribution.  Redistribution and use in binary form, without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions must reproduce the above copyright notice and the
- * following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * * No reverse engineering, decompilation, or disassembly of this software
- * is permitted.
- * * In case of redistribution as part of a development kit, the
- * accompanying DEPENDENCIES file, including all dependencies specified
- * therein, are included in the development kit.
  */
 #ifndef _NS_SOCKET_API_H
 #define _NS_SOCKET_API_H
@@ -29,9 +16,6 @@ extern "C" {
  *  - socket_free(), A function to free a socket
  *  - socket_raw_open(), A function to open a raw ICMP socket
  *
- * \section socket-sec Set socket TLS chipher suite list (SOCKET_TCP_TLS socket Type)
- *  - sec_socket_set_chipher_suite_list(), Used to set opened socket TLS chiphersuite support
- *   * check socket_security.h more information
  *
  * \section socket-read Socket Read API at Callback
  *  - socket_read(), A function to read received data buffer from a socket
@@ -55,7 +39,6 @@ extern "C" {
  * | :------------: | :----------------------------: |
  * | SOCKET_UDP     |   UDP socket type              |
  * | SOCKET_TCP     |   TCP socket type              |
- * | SOCKET_TCP_TLS |   TCP socket with TLS security |
  *
  * \section socket-raw ICMP RAW Socket Instruction
  * ICMP RAW socket can be created by socket_raw_open(). When using ICMP sockets the minimum payload length is 8 bytes, where first 4 bytes form the ICMP header.
@@ -115,7 +98,6 @@ extern "C" {
  * | socket_read_session_address() | Server/Client | Function read socket TCP session address and port information. |
  *
  * When TCP socket is opened it is in closed state. It must be set either listen or to connect state before it can be used to receive or transmit data.
- * SOCKET_TCP_TLS socket type is for secured TCP communication. Socket default TLS cipher suite is PSK. Change supported cipher suites can be set by sec_socket_set_chipher_suite_list() function.
  *
  * Socket can be set to listen mode by calling socket_listen() function. After the call the socket can accept an incoming connection from a remote host.
  * Listen mode closes the connection automatically after server timeout or when client or application closes the connection manually by socket_close() function.
@@ -140,8 +122,6 @@ extern "C" {
 #define SOCKET_UDP      17
 /** Normal TCP socket type */
 #define SOCKET_TCP      6
-/** TCP socket with TLS authentication */
-#define SOCKET_TCP_TLS  7
 /** Local Sockets for Tun interface functionality to APP-APP trough any BUS */
 #define SOCKET_LOCAL 1
 

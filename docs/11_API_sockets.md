@@ -155,7 +155,6 @@ where:
 <dd>The protocol to be used over this socket and valid values for the argument are:</dd>
 <dd><code>SOCKET_UDP</code> UDP: standard communication.</dd>
 <dd><code>SOCKET_TCP</code> TCP: standard communication.</dd>
-<dd><code>SOCKET_TCP_TLS</code> TCP using Transport Layer Security (TLS).</dd>
 <dd><code>SOCKET_ICMP</code> ICMP: used for ping functionality.</dd>
 
 <dt><code>identifier</code></dt>

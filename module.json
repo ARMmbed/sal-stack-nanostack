@@ -1,24 +1,21 @@
 {
   "name": "sal-stack-nanostack",
-  "version": "0.0.14",
+  "version": "0.0.18",
   "description": "Nanostack",
   "keywords": [
     "nanostack"
   ],
-  "license": "Permissive Binary License",
+  "license": "Proprietary, all rights reserved.",
   "extraIncludes": [
     "nanostack"
   ],
   "private": true,
   "dependencies": {
     "mbed-client-c": "~0.1.6",
-    "nanostack-libservice": "~3.0.0",
+    "mbed-client-libservice": "~3.0.0",
     "coap-service": "~0.0.3",
     "sal-stack-nanostack-eventloop": "~0.0.8",
-    "nanostack-randlib": "*",
-    "libx509-v3": "*",
-    "nanostack-ecc": "*",
-    "dtls-ecjpake": "*"
+    "mbed-client-randlib": "*"
   },
   "targetDependencies": {}
 }

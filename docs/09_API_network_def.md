@@ -784,7 +784,7 @@ typedef struct border_router_setup_t
 	uint8_t network_id[16];
 	uint8_t lowpan_nd_prefix[8];
 	uint16_t ra_life_time;
-	uint16_t abro_version_num;
+	uint32_t abro_version_num;
 } border_router_setup_t;
 ```
 

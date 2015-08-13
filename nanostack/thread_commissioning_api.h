@@ -1,18 +1,5 @@
 /*
  * Copyright (c) 2015 ARM Limited. All rights reserved.
- * Permissive Binary License
- * Redistribution.  Redistribution and use in binary form, without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions must reproduce the above copyright notice and the
- * following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * * No reverse engineering, decompilation, or disassembly of this software
- * is permitted.
- * * In case of redistribution as part of a development kit, the
- * accompanying DEPENDENCIES file, including all dependencies specified
- * therein, are included in the development kit.
  */
 
 /**Public API for enabling inside thread commissioner.
@@ -145,6 +132,18 @@ int commissioning_device_add(int8_t interface_id, bool short_eui64, uint8_t EUI6
  * \return 0 success other values failure
  */
 int commissioning_device_delete(int8_t interface_id, uint8_t EUI64[8]);
+
+/** Get next added device details
+ * \param ptr, for internal looping. For beginning, use NULL pointer, after that use return pointer
+ * \param interface_id Interface id where the request was made.
+ * \param short_eui64 boolean value indicating if we use short eui version for bloom filter generation. Can be NULL when no result wanted.
+ * \param EUI64 pointer to EUI64 buffer. Can be NULL when no result wanted.
+ * \param PSKd_ptr pointer to PSKd buffer. Can be NULL when no result wanted.
+ *
+ * \return >NULL for next iteration
+ * \return NULL  when end of list
+ */
+void *commission_device_get_next(void *ptr, int8_t interface_id, bool *short_eui64, uint8_t EUI64[8], uint8_t PSKd[32], uint8_t *PSKd_len);
 #ifdef __cplusplus
 }
 #endif

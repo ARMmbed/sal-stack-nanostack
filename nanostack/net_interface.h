@@ -1,18 +1,5 @@
 /*
  * Copyright (c) 2014-2015 ARM Limited. All rights reserved.
- * Permissive Binary License
- * Redistribution.  Redistribution and use in binary form, without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions must reproduce the above copyright notice and the
- * following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * * No reverse engineering, decompilation, or disassembly of this software
- * is permitted.
- * * In case of redistribution as part of a development kit, the
- * accompanying DEPENDENCIES file, including all dependencies specified
- * therein, are included in the development kit.
  */
 
 #ifndef NET_INTERFACE_H_
@@ -302,7 +289,7 @@ typedef struct {
     uint8_t network_id[16];         /**< network id 16-bytes, will be used at Beacon payload */
     uint8_t lowpan_nd_prefix[8];    /**< Define ND Default prefix, ABRO, DODAG ID, GP address*/
     uint16_t ra_life_time;          /**< Define ND router lifetime in seconds Recommend value 180+. */
-    uint16_t abro_version_num;      /**< ND ABRO version number (0 when starting new ND setup) */
+    uint32_t abro_version_num;      /**< ND ABRO version number (0 when starting new ND setup) */
 } border_router_setup_s;
 
 /*!
@@ -673,6 +660,15 @@ int8_t arm_nwk_nd_address_read(int8_t interface_id, network_layer_address_s *nd_
  */
 extern int8_t arm_net_address_get(int8_t nwk_interface_id, net_address_t addr_id, uint8_t *address);
 
+/**
+ * \brief A function to read networking address informations one by one.
+ * \param addr_id identifies the address information type to be read.
+ * \param integer pointer, which will be incremented every call. Start looping with n=0.
+ * \param address_buffer[16] there will be address copied
+ * \return 0 on success, 
+ * \return -1 no more addresses available.
+ */
+extern int8_t arm_net_address_list_get_next(int8_t nwk_interface_id, int *n, uint8_t address_buffer[16]);
 
 /**
  * \brief A function to read network Interface address count.
@@ -759,6 +755,8 @@ extern int8_t arm_tls_check_key(uint16_t key_id);
 void arm_print_routing_table(void);
 
 void arm_ncache_flush(void);
+
+void arm_print_neigh_cache(void);
 
 /**
   * \brief Get the library version information.
