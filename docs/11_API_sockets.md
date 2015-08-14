@@ -228,7 +228,7 @@ After successfully calling the function, the application must await the TX proce
 Function|Socket types
 --------|------------
 `socket_sendto( )`|UDP and ICMP
-`socket_send( )`|TCP (with or without TLS)
+`socket_send( )`|TCP 
 
 
 _Table 6-7_ describes the possible response events when the outcome of the function call is successful.
@@ -383,8 +383,7 @@ To close a TCP connection, use the following function:
 int8_t socket_close
 
 	int8_t			socket,
-	ns_address_t	*address,
-	uint8_t			release_security_session
+	ns_address_t	*address
 )
 ```
 
@@ -396,9 +395,6 @@ where:
 
 <dt><code>address</code></dt>
 <dd>The destination client address; a client should use a null pointer for this parameter.</dd>
-
-<dt><code>release_security_session</code></dt>
-<dd>The security session ID.</dd>
 
 <dt><code>Return value</code></dt>
 <dd>0 Valid request.</dd>

@@ -186,7 +186,6 @@ extern const uint8_t ns_in6addr_any[16];
  * \return -1 on failure.
  * \return -2 on port reserved.
  *
- * Note: PROTOCOL_TCP_TLS socket default TLS chiphersuite is PSK.
  */
 extern int8_t socket_open(uint8_t protocol, uint16_t identifier, void (*passed_fptr)(void *));
 
@@ -251,7 +250,6 @@ extern int8_t socket_bind(int8_t socket, const ns_address_t *address);
  *
  * \param socket refers to the socket ID to close.
  * \param address refers to the destination client address. When using as a client, a null pointer shall be passed.
- * \param release_security_session refers to the security session id.
  *
  * \return 0 on success.
  * \return -1 if a given socket ID is not found, if a socket type is wrong or tcp_close() returns a failure.
@@ -260,7 +258,7 @@ extern int8_t socket_bind(int8_t socket, const ns_address_t *address);
  *
  * Note: randomly_take_src_number is highly recommend to use always. Stack will generate new source port between 49152-65534.
  */
-extern int8_t socket_close(int8_t socket, ns_address_t *address, uint8_t release_security_session);
+extern int8_t socket_close(int8_t socket, ns_address_t *address);
 
 /**
  * \brief Used to send data via a connected TCP socket by client.
@@ -277,7 +275,6 @@ extern int8_t socket_close(int8_t socket, ns_address_t *address, uint8_t release
  * \return -2 Socket memory allocation fail
  * \return -3 TCP state not established
  * \return -4 Socket tx process busy
- * \return -5 TLS authentication not ready
  * \return -6 Packet too short
  *
  * Server need to use always specific address information when it close socket.
@@ -317,7 +314,6 @@ extern int16_t socket_read(int8_t socket, ns_address_t *src_addr, uint8_t *buffe
  * \return -2 Socket memory allocation fail.
  * \return -3 TCP state not established.
  * \return -4 Socket tx process busy.
- * \return -5 TLS authentication not ready.
  * \return -6 Packet too short.
  */
 extern int8_t socket_sendto(int8_t socket, ns_address_t *address, uint8_t *buffer, uint16_t length);

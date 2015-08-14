@@ -242,7 +242,6 @@ This section describes the functions of the security API that you can use to:
 - Initialize a certificate chain:
 	* Network.
 	* Transport layer.
-- Set the socket TLS mode.
 - Update the PANA key.
 - Set a timer period for the key trigger after delivery.
 - Activate a new key before timer triggering.
@@ -360,39 +359,6 @@ where:
 <dd>>=0 The certificate chain register is OK.</dd>
 <dd>-1 TLS is not supported in this stack.</dd>
 <dd>-2 A NULL pointer parameter.</dd>
-</dl>
-
-#### Set socket cipher mode
-
-To set the socket cipher mode, use the following function:
-
-```
-int8_t arm_socket_tls_cipher_setup_set
-(
-	uint8_t socket_id,
-	net_6lowpan_tls_cipher_e cipher_mode,
-	uint32_t psk_key_id
-)
-```
-
-where:
-
-<dl>
-<dt><code>socket_id</code></dt>
-<dd>The socket ID.</dd>
-<dt><code>cipher_mode</code></dt>
-<dd>The TLS cipher mode for PANA:</dd>
-<dd><code>NET_TLS_PSK_CIPHER</code>, PSK mode only.</dd>
-<dd><code>NET_TLS_ECC_CIPHER</code>, ECC mode only.</dd>
-<dd><code>NET_TLS_PSK_AND_ECC_CIPHER</code>, both modes are supported.</dd>
-<dt><code>psk_key_id</code></dt>
-<dd>The PSK key ID. This parameter is checked only when the PSK cipher is enabled.</dd>
-<dt><code>Return value</code></dt>
-<dd>>=0 The socket TLS cipher is set OK.</dd>
-<dd>-1 An unknown socket ID.</dd>
-<dd>-2 TLS is not supported in this stack.</dd>
-<dd>-3 No PSK key initialized to key ID.</dd>
-<dd>-4 No certificate chain for network authentication yet.</dd>
 </dl>
 
 
