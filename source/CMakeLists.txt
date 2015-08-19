@@ -1,4 +1,9 @@
-file(GLOB_RECURSE objs "*.o")
+if(DEFINED TARGET_LIKE_GCC)
+  file(GLOB_RECURSE objs "gcc/*.o")
+elseif(DEFINED TARGET_LIKE_ARMCC)
+  file(GLOB_RECURSE objs "armcc/*.o")
+endif()
+
 add_library(sal-stack-nanostack ${objs})
 set_target_properties(sal-stack-nanostack PROPERTIES LINKER_LANGUAGE C)
 target_link_libraries(sal-stack-nanostack

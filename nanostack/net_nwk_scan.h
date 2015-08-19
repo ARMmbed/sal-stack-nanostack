@@ -1,3 +1,17 @@
+/* Permissive Binary License
+ * Redistribution.  Redistribution and use in binary form, without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions must reproduce the above copyright notice and the
+ * following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ * * No reverse engineering, decompilation, or disassembly of this software
+ * is permitted.
+ * * In case of redistribution as part of a development kit, the
+ * accompanying DEPENDENCIES file, including all dependencies specified
+ * therein, are included in the development kit.
+ */
 /*
  * Copyright (c) 2014-2015 ARM Limited. All rights reserved.
  */
