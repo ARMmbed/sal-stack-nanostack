@@ -1,6 +1,6 @@
 {
   "name": "sal-stack-nanostack",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "description": "Nanostack",
   "keywords": [
     "nanostack"
@@ -13,7 +13,6 @@
   "dependencies": {
     "mbed-client-c": "~0.1.6",
     "nanostack-libservice": "~3.0.0",
-    "coap-service": "~0.0.3",
     "sal-stack-nanostack-eventloop": "~0.0.8",
     "nanostack-randlib": "*"
   },
