@@ -1,19 +1,15 @@
-/* Permissive Binary License
- * Redistribution.  Redistribution and use in binary form, without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions must reproduce the above copyright notice and the
- * following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * * No reverse engineering, decompilation, or disassembly of this software
- * is permitted.
- * * In case of redistribution as part of a development kit, the
- * accompanying DEPENDENCIES file, including all dependencies specified
- * therein, are included in the development kit.
- */
 /*
  * Copyright (c) 2014-2015 ARM Limited. All rights reserved.
+ *
+ * SPDX-License-Identifier: LicenseRef-PBL
+ *
+ * Licensed under the Permissive Binary License, Version 1.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.mbed.com/licenses/PBL-1.0
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
  */
 #ifndef _NS_SOCKET_API_H
 #define _NS_SOCKET_API_H
