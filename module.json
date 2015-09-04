@@ -9,7 +9,6 @@
   "extraIncludes": [
     "nanostack"
   ],
-  "private": true,
   "dependencies": {
     "mbed-client-c": "~0.1.6",
     "nanostack-libservice": "~3.0.0",
