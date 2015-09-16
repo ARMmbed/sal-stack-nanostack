@@ -727,9 +727,7 @@ extern int8_t border_router_nd_nvm_callback_set(void (*passed_fptr)(uint8_t , ui
  */
 extern int8_t arm_nwk_6lowpan_border_router_nd_context_load(int8_t nwk_interface_id, uint8_t *contex_data);  //NVM
 
-extern int8_t arm_bootstrap_certificate_chain_set(arm_certificate_chain_entry_s *chain_info);
 extern int8_t arm_network_certificate_chain_set(arm_certificate_chain_entry_s *chain_info);
-extern int8_t arm_transport_certificate_chain_set(arm_certificate_chain_entry_s *chain_info);
 
 /**
  * \brief Add PSK key to TLS library

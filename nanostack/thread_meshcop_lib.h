@@ -31,7 +31,7 @@
 #define MESHCOP_TLV_PAN                                    1
 #define MESHCOP_TLV_XPANID                                 2
 #define MESHCOP_TLV_NETWORK_NAME                           3
-#define MESHCOP_TLV_COMMISSIONING_CREDENTIALS              4
+#define MESHCOP_TLV_PSKC                                   4
 #define MESHCOP_TLV_NETWORK_MASTER_KEY                     5
 #define MESHCOP_TLV_NETWORK_KEY_SEQUENCE                   6
 #define MESHCOP_TLV_NETWORK_MESH_LOCAL_ULA                 7

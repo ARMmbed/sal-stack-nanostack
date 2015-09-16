@@ -135,7 +135,7 @@ typedef struct dodag_config_t {
     uint8_t DAG_DIO_INT_DOUB;   /**< RPL Trigle DIOIntervalDoublings , Should use 12 */
     uint8_t DAG_DIO_INT_MIN;    /**< RPL Trigle DIOIntervalMin , Should use 9 */
     uint8_t DAG_DIO_REDU;       /**< RPL Trigle DIORedundancyConstant , Should use 3 */
-    uint16_t DAG_MAX_RANK_INC;  /**< RPL MaxRankIncrease , Should use 16 */
+    uint16_t DAG_MAX_RANK_INC;  /**< RPL MaxRankIncrease , Should use 2048 */
     uint16_t DAG_MIN_HOP_RANK_INC;  /**< RPL MinHopRankIncrease, Should use 0x80 */
     uint16_t DAG_OCP;           /**< Objective Code Point must use 1 */
     uint8_t LIFE_IN_SECONDS;    /**< Life in seconds  = LIFE_IN_SECONDS * LIFETIME_UNIT */

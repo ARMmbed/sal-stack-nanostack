@@ -293,57 +293,12 @@ where:
 <dd>-1 Failure.</dd>
 </dl>
 
-#### Set initial commissioning of bootstrap
-
-To set the initial commissioning of a bootstrap certificate chain, use the following function:
-
-```
-int8_t arm_bootstrap_certificate_chain_set
-(
-	arm_certificate_chain_entry_t *chain_info
-)
-```
-
-where:
-
-<dl>
-<dt><code>chain_info</code></dt>
-<dd>A pointer to a certificate chain.</dd>
-<dt><code>Return value</code></dt>
-<dd>>=0 The certificate chain register is OK.
-<dd>-1 TLS is not supported in this stack.</dd>
-<dd>-2 A NULL pointer parameter.</dd>
-</dl>
-
 #### Set certificate chain for network
 
 To set a certificate chain for network authentication, use the following function:
 
 ```
 int8_t arm_network_certificate_chain_set
-(
-	arm_certificate_chain_entry_t *chain_info
-)
-```
-
-where:
-
-<dl>
-<dt><code>chain_info</code></dt>
-<dd>A pointer to a certificate chain.</dd>
-
-<dt><code>Return value</code></dt>
-<dd>>=0 The certificate chain register is OK.</dd>
-<dd>-1 TLS is not supported in this stack.</dd>
-<dd>-2 A NULL pointer parameter.</dd>
-</dl>
-
-#### Set certificate chain for transport layer
-
-To set a certificate chain of a transport layer for TCP TLS, use the following function:
-
-```
-int8_t arm_transport_certificate_chain_set
 (
 	arm_certificate_chain_entry_t *chain_info
 )
@@ -890,7 +845,7 @@ typedef struct dodag_config_s
 	uint8_t DAG_DIO_INT_MIN;
 	uint8_t DAG_DIO_REDU;
 	uint16_t DAG_MAX_RANK_INC;
-	uint16_t DAG_MIN_RANK_INC;
+	uint16_t DAG_MIN_HOP_RANK_INC;
 	uint16_t DAG_OCP;
 	uint8_t LIFE_IN_SECONDS;
 	uint16_t LIFETIME_UNIT;
@@ -904,28 +859,29 @@ where:
 <dd>Defines the possible parents for node. The recommended and maximum value 1 means two parents.</dd>
 
 <dt><code>DAG_DIO_INT_DOUB</code></dt>
-<dd>RPL Trigle DIOIntervalDoublings. Should use 12.</dd>
+<dd>RPL Trickle DIOIntervalDoublings. Should use 12.</dd>
 
 <dt><code>DAG_DIO_INT_MIN</code></dt>
-<dd>RPL Trigle DIOIntervalMin. Should use 9.</dd>
+<dd>RPL Trickle DIOIntervalMin. Should use 9.</dd>
 
 <dt><code>DAG_DIO_REDU</code></dt>
-<dd>RPL Trigle DIORedundancyConstant. Should use 3.</dd>
+<dd>RPL Trickle DIORedundancyConstant. Should use 3.</dd>
 
 <dt><code>DAG_MAX_RANK_INC</code></dt>
-<dd>RPL MaxRankIncrease. Should use 16.</dd>
+<dd>RPL MaxRankIncrease. Should use 2048.</dd>
 
-<dt><code>DAG_MIN_RANK_INC</code></dt>
-<dd>RPL MinHopRankIncrease. Should use <code>0x80</code>.</dd>
+<dt><code>DAG_MIN_HOP_RANK_INC</code></dt>
+<dd>RPL MinHopRankIncrease. Should use 128.</dd>
 
 <dt><code>DAG_OCP</code></dt>
 <dd>Objective Code Point must use 1.</dd>
 
 <dt><code>LIFE_IN_SECONDS</code></dt>
-<dd>Life in seconds  = <code>LIFE_IN_SECONDS * LIFETIME_UNIT</code>.</dd>
+<dd>Lifetime that is used as default for all routes (expressed in units of lifetime unit). Default lifetime in seconds is <code>LIFE_IN_SECONDS * LIFETIME_UNIT</code>.</dd>
 
 <dt><code>LIFETIME_UNIT</code></dt>
-<dd>Defines how long is 1 tick <code>LIFE_IN_SECONDS</code> in seconds. 60 means 1 minute.</dd>
+<dd>Defines the unit in seconds that is used to express route lifetimes. 60 means 1 minute.</dd>
+
 </dl>
 
 #### DODAG root setup
@@ -1648,7 +1604,7 @@ where:
 ## Multicast API
 
 This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, 
-a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router.
+a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
 
 **Note**
 

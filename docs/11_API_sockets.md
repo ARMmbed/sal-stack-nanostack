@@ -138,9 +138,9 @@ To initialize a socket ready for communication, use the following function:
 ```
 int8_t socket_open
 (
-	uint8_t			protocol,
-	uint16_t			identifier,
-	void			(*passed_fptr)(void *)
+	uint8_t		protocol,
+	uint16_t	identifier,
+	void		(*passed_fptr)(void *)
 )
 ```
 
@@ -182,6 +182,37 @@ where:
 <dt><code>Return value</dt></code>
 <dd>0 Socket release successful.</dd>
 <dd>-1 Socket release failed. Socket ID invalid or already released.</dd>
+</dl>
+
+### How to bind a socket
+
+To bind socket to a port, use the following function:
+
+**Note**
+
+Binding to address is not supported, therefore `address` in the structure 
+`ns_address_t` must be set to `ns_in6addr_any`.
+
+```
+int8_t socket_bind
+( 
+	int8_t 				socket, 
+	const ns_address_t 	*address 
+)
+```
+
+where:
+
+<dl>
+<dt><code>socket</dt></code>
+<dd>The socket ID returned by `socket_open`.</dd>
+<dt><code>Return value</dt></code>
+<dd>0 on success.</dd>
+<dd>-1 if given address is NULL.</dd>
+<dd>-2 if port is already bound to another socket.</dd>
+<dd>-3 if trying to bind to port 0.</dd>
+<dd>-4 if socket is already bound.</dd>
+<dd>-5 if given address is not equal to `ns_in6addr_any`.</dd>
 </dl>
 
 ### How to read data from a socket

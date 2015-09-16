@@ -5,7 +5,24 @@ This chapter describes the debug statistics interface API.
 
 ## Debug statistics API
 
-Using the debug statistics API it is possible to collect statistics from the stack in real-time for debugging purposes.
+Using the debug statistics API it is possible to collect statistics from the stack in real-time for debugging purposes. You can use this API by including the following line to your application:
+
+```
+#include nwk_stats_api.h
+```
+
+An overview of the function definitions and the Network statistics structure (nwk_stats_t) itself  are presented hereinafter.
+
+### protocol_stats_init
+
+To initialize collection of network statistics in the Network (NWK) statistics structure, use the following function call:
+
+```
+void protocol_stats_init
+(
+	void
+)
+```
 
 ### protocol_stats_start
 
@@ -39,7 +56,7 @@ void protocol_stats_stop
 
 ### protocol_stats_reset
 
-To reset network statistics to NULL, use the following function call:
+To reset network statistics to clean slate state, i.e., all the statistics counters are set to zero. Please use se the following function call to do so:
 
 ```
 void protocol_stats_reset
@@ -48,7 +65,163 @@ void protocol_stats_reset
 )
 ```
 
-### dev_stat_internal_init
+### Network statistics structure (nwk_stats_t)
+
+Following stats can be collected:
+
+#### General MAC related stats
+<dl>
+<dt><code>mac_tx_buffer_overflow</code></dt>
+<dd>Provides a count MAC TX queue overflow.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_rx_count</code></dt>
+<dd>A count of received MAC packets.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_tx_count</code></dt>
+<dd>A count of transmitted MAC packets.</dd>
+</dl>
+
+
+<dl>
+<dt><code>mac_rx_drop</code></dt>
+<dd>A count of dropped MAC packets.</dd>
+</dl>
+
+#### MAC payload flow
+<dl>
+<dt><code>mac_tx_bytes</code></dt>
+<dd>A count of no. of bytes transmitted.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_rx_bytes</code></dt>
+<dd>A count of no. of bytes received.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_tx_failed</code></dt>
+<dd>No. of times a transmission failed.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_tx_retry</code></dt>
+<dd>No. of times retries were made.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_tx_cca_cnt</code></dt>
+<dd>No. of times clear channel assessment was made.</dd>
+</dl>
+
+<dl>
+<dt><code>mac_tx_failed_cca</code></dt>
+<dd>A count of failed CCA attempts.</dd>
+</dl>
+
+
+<dl>
+<dt><code>mac_security_drop</code></dt>
+<dd>A count of security packets dropped.</dd>
+</dl>
+
+#### 6LoWPAN related stats
+
+<dl>
+<dt><code>ip_rx_count</code></dt>
+<dd>No. of IP packets received.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_tx_count</code></dt>
+<dd>No. of IP packets transmitted.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_rx_drop</code></dt>
+<dd>No. of IP packets dropped.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_cksum_error</code></dt>
+<dd>IP checksum error count.</dd>
+</dl>
+#### IP payload flow
+
+<dl>
+<dt><code>ip_tx_bytes</code></dt>
+<dd>No. of bytes transmitted as IP packets.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_rx_bytes</code></dt>
+<dd>No. of bytes received as IP packets.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_routed_up</code></dt>
+<dd>No. of bytes routed as IP packets.</dd>
+</dl>
+
+
+#### Fragmentation stats
+
+<dl>
+<dt><code>frag_rx_errors</code></dt>
+<dd>Fragmentation errors in reception.</dd>
+</dl>
+
+<dl>
+<dt><code>frag_tx_errors</code></dt>
+<dd>Fragmentation errors in transmission.</dd>
+</dl>
+#### RPL stats
+<dl>
+<dt><code>rpl_route_routecost_better_change</code></dt>
+<dd>No. of times an RPL parent was changed.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_routeloop_detect</code></dt>
+<dd>No. of times an RPL IP loop creation was detected.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_routeloop_detect</code></dt>
+<dd>No. of times an RPL route loop creation was detected.</dd>
+</dl>
+
+<dl>
+<dt><code>ip_no_route</code></dt>
+<dd>No. of times an RPL route was not found.</dd>
+</dl>
+#### Various buffers
+
+<dl>
+<dt><code>buf_alloc</code></dt>
+<dd>A count of buffer allocation.</dd>
+</dl>
+
+<dl>
+<dt><code>buf_headroom_realloc</code></dt>
+<dd>A buffer headroom allocation count.</dd>
+</dl>
+
+<dl>
+<dt><code>buf_headroom_shuffle</code></dt>
+<dd>A buffer headroom shuffling  count.</dd>
+</dl>
+
+<dl>
+<dt><code>buf_headroom_fail</code></dt>
+<dd>A buffer headroom failure  count.</dd>
+</dl>
+
+
+<!-- ### dev_stat_internal_init
 
 To start collecting device statistics within the device statistics structure, use the following function call:
 
@@ -107,5 +280,5 @@ where:
 <dl>
 <dt><code>return value</code></dt>
 <dd>The runtime since last reset.</dd>
-</dl>
+</dl> -->
 

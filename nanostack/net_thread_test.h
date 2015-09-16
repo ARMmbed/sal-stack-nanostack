@@ -20,6 +20,10 @@
 #ifndef NET_THREAD_TEST_H_
 #define NET_THREAD_TEST_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "ns_types.h"
 
 /**
@@ -145,5 +149,33 @@ void arm_nwk_6lowpan_thread_test_print_routing_database(int8_t interface_id);
 extern uint8_t mle_tlv_request(uint16_t addr, uint8_t req_tlv);
 
 int8_t arm_nwk_key_update_trig(int8_t interface_id);
+/**
+  * \brief Set Thread network id timeout
+  *
+  * \param interface_id Interface to modify
+  * \param network_id_timeout network timeout as seconds
+  *
+  * \return  0 Success
+  * \return -1 Invalid interface id
+  * \return -2 Thread not active
+  * \return -3 invalid timeout value
+  */
+int8_t thread_routing_set_network_id_timeout(int8_t interface_id, uint16_t network_id_timeout);
+/**
+  * \brief Get Thread network id timeout
+  *
+  * \param interface_id Interface to modify
+  * \param network_id_timeout pointer, where current network id timeout will be saved as seconds
+  *
+  * \return  0 Success
+  * \return -1 Invalid interface id
+  * \return -2 Thread not active
+  * \return -3 invalid pointer
+  */
+int8_t thread_routing_get_network_id_timeout(int8_t interface_id, uint16_t *network_id_timeout);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NET_THREAD_TEST_H_ */

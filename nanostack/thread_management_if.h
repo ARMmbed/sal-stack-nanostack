@@ -45,6 +45,7 @@ typedef struct link_configuration {
     uint8_t steering_data_len; /**< Length of current steering data*/
     char *PSKc_ptr; /**< Commissioning credentials @TODO think if we need the actual credentials*/
     uint8_t PSKc_len;
+    uint64_t time_stamp;/**< commissioning data set timestamp*/
     uint32_t key_rotation; /**< Key rotation time in hours*/
     uint32_t key_sequence; /**< Key sequence counter */
     uint16_t panId; /**< network id*/
@@ -381,6 +382,27 @@ int thread_management_native_commissioner_connect(int8_t interface_id, commissio
  */
 int thread_management_native_commissioner_get_connection_info(int8_t interface_id, uint8_t *address_ptr, uint16_t *port, uint8_t *PSKc_ptr);
 
+/**
+ * Get Thread device link timeout
+ *
+ * \param interface_id Network Interface
+ * \link_timeout New timeout value in seconds
+ *
+ * return 0, Set OK
+ * return <0 Set Fail
+ */
+int8_t thread_management_set_link_timeout(int8_t interface_id, uint32_t link_timeout);
+
+/**
+ * Set link timeout for Thread device
+ *
+ * \param interface_id Network Interface
+ * \link_timeout[out] pointer where timeout will be writted
+ *
+ * return 0, Get OK
+ * return <0 Get Fail
+ */
+int8_t thread_management_get_link_timeout(int8_t interface_id, uint32_t *link_timeout);
 
 #ifdef __cplusplus
 }

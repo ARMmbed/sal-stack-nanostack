@@ -28,7 +28,7 @@ This structure defines the socket address type and has the following variables:
 typedef struct ns_address_t
 {
     address_type_t	type;
-    uint8_t		address[16];
+    uint8_t			address[16];
     uint16_t		identifier;
 }ns_address_t;
 ```
@@ -72,3 +72,12 @@ where:
 <dt><code>ADDRESS_TUN_DRIVER_ID</code></dt>
 <dd>Local socket address type. The address is an 8-bit driver ID for packet source.</dd>
 </dl>
+
+## Address type
+
+This constant defines the IPv6 address INADDR_ANY:
+
+```
+extern const uint8_t ns_in6addr_any[16];
+```
+

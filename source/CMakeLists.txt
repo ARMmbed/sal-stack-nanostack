@@ -1,7 +1,11 @@
+if(NOT DEFINED YOTTA_CFG_NANOSTACK_CONFIGURATION)
+	set(YOTTA_CFG_NANOSTACK_CONFIGURATION mbedOS)
+endif()
+
 if(DEFINED TARGET_LIKE_GCC)
-  file(GLOB_RECURSE objs "gcc/*.o")
+  file(GLOB_RECURSE objs "gcc/${YOTTA_CFG_NANOSTACK_CONFIGURATION}/*.o")
 elseif(DEFINED TARGET_LIKE_ARMCC)
-  file(GLOB_RECURSE objs "armcc/*.o")
+  file(GLOB_RECURSE objs "armcc/${YOTTA_CFG_NANOSTACK_CONFIGURATION}/*.o")
 endif()
 
 add_library(sal-stack-nanostack ${objs})
