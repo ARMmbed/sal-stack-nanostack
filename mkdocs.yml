@@ -1,7 +1,7 @@
 site_name: ARM mbed 6LoWPAN Stack
 theme: 'readthedocs'
 
-docs_dir: docs
+docs_dir: Docs
 
 pages:
 - ['index.md']
