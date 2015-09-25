@@ -1,8 +1,6 @@
 site_name: ARM mbed 6LoWPAN Stack
 theme: 'readthedocs'
-
-docs_dir: Docs
-
+use_directory_urls: false
 pages:
 - ['index.md']
 - ['01_overview.md', 'ARM mbed 6LoWPAN Stack Overview', 'ARM mbed 6LoWPAN Stack ARM mbed 6LoWPAN Stack Overview']
