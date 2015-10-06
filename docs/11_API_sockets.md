@@ -5,8 +5,7 @@ This chapter describes socket use and the available APIs.
 
 ## Sockets
 
-Sockets are a common abstraction model for network communication and are used in most Operating Systems (OSs). The 6LoWPAN stack API follows the _Berkeley Software Distribution_ (BSD) socket API conventions closely with
-some extensions necessitated by the event-based scheduling model. The stack supports the socket types shown in _Table 6-1_.
+Sockets are a common abstraction model for network communication and are used in most Operating Systems (OSs). The 6LoWPAN stack API follows the _Berkeley Software Distribution_ (BSD) socket API conventions closely with some extensions necessitated by the event-based scheduling model. The stack supports the socket types shown in _Table 6-1_.
 
 **Table 6-1 Socket types**
 
@@ -19,8 +18,7 @@ Socket name|Socket description
 
 ### ICMP socket instruction
 
-When using _Internet Control Message Protocol_ (ICMP) sockets, the maximum packet length is eight bytes where the first four bytes comprise the ICMP header, as described in _Table 6-2_. The stack will calculate the checksum
-automatically prior to transmitting the packet.
+When using _Internet Control Message Protocol_ (ICMP) sockets, the maximum packet length is eight bytes where the first four bytes comprise the ICMP header, as described in _Table 6-2_. The stack will calculate the checksum automatically before transmitting the packet.
 
 **Table 6-2 ICMP header**
 
@@ -49,9 +47,7 @@ Type|Code|Checksum|Payload
 
 ### Socket receive
 
-When there is data to read from the socket, a receive callback function is called from the stack with the socket event parameter. The state of the _Transmission Control Protocol_ (TCP) socket  changes
-and the socket _Transmit_ (TX) process is ready `(SOCKET_TX_FAIL or SOCKET_TX_DONE)`. The socket event has both `event_type` and `socket_id` fields. The receive callback function must be defined when a socket is opened
-using the `socket_open( )` API.
+When there is data to read from the socket, a receive callback function is called from the stack with the socket event parameter. The state of the _Transmission Control Protocol_ (TCP) socket  changes and the socket _Transmit_ (TX) process is ready `(SOCKET_TX_FAIL or SOCKET_TX_DONE)`. The socket event has both `event_type` and `socket_id` fields. The receive callback function must be defined when a socket is opened using the `socket_open( )` API.
 
 All supported socket event types are listed in _Table 6-5_.
 
@@ -113,19 +109,15 @@ void main_receive
 
 When a TCP socket is opened, it is in an unusable state and must be set to either a listen or connect state before it can be used to receive or transmit data.
 
-The socket can be set to a listen state by calling the `socket_listen( )` function. Following the call, the socket can accept an incoming connection from a remote host. The TCP implementation of the 6LoWPAN stack
-supports only one connection from a remote host. The listen state closes the connection automatically after a server timeout or when the client or application closes the connection manually by using
-the `socket_close( )` function.
+The socket can be set to a listen state by calling the `socket_listen( )` function. Following the call, the socket can accept an incoming connection from a remote host. The TCP implementation of the 6LoWPAN stack supports only one connection from a remote host. The listen state closes the connection automatically after a server timeout or when the client or application closes the connection manually by using the `socket_close( )` function.
 
-The TCP socket can be connected to a remote host by calling `socket_connect( )` with the correct arguments. After the function call, an application (non-blocking) must await the socket event to confirm the successful
-state change of the socket.
+The TCP socket can be connected to a remote host by calling `socket_connect( )` with the correct arguments. After the function call, an application (non-blocking) must await the socket event to confirm the successful state change of the socket.
 
 After receiving a successful state event, data can be sent using the `socket_send( )` call. The connection can be closed by calling `socket_close( )` or with a server timeout.
 
 ### How to use UDP and ICMP sockets
 
-A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately following a successful call to `socket_open( )` where the `ARM_NWK_BOOTSTRAP_READY` event is received. Data can then be transmitted
-using the `socket_sendto( )` function call. The same function call can also be used for an ICMP socket.
+A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately following a successful call to `socket_open( )` where the `ARM_NWK_BOOTSTRAP_READY` event is received. Data can then be transmitted using the `socket_sendto( )` function call. The same function call can also be used for an ICMP socket.
 
 ## Socket API
 
@@ -190,13 +182,12 @@ To bind socket to a port, use the following function:
 
 **Note**
 
-Binding to address is not supported, therefore `address` in the structure 
-`ns_address_t` must be set to `ns_in6addr_any`.
+Binding to address is not supported, therefore `address` in the structure `ns_address_t` must be set to `ns_in6addr_any`.
 
 ```
 int8_t socket_bind
 ( 
-	int8_t 				socket, 
+	int8_t 			socket, 
 	const ns_address_t 	*address 
 )
 ```
@@ -374,9 +365,9 @@ To connect a socket to a remote host, use the following function:
 ```
 int8_t socket_connect
 (
-	int8_t			socket,
+	int8_t		socket,
 	ns_address_t	*address,
-	uint8_t			randomly_take_src_numbers
+	uint8_t		randomly_take_src_numbers
 )
 ```
 
@@ -413,7 +404,7 @@ To close a TCP connection, use the following function:
 ```
 int8_t socket_close
 
-	int8_t			socket,
+	int8_t		socket,
 	ns_address_t	*address
 )
 ```
@@ -441,11 +432,11 @@ To specify miscellaneous options for a socket, use the following function:
 ```
 int8_t socket_setsockopt
 (
-	int8_t socket,
-	uint8_t level,
-	uint8_t opt_name,
-	const void *opt_value,
-	uint16_t opt_len
+	int8_t 		socket,
+	uint8_t 	level,
+	uint8_t 	opt_name,
+	const 		void *opt_value,
+	uint16_t 	opt_len
 )
 ```
 
@@ -487,9 +478,7 @@ A socket uses a configured setup until the user changes it with a new function c
 
 #### How to set address mode for a socket
 
-A socket can be configured to use a primary or secondary address as the source address when transmitting packets using `socket_sendto( )`.  The primary (default) address is an IPv6 address which is created using
-a short address type, whereas the secondary address, also IPv6 based, is created using a MAC address type.  The source address is currently the only configurable parameter using `socket_configuration` and when multimode
-is not used, the source address configuration has no effect. The primary address is the default address when no configuration is needed.
+A socket can be configured to use a primary or secondary address as the source address when transmitting packets using `socket_sendto( )`. The primary (default) address is an IPv6 address which is created using a short address type, whereas the secondary address, also IPv6 based, is created using a MAC address type.  The source address is currently the only configurable parameter using `socket_configuration` and when multimode is not used, the source address configuration has no effect. The primary address is the default address when no configuration is needed.
 
 ```
 int8_t set_coap_socket_src_address_mode(int16_t address_mode)
@@ -502,8 +491,7 @@ SOCKET_IPV6_ADDRESS_SELECT, &address_mode),sizeof(address_mode)));
 
 ### How to set traffic class for a socket
 
-You can use `socket_setsockopt()` to set the socket traffic class. When this option is set, it will stay until modified. Therefore, if you want to set for one specific packet, you must call `socket_setsockopt()` again
-with a default traffic class after the packet has been sent.
+You can use `socket_setsockopt()` to set the socket traffic class. When this option is set, it will stay until modified. Therefore, if you want to set for one specific packet, you must call `socket_setsockopt()` again with a default traffic class after the packet has been sent.
 
 Parameters for Traffic class:
 

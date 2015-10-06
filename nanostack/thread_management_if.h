@@ -39,6 +39,7 @@ typedef struct link_configuration {
     uint8_t master_key[16]; /**< Master key of the thread network*/
     uint8_t PSKc[16]; /**< PSKc value that is calculated from commissioning credentials credentials,XPANID and network name*/
     uint8_t mesh_local_ula_prefix[8]; /**< Mesh local ula prefix*/
+    uint8_t mesh_local_eid[8]; /**< Mesh local extented id*/
     uint8_t extented_pan_id[8]; /**< Extended pan id*/
     uint8_t extended_random_mac[8]; /**< Extended random mac which is generated during commissioning*/
     uint8_t steering_data[16]; /**< Dynamic steering data set by commissioning device max length 16*/
@@ -61,27 +62,17 @@ typedef struct link_configuration {
  * This information is required if commissioning is enabled for this device.
  */
 typedef struct {
-    uint8_t eui64[8];/**< eui64 of the device. This field is used to identify device when joining to network*/
-    char *PSKd_ptr;/**< Device credentials used to authenticate device to commissioner*/
+    uint8_t eui64[8];/**< eui64 of the device. This field is used to identify device when joining to network Mandatory*/
+    char *PSKd_ptr;/**< Device credentials used to authenticate device to commissioner Mandatory  length 6-32*/
+    char *provisioning_uri_ptr;/**< Provisioning url max 64 bytes*/
+    char *vendor_name_ptr;/**< Vendor name optional max 32 bytes*/
+    char *vendor_model_ptr;/**< Vendor model optional max 32 bytes*/
+    char *vendor_sw_version_ptr;/**<  Vendor SW version optional max 16 bytes*/
+    uint8_t vendor_stack_version[6];/**< Vendor stack version optional all 0 indicates not set*/
+    uint8_t *vendor_data_ptr;/**<  optional Array max 64 bytes*/
+    uint8_t vendor_data_len;/**<  optional Array length max 64 bytes*/
     bool leaderCap; /**< Define Leader Capability */
 } device_configuration_s;
-
-typedef struct {
-    uint8_t protocol_id;
-    uint8_t version;
-} node_version_t;
-
-typedef struct {
-    uint8_t network_id[16];
-    uint8_t extented_pan_id[8];
-    uint16_t supported_amount;
-    uint16_t pan_id;
-    bool extented_filter: 1;
-    bool network_filter: 1;
-    bool pan_id_filter: 1;
-    node_version_t supported[];//Additional protocol id and version combinations that clients want to allow joining
-    //allocate more size for the amount of versions sizeof(thread_version_t)
-} node_link_filter_t;
 
 /**
  * Set Thread Security Material. Terms are defined in Thread security specification
@@ -89,19 +80,13 @@ typedef struct {
  * \param interface_id Network Interface
  * \param enableSecurity Boolean for enable security or disable
  * \param thrMasterKey Master Key material which will be used for generating new key
-* \param thrKeySequenceCounter Periodic counter used to generate new MAC and MLE keys
-* \param thrKeyRotation Update period (in seconds) for thrKeySequenceCounter
+ * \param thrKeySequenceCounter Periodic counter used to generate new MAC and MLE keys
+ * \param thrKeyRotation Update period (in seconds) for thrKeySequenceCounter
  *
  * return 0, ADD OK
  * return <0 Add Not OK
  */
 int thread_managenet_security_material_set(int8_t nwk_interface_id, bool enableSecurity, uint8_t *thrMasterKey, uint32_t thrKeySequenceCounter, uint32_t thrKeyRotation);
-
-
-/*Todo update and rethink not enough parameters*/
-int thread_management_commission_data_set(int8_t nwk_interface_id);
-
-int thread_managenet_joiner_attach_start(int8_t nwk_interface_id);
 
 /**
  * Increment Thread key sequence counter
@@ -255,6 +240,18 @@ int thread_management_get_my_ml_prefix_112(int8_t interface_id, uint8_t *prefix)
 link_configuration_s *thread_managenet_configuration_get(int8_t interface_id);
 
 /**
+ * Get device configuration of thread device settings.
+ *
+ * Configuration is pointer to static device configuration and only valid in current context.
+ *
+ * \param interface_id Network Interface
+ *
+ * return pointer to link configuration
+ * return NULL Failure
+ */
+device_configuration_s *thread_managenet_device_configuration_get(int8_t interface_id);
+
+/**
  * Initialize Thread stack to Node mode
  *
  * \param interface_id Network Interface
@@ -266,7 +263,6 @@ link_configuration_s *thread_managenet_configuration_get(int8_t interface_id);
 int thread_managenet_node_init(
     int8_t interface_id,
     uint32_t channelMask,
-    node_link_filter_t *link_filter_ptr,
     device_configuration_s *device_configuration,
     link_configuration_s *static_configuration);
 
@@ -300,6 +296,21 @@ int thread_management_router_select_threshold_values_set(
 int thread_management_max_accepted_router_id_limit_set(
     int8_t interface_id,
     uint8_t maxRouterLimit);
+
+/**
+ * Thread Leader max child count set
+ *
+ * This function should be used to set limited amount of children allowed for parent default to 32
+ *
+ * \param interface_id Network Interface
+ * \param maxChildCount Min Accepted value is 0 and max 32
+ *
+ * return 0, Set OK
+ * return <0 Set Fail
+ */
+int thread_management_max_child_count(
+    int8_t interface_id,
+    uint8_t maxChildCount);
 
 /** Interfaces needed for Native commissioner
  * current design is:

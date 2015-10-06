@@ -16,14 +16,11 @@ The 6LoWPAN stack is designed to be portable for various platforms and radio dri
 
 ![high-level-stack](img/high_level_stack_API_interfaces.png)
 
-The 6LoWPAN stack offers application designers interfaces for sending and receiving packets, configuring a network and running the event base system in the form of tasklets. For more information on the interfaces, 
-see chapters [_An Event-driven Scheduling Model_](08_API_events.md), [_Network API Definitions_](09_API_network_def.md) and [_Sockets Use and Available APIs_](11_API_sockets.md).
+The 6LoWPAN stack offers application designers interfaces for sending and receiving packets, configuring a network and running the event base system in the form of tasklets. For more information on the interfaces, see chapters [_An Event-driven Scheduling Model_](08_API_events.md), [_Network API Definitions_](09_API_network_def.md) and [_Sockets Use and Available APIs_](11_API_sockets.md).
 
-The 6LoWPAN stack relies on two interfaces that must be ported to run it on a specific platform. Platform API defines an abstraction layer of the underlying microcontrollers or operating system. For more information 
-on the Platform API, see section _Platform API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
+The 6LoWPAN stack relies on two interfaces that must be ported to run it on a specific platform. Platform API defines an abstraction layer of the underlying microcontrollers or operating system. For more information on the Platform API, see section _Platform API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
 
-PHY driver API is an abstraction between the driver and the 6LoWPAN stack and allows 6LoWPAN network to be formed on any 802.15.4 compatible or similar radio chip. The PHY driver API is not limited to only radio chips, 
-even serial communication may be used. For more information on the PHY driver API, see section _Device driver API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
+PHY driver API is an abstraction between the driver and the 6LoWPAN stack and allows 6LoWPAN network to be formed on any 802.15.4 compatible or similar radio chip. The PHY driver API is not limited to only radio chips, even serial communication may be used. For more information on the PHY driver API, see section _Device driver API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
 
 For more information on the 6LoWPAN stack architecture, and the protocol and application modules used by the 6LoWPAN stack, see [_ARM mbed 6LoWPAN Stack Overview_](01_overview.md).
 
@@ -71,8 +68,7 @@ void main(void)
 }
 ```
 
-In this code example, the main application registers an event handler called tasklet_main. This event handler is then used to send and receive timed events in one-second intervals. For a description of the functions used 
-and their parameters, see chapter [_An Event-driven Scheduling Model_](08_API_events.md).
+In this code example, the main application registers an event handler called tasklet_main. This event handler is then used to send and receive timed events in one-second intervals. For a description of the functions used and their parameters, see chapter [_An Event-driven Scheduling Model_](08_API_events.md).
 
 ## Platform API
 

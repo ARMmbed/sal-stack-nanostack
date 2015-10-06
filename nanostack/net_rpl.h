@@ -152,6 +152,7 @@ typedef struct dodag_config_t {
   *
   * \return 0, Allocate OK
   * \return -1, Allocate Fail(Node connected Already to same Instance or memory allocate fail)
+  * \return -2, Dodag configuration parameter fail
   *
   */
 extern int8_t arm_nwk_6lowpan_rpl_dodag_init(int8_t interface_id, const uint8_t *dodag_id, const dodag_config_t *config, uint8_t instace_id, uint8_t flags);

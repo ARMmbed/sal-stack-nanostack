@@ -90,28 +90,6 @@ int_fast8_t arm_nwk_6lowpan_thread_test_remove_neighbour(
     int8_t interface_id,
     uint16_t neighbour_short_addr);
 
-/**
-  * \brief Set up address filtering
-  *
-  * Test API: Supply a list of valid addresses. The passed lists must be
-  * static - they won't be copied. If a list is supplied, a src address of
-  * that size be on it, or the incoming packet will be dropped
-  *
-  * \param interface_id Interface to modify
-  * \param num_short_addrs Number of short addresses
-  * \param valid_short_addrs Valid short addresses
-  * \param num_long_addrs Number of long addresses
-  * \param valid_long_addrs Valid long addresses
-  *
-  * \return  0 Success
-  * \return <0 Failure
-  */
-int_fast8_t arm_nwk_6lowpan_thread_test_set_addr_filter(
-    int8_t interface_id,
-    uint8_t num_short_addrs,
-    const uint16_t valid_short_addrs[num_short_addrs],
-    uint8_t num_long_addrs,
-    const uint8_t valid_long_addrs[num_long_addrs][8]);
 
 /**
   * \brief Artificially adjust link margins.

@@ -9,23 +9,16 @@ This chapter describes porting the 6LoWPAN stack to a new platform. It contains 
 
 ## Porting 6LoWPAN stack to a new platform
 
-The 6LoWPAN stack has two sets of drivers that you must be aware of when porting it to a new platform. The drivers are divided into
-platform drivers and device drivers.
+The 6LoWPAN stack has two sets of drivers that you must be aware of when porting it to a new platform. The drivers are divided into platform drivers and device drivers.
 
-The platform drivers are a set of functions that the underlying platform must provide to run an event loop in a specific environment.
-These functions abstract away the underlying hardware and they can be ported to run on bare metal or from a full-featured operating
-system. Because the 6LoWPAN stack is provided as part of mbed OS you already have platform drivers, therefore you do not need to port
-these by yourself.
+The platform drivers are a set of functions that the underlying platform must provide to run an event loop in a specific environment. These functions abstract away the underlying hardware and they can be ported to run on bare metal or from a full-featured operating system. Because the 6LoWPAN stack is provided as part of mbed OS you already have platform drivers, therefore you do not need to port these by yourself.
 
-The device drivers are a set of functions for providing PHY layer devices for the 6LoWPAN stack. It consist of registering the device,
-a receiving function and a set of device controlling functions. For more detailed information on the device drivers, see section
-[_Device driver API_](#device-driver-api).
+The device drivers are a set of functions for providing PHY layer devices for the 6LoWPAN stack. It consist of registering the device, a receiving function and a set of device controlling functions. For more detailed information on the device drivers, see section [_Device driver API_](#device-driver-api).
 
 
 ## Platform API
 
-This section introduces the API for platform drivers. These functions must be implemented to run a 6LoWPAN stack in a given platform.
-Here the platform may refer to a specific CPU or operating system.
+This section introduces the API for platform drivers. These functions must be implemented to run a 6LoWPAN stack in a given platform. Here the platform may refer to a specific CPU or operating system.
 
 ### Required resources
 
@@ -214,8 +207,7 @@ The pseudorandom generator requests this seed on initialization.
 
 ### Global interrupt control API
 
-The platform driver code must provide protection for a stack when there are critical code sections. Some stack interfaces might be called within interrupts or from multiple threads, so protection is required. On some platform,
-these disable interrupts. On some platform, it is only a recursive mutex.
+The platform driver code must provide protection for a stack when there are critical code sections. Some stack interfaces might be called within interrupts or from multiple threads, so protection is required. On some platform, these disable interrupts. On some platform, it is only a recursive mutex.
 
 When a stack is about to enter a critical section, it uses the following function call:
 
@@ -262,8 +254,7 @@ void eventOS_scheduler_signal
 )
 ```
 
-This function is called when the stack enters deep sleep state for a period of time. This function enables thread sleep or the CPU deep sleep for a given time. It may also set specific peripherals to sleep mode, if they
-are not required.
+This function is called when the stack enters deep sleep state for a period of time. This function enables thread sleep or the CPU deep sleep for a given time. It may also set specific peripherals to sleep mode, if they are not required.
 
 ```
 uint32_t eventOS_scheduler_sleep
@@ -284,12 +275,9 @@ where:
 
 ## Device driver API
 
-The 6LoWPAN stack uses the Device driver API to communicate with different physical layer drivers. The 6LoWPAN stack supports different device types for PHY layer and special cases where raw IPv6 datagrams
-are forwarded to a driver.
+The 6LoWPAN stack uses the Device driver API to communicate with different physical layer drivers. The 6LoWPAN stack supports different device types for PHY layer and special cases where raw IPv6 datagrams are forwarded to a driver.
 
-The driver must first be registered with the 6LoWPAN stack using the `phy_device_driver_s` structure defined in section [_PHY device driver register_](#phy-device-driver-register). This structure defines
-all the functions that a stack uses in calling a device driver. When the device driver must call the driver API from the stack, it uses the ID number received in the registration phase to distinct between
-different devices. The following sections define the contents of the driver structures and API interfaces that the driver can use.
+The driver must first be registered with the 6LoWPAN stack using the `phy_device_driver_s` structure defined in section [_PHY device driver register_](#phy-device-driver-register). This structure defines all the functions that a stack uses in calling a device driver. When the device driver must call the driver API from the stack, it uses the ID number received in the registration phase to distinct between different devices. The following sections define the contents of the driver structures and API interfaces that the driver can use.
 
 ### How to create a new RF driver
 
@@ -382,6 +370,7 @@ Before starting the actual CCA process, the driver checks that it is not current
 ### PHY device driver register
 
 This function is for the dynamic registration of a PHY device driver. The 6LoWPAN stack allocates its own device driver list internally. This list is used when an application creates network interfaces to a specific PHY driver.
+
 To register a PHY driver to the stack, use the following function call:
 
 ```
@@ -496,11 +485,9 @@ where:
 <dd>-1 An unknown interface ID or handle.</dd>
 </dl>
 
-When the PHY device handles the CSMA-CA and auto-retry, the stack needs to know the total number of CCA attempts or TX attempts made in case of error.
-The stack retries the CCA phase 8 times and the TX attempt 4 times. These may be handled by the hardware.
+When the PHY device handles the CSMA-CA and auto-retry, the stack needs to know the total number of CCA attempts or TX attempts made in case of error. The stack retries the CCA phase 8 times and the TX attempt 4 times. These may be handled by the hardware.
 
-If the CSMA-CA is handled by the hardware, the `cca_retry` should return a value larger than 7 if returning `PHY_LINK_CCA_FAIL` status to the stack.
-If the total number of CCA retries is less than 8, the stack initiates a new CCA phase.
+If the CSMA-CA is handled by the hardware, the `cca_retry` should return a value larger than 7 if returning `PHY_LINK_CCA_FAIL` status to the stack. If the total number of CCA retries is less than 8, the stack initiates a new CCA phase.
 
 When hardware handles the auto-retry mode, the error cases should report the number of TX attempts made in the `tx_retry` parameter. IF the total number of retries is less that 4, the stack initiates a retransmission.
 

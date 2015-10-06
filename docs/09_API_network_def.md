@@ -12,8 +12,7 @@ This chapter describes the network API definitions. It contains the following se
 
 This section introduces the PANA network authentication API for server and client mode.
 
-PANA network authentication is an authentication layer for network access. It supports configurable authentication methods and security parameters. The server controls that only devices that passed the network authentication get access
-to the network and receive security material for network layer encryption. The server also handles the key updates to nodes in coordinated way.
+PANA network authentication is an authentication layer for network access. It supports configurable authentication methods and security parameters. The server controls that only devices that passed the network authentication get access to the network and receive security material for network layer encryption. The server also handles the key updates to nodes in coordinated way.
 
 Supported TLS 1.2 cipher modes for client and server are listed in _Table 4-0_:
 
@@ -135,8 +134,7 @@ where:
 <dd>-2 Interface active.</dd>
 </dl>
 
-To trigger a network key update process, use the following function. This function will deliver a new network key to all routers that have registered a GP address with the server. The function call always triggers a new key ID.
-The key delivery is started in 300ms intervals between the nodes. This function does not cause any traffic if the server does not have any router device sessions.
+To trigger a network key update process, use the following function. This function will deliver a new network key to all routers that have registered a GP address with the server. The function call always triggers a new key ID. The key delivery is started in 300ms intervals between the nodes. This function does not cause any traffic if the server does not have any router device sessions.
 
 ```
 int8_t arm_pana_server_key_update
@@ -237,14 +235,11 @@ where:
 
 The PANA Resume API allows the previously established PANA sessions to be resumed without going through a full authentication phase. This allows smaller low-power devices to join the network faster after the host or router is booted.
 
-The resume functionality depends on the platform side to provide non-volatile storage space that is used for storing PANA session data. The storage is used for keeping the data when the device is powered off or rebooted.
-The data contains authentication keys so it must be kept secure. If no such secure storage can be provided, ARM recommends not to use the resume functionality because it may leak the authentication keys.
+The resume functionality depends on the platform side to provide non-volatile storage space that is used for storing PANA session data. The storage is used for keeping the data when the device is powered off or rebooted. The data contains authentication keys so it must be kept secure. If no such secure storage can be provided, ARM recommends not to use the resume functionality because it may leak the authentication keys.
 
-The resume functionality is divided into two parts, the client side API and the server side API. Both sides require the application to set a callback that receives new material when there are updates in the network. The client side callback receives key material immediately after a successful authentication and periodically after each network key update. On the server side, the callback receives an update when a new client joins the network or when network
-keys are updated.
+The resume functionality is divided into two parts, the client side API and the server side API. Both sides require the application to set a callback that receives new material when there are updates in the network. The client side callback receives key material immediately after a successful authentication and periodically after each network key update. On the server side, the callback receives an update when a new client joins the network or when network keys are updated.
 
-Security material is basically divided into two parts, session keys and network keys. Each client session has unique authentication keys that are assigned to only one session. After a successful authentication, the client
-receives network keys that are shared with the whole network. The network keys are used for encryption and decryption for all clients. Therefore, a session resume requires you to store both keys.
+Security material is basically divided into two parts, session keys and network keys. Each client session has unique authentication keys that are assigned to only one session. After a successful authentication, the client receives network keys that are shared with the whole network. The network keys are used for encryption and decryption for all clients. Therefore, a session resume requires you to store both keys.
 
 #### Client side PANA resume API
 
@@ -292,8 +287,7 @@ where:
 <dd>is an update of the REQ and RES sequence number of a PANA key pull or push operation.</dd>
 </dl>
 
-When a callback takes place with the parameter `PANA_CLIENT_SESSION_UPDATE`, the first 16 bytes in the data buffer are PANA session address and the following 70 bytes PANA session keys. The session address is associated with
-the node's parent address, so that is most probably required only on star topology networks. On the mesh network, the parent address can change, so storing the session address is unnecessary.
+When a callback takes place with the parameter `PANA_CLIENT_SESSION_UPDATE`, the first 16 bytes in the data buffer are PANA session address and the following 70 bytes PANA session keys. The session address is associated with the node's parent address, so that is most probably required only on star topology networks. On the mesh network, the parent address can change, so storing the session address is unnecessary.
 
 When multiple sessions are supported, the session address identifies each session. All sessions are then stored separately.
 
@@ -396,8 +390,7 @@ where:
 <dd>removes the PANA client session.</dd>
 </dl>
 
-The buffer that is used to transfer data from the PANA process to the storage can contain server keys or client session data. When the server keys are stored, the buffer size is 90 bytes. On the client sessions, it depends
-on the event that the buffer contains.
+The buffer that is used to transfer data from the PANA process to the storage can contain server keys or client session data. When the server keys are stored, the buffer size is 90 bytes. On the client sessions, it depends on the event that the buffer contains.
 
 When client session data is stored, the buffer is divided into the following parts:
 

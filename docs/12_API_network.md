@@ -101,20 +101,18 @@ Use the 6LoWPAN MAC layer API to configure:
 
 You must configure these before calling the `arm_nwk_interface_up()` function.
 
-Starting the network with security enabled, but without having set the security level and key, will result in an error. The stack will store the 6LoWPAN MAC configuration after the first call and will use the existing configuration
-until it is explicitly changed by the application, or if the device is power-cycled.
+Starting the network with security enabled, but without having set the security level and key, will result in an error. The stack will store the 6LoWPAN MAC configuration after the first call and will use the existing configuration until it is explicitly changed by the application, or if the device is power-cycled.
 
 ### Scan channel list (2.4GHz only)
 
-The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27-bits are used to set the channels to be scanned, 
-as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
+The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27-bits are used to set the channels to be scanned, as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
 
 ```
 int8_t arm_nwk_6lowpan_link_scan_paramameter_set
 (
-	int8_t nwk_interface_id,
-	uint32_t channel_mask,
-	uint8_t scan_time
+	int8_t 		nwk_interface_id,
+	uint32_t 	channel_mask,
+	uint8_t 	scan_time
 )
 ```
 where:
@@ -155,8 +153,8 @@ To set the protocol ID filter, use the following function:
 ```
 int8_t arm_nwk_6lowpan_link_protocol_id_filter_for_nwk_scan
 (
-	int8_t nwk_interface_id,
-	uin8_t protocol_ID
+	int8_t 	nwk_interface_id,
+	uin8_t 	protocol_ID
 )
 ```
 
@@ -184,7 +182,7 @@ To set a PAN ID filter of a configured network interface for a network scan, use
 ```
 int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan
 (
-	int8_t nwk_interface_id,
+	int8_t 	nwk_interface_id,
 	uin16_t pan_id_filter
 )
 ```
@@ -387,9 +385,9 @@ To configure the IPv6 bootstrap, use the following function:
 ```
 int8_t arm_nwk_interface_configure_ipv6_bootstrap_set
 (
-	int8_t nwk_interface_id,
+	int8_t 		nwk_interface_id,
 	net_ipv6_mode_e bootstrap_mode,
-	uint8_t *ipv6_prefix_pointer
+	uint8_t 	*ipv6_prefix_pointer
 )
 ```
 
@@ -699,8 +697,8 @@ An example of how to place the processor in sleep mode:
 ```
 uint32_t app_ns_core_idle
 (
-	uint8_t			event,
-	uint32_t			sleep_time_ms
+	uint8_t		event,
+	uint32_t	sleep_time_ms
 )
 {
 	uint32_t returned_slept_time = 0;
@@ -733,9 +731,9 @@ To set a new host mode, use the following function:
 ```
 int8_t arm_nwk_6lowpan_sleepy_host_mode_set
 (
-	int8_t nwk_interface_id,
+	int8_t 		nwk_interface_id,
 	net_host_mode_t mode,
-	uint32_t slow_poll_frequency_in_seconds
+	uint32_t 	slow_poll_frequency_in_seconds
 )
 ```
 
@@ -772,7 +770,7 @@ To read a new host mode, use the following function:
 ```
 int8_t arm_nwk_6lowpan_sleepy_host_mode_read
 (
-	int8_t nwk_interface_id,
+	int8_t 		nwk_interface_id,
 	net_host_mode_t mode
 )
 ```
@@ -796,15 +794,14 @@ where:
 
 #### Control host sleep state
 
-When an application wants to save more power, it calls the function `enable_deep_sleep=1`. After the call, the idle callback event of the stack is `EV_READY_TO_SLEEP` which indicates sleep time in milliseconds. When the
-application wants to disable the sleep, it calls `enable_deep_sleep=0`.
+When an application wants to save more power, it calls the function `enable_deep_sleep=1`. After the call, the idle callback event of the stack is `EV_READY_TO_SLEEP` which indicates sleep time in milliseconds. When the application wants to disable the sleep, it calls `enable_deep_sleep=0`.
 
 To control the host sleep state, use the following function:
 
 ```
 int8_t arm_nwk_6lowpan_sleepy_host_enable_deep_sleep_control
 (
-	int8_t nwk_interface_id,
+	int8_t 	nwk_interface_id,
 	uint8_t enable_deep_sleep
 )
 ```
@@ -830,8 +827,7 @@ where:
 
 ### RPL root structures and definition
 
-The 6LoWPAN Border Router defines an RPL MOP and DODAG preference, the ZigBeeIP must use `(BR_DODAG_MOP_NON_STRORING | BR_DODAG_PREF_7)` only one RPL DODAG root. The RPL module defines a DODAG ID for an interface DAG from
-the default GP address of the interface. Therefore, before the interface can use the RPL module, the interface bootstrap and address must first be configured.
+The 6LoWPAN Border Router defines an RPL MOP and DODAG preference, the ZigBeeIP must use `(BR_DODAG_MOP_NON_STRORING | BR_DODAG_PREF_7)` only one RPL DODAG root. The RPL module defines a DODAG ID for an interface DAG from the default GP address of the interface. Therefore, before the interface can use the RPL module, the interface bootstrap and address must first be configured.
 
 The DODAG instance ID is dynamically allocated. It generates the first free number starting from `0x01`, and ends to `0xFE`.
 
@@ -906,8 +902,7 @@ The default is `0` least preferred).
 
 **_Mode of Operation_** **(MOP)**
 
-The MOP field identifies the mode of operation of the RPL instance as administratively provisioned at and distributed by the DODAG root. All nodes that join the DODAG must be able to honor the MOP to fully participate as a router,
-or else they must only join as a leaf.
+The MOP field identifies the mode of operation of the RPL instance as administratively provisioned at and distributed by the DODAG root. All nodes that join the DODAG must be able to honor the MOP to fully participate as a router, or else they must only join as a leaf.
 
 ```
 /**Non-Storing Mode of Operation  */
@@ -976,11 +971,11 @@ To update the RPL prefix to the DODAG proxy, use the following function:
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_prefix_update
 (
-	int8_t nwk_interface_id,
-	uint8_t *prefix_ptr,
-	uint8_t prefix_len,
-	uint8_t flags,
-	uint32_t lifetime
+	int8_t 		nwk_interface_id,
+	uint8_t 	*prefix_ptr,
+	uint8_t 	prefix_len,
+	uint8_t 	flags,
+	uint32_t 	lifetime
 )
 ```
 
@@ -1019,11 +1014,11 @@ To update the RPL route information to the DODAG proxy, use the following functi
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_route_update
 (
-	int8_t nwk_interface_id,
-	uint8_t *prefix_ptr,
-	uint8_t prefix_len,
-	uint8_t flags,
-	uint32_t lifetime
+	int8_t 		nwk_interface_id,
+	uint8_t 	*prefix_ptr,
+	uint8_t 	prefix_len,
+	uint8_t 	flags,
+	uint32_t 	lifetime
 )
 ```
 
@@ -1184,7 +1179,7 @@ To read network address information, use the following function:
 ```
 extern int8_t arm_net_address_get
 (
-	int8_t nwk_interface_id
+	int8_t 		nwk_interface_id
 	net_address_t	addr_id,
 	uint8_t		*address
 )
@@ -1222,15 +1217,15 @@ This structure defines the 6LoWPAN ND parameters and has the following variables
 ```
 typedef struct nd_parameters_s
 {
-	uint8_t rs_retry_max;
-	uint8_t ns_retry_max;
-	uint16_t timer_random_max;
-	uint16_t rs_retry_interval_min;
-	uint16_t ns_retry_interval_min;
-	uint16_t ns_retry_linear_backoff;
-	uint16_t ra_interval_min;
-	uint8_t ra_transmits;
-	uint16_t ns_forward_timeout;
+	uint8_t 	rs_retry_max;
+	uint8_t 	ns_retry_max;
+	uint16_t 	timer_random_max;
+	uint16_t 	rs_retry_interval_min;
+	uint16_t 	ns_retry_interval_min;
+	uint16_t 	ns_retry_linear_backoff;
+	uint16_t 	ra_interval_min;
+	uint8_t 	ra_transmits;
+	uint16_t 	ns_forward_timeout;
 } nd_parameters_s;
 ```
 
@@ -1459,8 +1454,8 @@ To read network layer configurations, use the following function:
 ```
 int8_t arm_nwk_param_read
 (
-	int8_t interface_id,
-	link_layer_setups_s * network_params
+	int8_t 			interface_id,
+	link_layer_setups_s 	*network_params
 )
 ```
 
@@ -1480,11 +1475,11 @@ This structure defines a parameter list of a network coordinator and it is used 
 ```
 typedef struct link_layer_setups_s
 {
-	 uint16_t PANId;
-	 uint8_t LogicalChannel;
-	 net_mac_address_t addr_mode;
-	 uint8_t address[8];
-	 uint8_t sf;
+	 uint16_t 		PANId;
+	 uint8_t 		LogicalChannel;
+	 net_mac_address_t 	addr_mode;
+	 uint8_t 		address[8];
+	 uint8_t 		sf;
 }link_layer_setups_s;
 ```
 
@@ -1514,8 +1509,8 @@ To read the MAC PAN ID, short address and EUI-64, use the following function:
 ```
 int8_t arm_nwk_mac_address_read
 (
-	int8_t interface_id,
-	link_layer_address_s * mac_params
+	int8_t 			interface_id,
+	link_layer_address_s 	*mac_params
 )
 ```
 
@@ -1535,10 +1530,10 @@ This structure defines the network MAC address information and it is used to rea
 ```
 typedef struct link_layer_address_s
 {
-	 uint16_t PANId;
-	 uint16_t mac_short;
-	 uint8_t mac_long[8];
-	 uint8_t iid_eui64[8];
+	 uint16_t 	PANId;
+	 uint16_t 	mac_short;
+	 uint8_t 	mac_long[8];
+	 uint8_t 	iid_eui64[8];
 }link_layer_address_s;
 ```
 
@@ -1565,8 +1560,8 @@ To read the 6LoWPAN ND border router address and NWK prefix,  use the following 
 ```
 int8_t arm_nwk_nd_address_read
 (
-	int8_t interface_id,
-	network_layer_address_s * nd_params
+	int8_t 			interface_id,
+	network_layer_address_s *nd_params
 )
 ```
 
@@ -1603,16 +1598,13 @@ where:
 
 ## Multicast API
 
-This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, 
-a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
+This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
 
 **Note**
 
 The site local multicast is the only multicast scope that can be routed through the border router.
 
-The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters.
-The multicast parameters are set and changed using the function `multicast_set_parameters( )`
-where multicast groups are managed using the function calls `multicast_add_address( )` and `multicast_free_address( )`.
+The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters( )`where multicast groups are managed using the function calls `multicast_add_address( )` and `multicast_free_address( )`.
 
 **Note**
 

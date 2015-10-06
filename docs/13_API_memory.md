@@ -94,7 +94,7 @@ To free allocated memory from the 6LoWPAN stack heap, use the following function
 ```
 void ns_dyn_mem_free
 (
-	void		*heap_ptr
+	void	*heap_ptr
 )
 ```
 

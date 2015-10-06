@@ -19,3 +19,4 @@ pages:
 - ['14_API_data.md','API Reference_Manual', 'Data Structures, Types and Variables']
 - ['15_API_debug.md','API Reference_Manual', 'Debug Statistics Interface API']
 - ['16_API_porting.md','API Reference_Manual', 'Porting 6LoWPAN Stack']
+- ['configuring.md', 'Configuring the stack', 'Build time configuration']

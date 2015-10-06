@@ -22,7 +22,7 @@
  */
 
 /**
- * Register commissioner. This data is then registered as commissioner adverticements in thread network.
+ * Register commissioner. This data is then registered as commissioner advertisements in thread network.
  *
  * \param interface_id Network Interface
  * \param border_router_address Border router locator address
@@ -31,21 +31,31 @@
  *
  * return 0, OK
  * return -1 fail
+ * return -2 Commissioner already registered.
  */
-int thread_commissioning_register(int8_t interface_id, uint8_t border_router_address[static 16], char *commissioner_id_ptr, uint16_t *session_id);
+int thread_commissioning_register(int8_t interface_id, uint8_t border_router_address[static 16], uint8_t *commissioner_id_ptr, uint16_t commissioner_id_len, uint16_t *session_id);
+
+/**
+ * Remove commissioner session
+ *
+ * \param interface_id Network Interface
+ * \param session_id Session id for this commissioner
+ *
+ * return true when OK
+ * return false when failed
+ */
+bool thread_commissioning_unregister(int8_t interface_id, uint16_t session_id);
 
 /**
  * Refresh commissioner keep alive timer
  *
  * \param interface_id Network Interface
  * \param session_id Session id for this commissioner
- * \param state true refresh commissioner, false remove commissioner
  *
- * return 0, OK
- * return -1 failure the commissioner is dropped
+ * return true when OK
+ * return false when failed
  */
-
-int thread_commissioning_session_refresh(int8_t interface_id, uint16_t session_id, bool state);
+bool thread_commissioning_session_refresh(int8_t interface_id, uint16_t session_id);
 
 /**
  * Update steering data. This might also affect permit join bit if that is available
@@ -83,19 +93,6 @@ int thread_commissioning_pairwise_key_add(int8_t interface_id, uint32_t valid_li
  */
 int thread_commissioning_pairwise_key_delete_all(int8_t interface_id);
 
-/**
- * register commissioning tasklet id
- *
- * Register tasklet id where commissioning initialisation event is sent.
- *
- * \param tasklet_id Tasklet id
- * \param event_type event type should be APPLICATION_EVENT
- *
- * return 0, OK
- * return <0 fail
- */
-int thread_commissioning_register_app_id(int8_t interface_id, int8_t tasklet_id);
-
 /** @todo
  * This function is interop hack only and should not exists when proper commissioner
  * joiner implementation is made. The Link configuration is learned during commissioning and should be
@@ -119,32 +116,23 @@ int thread_commissioning_enable_security(int8_t interface_id);
 int thread_commissioning_border_router_locator_get(int8_t interface_id, uint8_t *address_ptr);
 
 /**
- * Event Id for tmf commissioning request event
- */
-
-#define TMF_POST_COMMISSION_REQUEST 2
-/**
- * Event data for commissioning request event
+ * get registered commissioner ID
  *
- */
-typedef struct {
-    uint8_t address[16];/**< Link Local address of the joiner router*/
-    int8_t interfaceId;/**< nterface identifier*/
-} tmf_commision_req;
-
-/**
- * Event Id for tmf commissioning request event
- */
-
-#define TMF_POST_COMMISSION_RELAY 3
-/**
- * Event data for commissioning request event
+ * \param interface_id interface id
  *
+ * return pointer to commissioner ID string
+ * return NULL if failed
  */
-typedef struct {
-    uint8_t address[16];/**< Link Local address of the joiner router*/
-    bool enableRelay;
-    int8_t interfaceId;/**< nterface identifier*/
-} tmf_relay_req;
+char* thread_commissioning_commissioner_id_get(int8_t interface_id);
+
+/**
+ * get registered commissioner session ID
+ *
+ * \param interface_id interface id
+ *
+ * return Session ID
+ * return 0 if failed
+ */
+uint16_t thread_commissioning_session_id_get(int8_t interface_id);
 
 #endif /* NANOSTACK_THREAD_COMMISSIONING_IF_H_ */

@@ -8,12 +8,9 @@ This chapter introduces the _6LoWPAN Stack Architecture_. It contains the follow
 
 ## Architecture
 
-_IPv6 Low power Wireless Personal Area Network_ (6LoWPAN) is an adaptation layer that enables the use of IPv6 over low power wireless and supports IPv6 and _User Datagram Protocol_ (UDP) header compression.
-The Internet Protocol (IP) header compression allows 6LoWPAN packets to be compact, making it robust and, ideal for low power and lossy networks. It also handles fragmentation and reassembly of packets in scenarios
-where payloads larger than the _Maximum Transmission Unit_ (MTU) of the supported interface are transferred (a maximum of 1280 bytes).
+_IPv6 Low power Wireless Personal Area Network_ (6LoWPAN) is an adaptation layer that enables the use of IPv6 over low power wireless and supports IPv6 and _User Datagram Protocol_ (UDP) header compression. The Internet Protocol (IP) header compression allows 6LoWPAN packets to be compact, making it robust and, ideal for low power and lossy networks. It also handles fragmentation and reassembly of packets in scenarios where payloads larger than the _Maximum Transmission Unit_ (MTU) of the supported interface are transferred (a maximum of 1280 bytes).
 
-The industry leading ARM 6LoWPAN Stack is both highly scalable and reliable, but also provides an unrivaled feature set to include a compact source code base and optimal memory usage. Additionally, the 6LoWPAN Stack
-can be supplied with optional software modules for security and embedded web services (mbed Device Server). The modular structure of the design makes it possible for ARM to accommodate most requirements.
+The industry leading ARM 6LoWPAN Stack is both highly scalable and reliable, but also provides an unrivaled feature set to include a compact source code base and optimal memory usage. Additionally, the 6LoWPAN Stack can be supplied with optional software modules for security and embedded web services (mbed Device Server). The modular structure of the design makes it possible for ARM to accommodate most requirements.
 
 The combination of 6LoWPAN Stack and 6LoWPAN Border Router _Access Point_ (AP) software enables developers to use the extremely flexible and multi-purpose mesh communication solution for most applications (see _Figure 1-1_).
 
@@ -23,10 +20,7 @@ The combination of 6LoWPAN Stack and 6LoWPAN Border Router _Access Point_ (AP) s
 
 ## 6LoWPAN Stack
 
-The 6LoWPAN Stack is modular in design and uses an extremely lightweight event environment that allows the developer to run the stack completely in standalone mode without a need for a third-party _Operating System_ (OS).
-Additional benefits of the model are lower hardware requirements in the terms of flash and RAM usage. This approach significantly reduces integration effort and, thus, reduces your time-to-market. The stack can also be used
-in a configuration so that the developer can run it as a task or thread, for example, within a full _Real-time Operating System_ (RTOS). However, this will inevitably increase the system resource requirement because
-additional resources are required by the RTOS.
+The 6LoWPAN Stack is modular in design and uses an extremely lightweight event environment that allows the developer to run the stack completely in standalone mode without a need for a third-party _Operating System_ (OS). Additional benefits of the model are lower hardware requirements in the terms of flash and RAM usage. This approach significantly reduces integration effort and, thus, reduces your time-to-market. The stack can also be used in a configuration so that the developer can run it as a task or thread, for example, within a full _Real-time Operating System_ (RTOS). However, this will inevitably increase the system resource requirement because additional resources are required by the RTOS.
 
 The stack architecture can be divided into four high-level components:
 
@@ -47,9 +41,7 @@ For simplicity, the event core is shown to be part of the same component, alongs
 
 ### Event core
 
-The event core is responsible for the low level events, scheduling and system timer functions. The core module provides all the basic functionality that the rest of the modules need  (with the exception of the application modules)
-and is undertaken with a low resource requirement. The design objective has been to reserve and use minimal resources of the hardware platform and, instead, leave all unnecessary timers, for example, unused so that the developer
-has full control over these resources from the application layer.
+The event core is responsible for the low level events, scheduling and system timer functions. The core module provides all the basic functionality that the rest of the modules need  (with the exception of the application modules) and is undertaken with a low resource requirement. The design objective has been to reserve and use minimal resources of the hardware platform and, instead, leave all unnecessary timers, for example, unused so that the developer has full control over these resources from the application layer.
 
 The event system provides the application with the tools and functionality that it needs, for example, to post timed events to itself and create events with specific callback functions.
 
@@ -57,8 +49,7 @@ The event system relies on Platform API to provide portable set of functions tha
 
 ### Protocol modules
 
-The 6LoWPAN Stack implements a wide range of protocols as individual modules, which is illustrated in _Figure 1-2_. These modules are designed to use an internal data structure that is used to exchange packets. The stack uses
-a no-copy design wherever possible because in some modules a packet may be copied to provide a re-transmission functionality, as mandated by related standards.
+The 6LoWPAN Stack implements a wide range of protocols as individual modules, which is illustrated in _Figure 1-2_. These modules are designed to use an internal data structure that is used to exchange packets. The stack uses a no-copy design wherever possible because in some modules a packet may be copied to provide a re-transmission functionality, as mandated by related standards.
 
 The  modular design of the 6LoWPAN Stack allows some modules to be omitted from the build, for example, excluding the _Transmission Control Protocol_ (TCP) module would disable the TCP transport mechanism.
 
@@ -75,8 +66,7 @@ The 6LoWPAN Stack can be delivered with optional security components. These comp
 - ECC (ECDSA and ECDHE) (requires X509.3)
 - X509.3 (requires ECC)
 
-The _Elliptic Curve Cryptography_ (ECC) component supports the EEC curve NIST-P256 as defined in the Smart Grid standards collection of the _National Institute of Standards and Technology_ (NIST);
-see [NIST](http://www.nist.gov/smartgrid/). The stack also provides full x509.3 certificate support along with certificate chaining.
+The _Elliptic Curve Cryptography_ (ECC) component supports the EEC curve NIST-P256 as defined in the Smart Grid standards collection of the _National Institute of Standards and Technology_ (NIST); see [NIST](http://www.nist.gov/smartgrid/). The stack also provides full x509.3 certificate support along with certificate chaining.
 
 The stack essentially allows the end device to be a part of a full _Public Key Infrastructure_ (PKI) security scheme.
 
@@ -86,15 +76,11 @@ The 6LoWPAN Stack is dependent of the _Advanced Encryption Standard_ (AES)-_Coun
 
 ### Application modules
 
-The 6LoWPAN Stack runs on a lightweight event-based system that allows low power consumption and minimal latency. Application logic is implemented in a specific event handler called tasklet. The 6LoWPAN Stack allows
-the developer to define multiple tasklets to ease the task of application design. Each of these tasklets can then have full access to the network stack and its features. The system relies on events and does not attempt
-to provide real multi-thread services, so the developer does not need to be concerned about multiple access to resources.
+The 6LoWPAN Stack runs on a lightweight event-based system that allows low power consumption and minimal latency. Application logic is implemented in a specific event handler called tasklet. The 6LoWPAN Stack allows the developer to define multiple tasklets to ease the task of application design. Each of these tasklets can then have full access to the network stack and its features. The system relies on events and does not attempt to provide real multi-thread services, so the developer does not need to be concerned about multiple access to resources.
 
 One of the most important aspects of an application tasklet design is for the developer to understand how the event environment impacts it. The system does not support the capability for a multi-thread environment.
-The application tasklet must be designed so that it cannot block the execution for an extended period of time. A simple design rule is that a tasklet needs to be implemented in a state machine fashion. The tasklet
-receives an event that it processes, performs an action, such as reading a sensor value, builds a packet and transmits it, sets up a new timed event, and eventually returns. When the tasklet returns, the event core
-system schedules the networking stack to take care of the actual transmission of the packet. The delay between the actual transmission of the packet and the `socket_sendto( )` function at the application layer depends
-on the overall loading of the device at that time. In an otherwise idle situation, the delay is subject to the performance of the processor, but is typically negligible.
+
+The application tasklet must be designed so that it cannot block the execution for an extended period of time. A simple design rule is that a tasklet needs to be implemented in a state machine fashion. The tasklet receives an event that it processes, performs an action, such as reading a sensor value, builds a packet and transmits it, sets up a new timed event, and eventually returns. When the tasklet returns, the event core system schedules the networking stack to take care of the actual transmission of the packet. The delay between the actual transmission of the packet and the `socket_sendto( )` function at the application layer depends on the overall loading of the device at that time. In an otherwise idle situation, the delay is subject to the performance of the processor, but is typically negligible.
 
 _Figure 1-3_ shows the various protocol modules that make up the 6LoWPAN Stack, which are placed alongside the Open Systems Interconnect (OSI) model.
 
@@ -155,8 +141,7 @@ The related standards supported by the stack are:
 
 ### Interfaces
 
-The 6LoWPAN Stack offers application developers programming interfaces for configuring the 6LoWPAN network, defining security levels and sending and receiving packets. The 6LoWPAN Stack requires the developers to provide
-functions for platform specific tasks and network drivers for physical layer. For more information on programming interfaces, see [_ARM mbed 6LoWPAN API Reference Manual_](05_reference.md).
+The 6LoWPAN Stack offers application developers programming interfaces for configuring the 6LoWPAN network, defining security levels and sending and receiving packets. The 6LoWPAN Stack requires the developers to provide functions for platform specific tasks and network drivers for physical layer. For more information on programming interfaces, see [_ARM mbed 6LoWPAN API Reference Manual_](05_reference.md).
 
 ### Operation modes
 

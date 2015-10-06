@@ -16,6 +16,7 @@ The 6LoWPAN stack uses an event-driven scheduling model and this section  descri
 ### Handling events
 
 An application should register at least one event handler. These tasklets are then used to send and receive events between the stack or between other tasklets. Also socket events are sent to a tasklet that opened them.
+
 The following is a prototype of a tasklet:
 
 ```
@@ -191,8 +192,7 @@ Event type|Description
 `ARM_NWK_PARENT_POLL_FAIL`|Sleepy host poll fails three times.
 `ARM_NWK_PHY_CONNECTION_DOWN`|The interface PHY cable is off or the serial port interface does not respond anymore.
 
-When an `ARM_NWK_SCAN_FAIL`, `ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL` or `ARM_NWK_DUPLICATE_ADDRESS_DETECTED` event type occurs, the stack will enter an IDLE state automatically. If the `ARM_NWK_CONNECTION_DOWN` event type 
-is received, the stack will start scanning automatically for a new network; however, the application must wait for the result of the `arm_nwk_interface_up()` call before transmitting data.
+When an `ARM_NWK_SCAN_FAIL`, `ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL` or `ARM_NWK_DUPLICATE_ADDRESS_DETECTED` event type occurs, the stack will enter an IDLE state automatically. If the `ARM_NWK_CONNECTION_DOWN` event type is received, the stack will start scanning automatically for a new network; however, the application must wait for the result of the `arm_nwk_interface_up()` call before transmitting data.
 
 _Table 3-6_ describes how to analyze the status events of a network interface.
 

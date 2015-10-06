@@ -11,7 +11,7 @@ Using the debug statistics API it is possible to collect statistics from the sta
 #include nwk_stats_api.h
 ```
 
-An overview of the function definitions and the Network statistics structure (nwk_stats_t) itself  are presented hereinafter.
+An overview of the function definitions and the Network statistics structure (`nwk_stats_t`) itself are presented hereinafter.
 
 ### protocol_stats_init
 
@@ -56,7 +56,7 @@ void protocol_stats_stop
 
 ### protocol_stats_reset
 
-To reset network statistics to clean slate state, i.e., all the statistics counters are set to zero. Please use se the following function call to do so:
+To reset network statistics to clean slate state, that is, all the statistics counters are set to zero, use se the following function call:
 
 ```
 void protocol_stats_reset
@@ -67,7 +67,7 @@ void protocol_stats_reset
 
 ### Network statistics structure (nwk_stats_t)
 
-Following stats can be collected:
+Following statistics can be collected:
 
 #### General MAC related stats
 <dl>
@@ -128,7 +128,7 @@ Following stats can be collected:
 <dd>A count of security packets dropped.</dd>
 </dl>
 
-#### 6LoWPAN related stats
+#### 6LoWPAN related statistics
 
 <dl>
 <dt><code>ip_rx_count</code></dt>
@@ -167,7 +167,7 @@ Following stats can be collected:
 </dl>
 
 
-#### Fragmentation stats
+#### Fragmentation statistics
 
 <dl>
 <dt><code>frag_rx_errors</code></dt>
@@ -178,7 +178,7 @@ Following stats can be collected:
 <dt><code>frag_tx_errors</code></dt>
 <dd>Fragmentation errors in transmission.</dd>
 </dl>
-#### RPL stats
+#### RPL statistics
 <dl>
 <dt><code>rpl_route_routecost_better_change</code></dt>
 <dd>No. of times an RPL parent was changed.</dd>
