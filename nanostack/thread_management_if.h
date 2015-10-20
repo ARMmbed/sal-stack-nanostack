@@ -312,6 +312,21 @@ int thread_management_max_child_count(
     int8_t interface_id,
     uint8_t maxChildCount);
 
+/**
+ * Thread Leader Context ID re use timeout set
+ *
+ * This function should be used to change default 48 hours to shorter one
+ *
+ * \param interface_id Network Interface
+ * \param timeout Min Accepted value is 60 seconds and max  48 hours (48*3600)
+ *
+ * return 0, Set OK
+ * return <0 Set Fail
+ */
+int thread_management_set_context_id_resuse_timeout(
+    int8_t interface_id,
+    uint32_t timeout);
+
 /** Interfaces needed for Native commissioner
  * current design is:
  *  - application configures interface to scan available thread networks where to join

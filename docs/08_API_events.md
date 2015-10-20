@@ -264,7 +264,7 @@ An example of sending an event from interrupt:
 ```
 void xx_button_interrupt_handler(void)
 {
-	arm_event_s event;
+	arm_event_s event = {0};
 	/*Example of sending event to the application.
 	event.event is user-defined event.
 	In this application S1_BUTTON event is sent when IRQD interrupt occurs */

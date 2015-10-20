@@ -232,14 +232,14 @@ extern int8_t socket_listen(int8_t socket);
  * \return -4 if socket is already connected
  * \return -5 connect is not supported on this type of socket
  * \return -6 if TCP session state is wrong
+ * \return -7 if source address selection fails
  */
 extern int8_t socket_connect(int8_t socket, ns_address_t *address, uint8_t randomly_take_src_number);
 
 /**
  * \brief Bind socket to address.
  *
- * Note: Address binding is not supported, therefore `address` needs to be set to ns_in6addr_any.
- * `identifier` in the address structure identifies port to bind, it needs to differ from 0.
+ * Note: `identifier` in the address structure identifies port to bind, it needs to differ from 0.
  *
  * Used by the application to bind socket to port.
  *
@@ -251,9 +251,26 @@ extern int8_t socket_connect(int8_t socket, ns_address_t *address, uint8_t rando
  * \return -2 if port is already bound to another socket.
  * \return -3 if trying to bind to port 0.
  * \return -4 if socket is already bound to port.
- * \return -5 if given address is not equal to ns_in6addr_any.
  */
 extern int8_t socket_bind(int8_t socket, const ns_address_t *address);
+
+/**
+ * \brief Bind a local address to socket based on destination address and
+ *  address selection preferences.
+ *  Binding happens to the same address that socket_connect() would bind to.
+ *  Reference: RFC5014 IPv6 Socket API for Source Address Selection.
+ *
+ * \param socket socket id
+ * \param dst_address destination address to which socket wants to communicate.
+ *
+ * \return 0 on success.
+ * \return -1 if given address is NULL or socket ID is invalid.
+ * \return -2 if memory allocation failed.
+ * \return -3 if socket is already bound to address.
+ * \return -4 if interface can't be found.
+ * \return -5 if source address selection fails.
+ */
+extern int8_t socket_bind2addrsel(int8_t socket, const ns_address_t *dst_address);
 
 /**
  * \brief A function to close a connection.
@@ -285,11 +302,8 @@ extern int8_t socket_close(int8_t socket, ns_address_t *address);
  * \return -2 Socket memory allocation fail
  * \return -3 TCP state not established
  * \return -4 Socket tx process busy
+ * \return -5 Socket is not connected
  * \return -6 Packet too short
- *
- * Server need to use always specific address information when it close socket.
- * Client may set address pointer to NULL.
- *
  */
 extern int8_t socket_send(int8_t socket, uint8_t *buffer, uint16_t length);
 

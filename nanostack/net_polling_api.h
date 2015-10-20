@@ -52,7 +52,7 @@ extern "C" {
  * \enum net_host_mode_t
  * \brief Sleepy Host states.
  */
-typedef enum net_host_mode_t {
+typedef enum net_host_mode {
     NET_HOST_FAST_POLL_MODE,    /**< Sleepy Host Fast Poll State, max Poll period 400ms */
     NET_HOST_SLOW_POLL_MODE,    /**< Sleepy Host Slow Poll State, User define max period in seconds */
     NET_HOST_RX_ON_IDLE,        /**< Sleepy Host --> HOST, Parent could use now Direct Data Send and Host not poll*/
