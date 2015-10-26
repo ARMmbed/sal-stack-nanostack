@@ -1,11 +1,15 @@
 {
   "name": "sal-stack-nanostack",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "Nanostack",
   "keywords": [
     "nanostack"
   ],
-  "license": "Proprietary, all rights reserved.",
+  "licenses": [
+    {
+      "type": "LicenseRef-permissive-binary-license-1.0.txt"
+    }
+  ],
   "extraIncludes": [
     "nanostack"
   ],
