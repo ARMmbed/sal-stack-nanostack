@@ -1,6 +1,5 @@
 Library Timer API
 =================
-
 This chapter describes the timer functionality.
 
 If an application requires a timer, it can allocate one with the `eventOS_event_timer_request( )` function. Further to a successful allocation, the system timer event occurs.
@@ -8,6 +7,14 @@ If an application requires a timer, it can allocate one with the `eventOS_event_
 **Note**
 
 The library supports dynamic timer count at the application layer. The stack can multiplex a single timer for multiple purposes.
+
+## API Headers
+
+To use Library Timer API, include the following header in your application:
+
+```
+#include eventOS_event_timer.h
+``` 
 
 ## Allocate timer
 

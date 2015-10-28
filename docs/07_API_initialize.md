@@ -1,4 +1,4 @@
-6LoWPAN Stack Initialization
+IPv6/6LoWPAN Stack Initialization
 ===============================
 
 This chapter describes the 6LoWPAN stack initialization sequence. It contains the following sections:
@@ -9,9 +9,7 @@ This chapter describes the 6LoWPAN stack initialization sequence. It contains th
 
 ## About initalization
 
-This section is an introduction to the 6LoWPAN stack initialization.
-
-To take the 6LoWPAN stack into use, follow these instructions:
+To bring the 6LoWPAN stack into use, follow these instructions:
 
 1. To initialize the event OS, call `eventOS_scheduler_init()`.
 2. To initialize the 6LoWPAN stack and platform, call `net_init_core()`.

@@ -3,22 +3,21 @@ Porting 6LoWPAN Stack
 
 This chapter describes porting the 6LoWPAN stack to a new platform. It contains the following sections:
 
-- [_Porting 6LoWPAN stack to a new platform_](#porting-6lowpan-stack-to-a-new-platform)
+- [_Porting 6LoWPAN Stack to a new platform_](#porting-6lowpan-stack-to-a-new-platform)
 - [_Platform API_](#platform-api)
 - [_Device driver API_](#device-driver-api)
 
-## Porting 6LoWPAN stack to a new platform
+## Porting 6LoWPAN Stack to a new platform
 
-The 6LoWPAN stack has two sets of drivers that you must be aware of when porting it to a new platform. The drivers are divided into platform drivers and device drivers.
+The 6LoWPAN Stack has two sets of drivers that you must be aware of when porting it to a new platform. The drivers are divided into platform drivers and device drivers.
 
-The platform drivers are a set of functions that the underlying platform must provide to run an event loop in a specific environment. These functions abstract away the underlying hardware and they can be ported to run on bare metal or from a full-featured operating system. Because the 6LoWPAN stack is provided as part of mbed OS you already have platform drivers, therefore you do not need to port these by yourself.
+The platform drivers are a set of functions that the underlying platform must provide to run an event loop in a specific environment. These functions abstract away the underlying hardware and they can be ported to run on bare metal or from a full-featured operating system. Because the 6LoWPAN Stack is provided as part of mbed OS you already have platform drivers, therefore you do not need to port these by yourself.
 
-The device drivers are a set of functions for providing PHY layer devices for the 6LoWPAN stack. It consist of registering the device, a receiving function and a set of device controlling functions. For more detailed information on the device drivers, see section [_Device driver API_](#device-driver-api).
-
+The device drivers are a set of functions for providing PHY layer devices for the 6LoWPAN Stack. It consists of registering the device, a receiving function and a set of device controlling functions. For more detailed information on the device drivers, see section [_Device driver API_](#device-driver-api).
 
 ## Platform API
 
-This section introduces the API for platform drivers. These functions must be implemented to run a 6LoWPAN stack in a given platform. Here the platform may refer to a specific CPU or operating system.
+This section introduces the API for platform drivers. These functions must be implemented to run the 6LoWPAN Stack in a given platform. Here the platform may refer to a specific CPU or operating system.
 
 ### Required resources
 
@@ -32,11 +31,11 @@ The following resources are required for a platform driver API:
 	* Implementation guide: set the timer running and use the compare interrupt functionality of the timer.
 - A sleep timer (optional, application specific):
 	* Accuracy: 1ms.
-	*32-bit resolution.
+	* 32-bit resolution.
 - AES:
 	* Implementation is optional.
 	* SW or HW accelerated AES.
-	* This function performs Si=E[key,Ai] (a simple ECB block).
+	* This function performs `Si=E[key,Ai]` (a simple ECB block).
 - A pseudorandom number generator:
 	* 8-bit, 16-bit, 32-bit and n-bit (using length and pointer).
 	* Statistically valid.
@@ -54,25 +53,23 @@ The following resources are required for a platform driver API:
 - CPU power mode control (optional, application specific).
 - Idle, sleep timer, external wakeup modes.
 
-
-
 ### 6LoWPAN stack event OS port
 
-_Table 11-1_ describes the functions that the 6LoWPAN stack event base system requires for porting.
+_Table 4-1_ describes the functions that the 6LoWPAN Stack event base system requires for porting.
 
-**Table 11-1 Functions required for porting**
+**Table 4-1 Functions required for porting**
 
 Function|Desciption
 --------|----------
-`eventOS_scheduler_wait()`|Stack enters idle state and starts waiting for a signal
-`eventOS_scheduler_signal()`|Stack wakes from idle
-`eventOS_scheduler_sleep()`|CPU deep sleep for a given time
-`platform_enter_critical()`|Disables global interrupts
-`platform_exit_critical()`|Enables global interrupts
+`eventOS_scheduler_wait()`|Stack enters idle state and starts waiting for a signal.
+`eventOS_scheduler_signal()`|Stack wakes from idle.
+`eventOS_scheduler_sleep()`|CPU deep sleep for a given time.
+`platform_enter_critical()`|Disables global interrupts.
+`platform_exit_critical()`|Enables global interrupts.
 
-For more information on the functions, see [_Process API_](#process-api).
+For more information on the functions, see section [_Process API_](#process-api).
 
-### 6LoWPAN stack peripherals API port
+### 6LoWPAN Stack peripherals API port
 
 The 6LoWPAN stack requires the following peripherals for porting:
 
@@ -80,25 +77,25 @@ The 6LoWPAN stack requires the following peripherals for porting:
 - Random number seed for a pseudorandom generator.
 - AES Encode block for Si=E[key,Ai].
 
-The 6LoWPAN stack only needs one timer that must give a 50us resolution for an ordered timer counter. For more information on the timer, see section [_NET timer API definition_](#net-timer-api-definition).
+The 6LoWPAN Stack only needs one timer that must give a 50us resolution for an ordered timer counter. For more information on the timer, see section [_NET timer API definition_](#net-timer-api-definition).
 
 
 ### NET timer API definition
 
-The Timer Platform API is used for platform porting. _Table 11-2_ introduces the timer functions the 6LoWPAN stack is using.
+The Timer Platform API is used for platform porting. _Table 4-2_ introduces the timer functions the 6LoWPAN Stack is using.
 
-**Table 11-2 Timer functions**
+**Table 4-2 Timer functions**
 
 Function|Description
 --------|-----------
-`platform_timer_enable()`|Initializes the timer
-`platform_timer_set_cb()`|API for setting the timer interrupt handler for a stack
-`platform_timer_start()`|Starts the timer for a given period
-`platform_timer_disable()`|Stops the timer
+`platform_timer_enable()`|Initializes the timer.
+`platform_timer_set_cb()`|API for setting the timer interrupt handler for the stack.
+`platform_timer_start()`|Starts the timer for a given period.
+`platform_timer_disable()`|Stops the timer.
 
 #### Initialize platform timer peripheral
 
-To initialize the peripheral driver of the 6LoWPAN stack timer, use the following function call:
+To initialize the peripheral driver of the 6LoWPAN Stack timer, use the following function call:
 
 ```
 void platform_timer_enable
@@ -120,7 +117,7 @@ void platform_timer_disable
 
 #### Set compare timer
 
-To set the compare timer event for stack, use the following function call:
+To set the compare timer event for the stack, use the following function call:
 
 ```
 void platform_system_timer_start
@@ -138,7 +135,7 @@ where:
 
 #### Callback function set
 
-To set the timer interrupt handler for stack, use the following callback function call:
+To set the timer interrupt handler for the stack, use the following callback function call:
 
 ```
 void platform_system_timer_set_cb
@@ -158,7 +155,7 @@ where:
 
 ### AES 128-bit block encode API
 
-To perform a 128-bit `Si=E[key,Ai]` block encoding for given Ai data using the supplied key, use the following function call:
+To perform a 128-bit `Si=E[key,Ai]` block encoding for given `Ai` data using the supplied key, use the following function call:
 
 ```
 void platform_aes128_block_encode
@@ -209,7 +206,7 @@ The pseudorandom generator requests this seed on initialization.
 
 The platform driver code must provide protection for a stack when there are critical code sections. Some stack interfaces might be called within interrupts or from multiple threads, so protection is required. On some platform, these disable interrupts. On some platform, it is only a recursive mutex.
 
-When a stack is about to enter a critical section, it uses the following function call:
+When the stack is about to enter a critical section, it uses the following function call:
 
 ```
 void platform_enter_critical
@@ -218,7 +215,7 @@ void platform_enter_critical
 )
 ```
 
-When a stack exits a critical section, it uses the following function call:
+When the stack exits a critical section, it uses the following function call:
 
 ```
 void platform_exit_critical
@@ -229,11 +226,11 @@ void platform_exit_critical
 
 ### Process API
 
-These functions provide a portable layer for handling idle states for a stack.
+These functions provide a portable layer for handling idle states for the stack.
 
-This function is called when the stack enters idle state and starts waiting for a signal. The 6LoWPAN stack calls this function whenever the event queue is empty. The function disables the current task or the CPU as follows:
+This function is called when the stack enters idle state and starts waiting for a signal. The 6LoWPAN Stack calls this function whenever the event queue is empty. The function disables the current task or the CPU as follows:
 
-1. Use pure 6LoWPAN stack 1 thread system:
+1. Use pure 6LoWPAN Stack 1 thread system:
 	* Sets the global parameter to wait for a signal state and sets the CPU to idle.
 2. RTOS or any multithread:
 	* Stops the running thread and waits for a signal.
@@ -245,7 +242,7 @@ void eventOS_scheduler_wait
 )
 ```
 
-The 6LoWPAN stack calls this function when it receives an external event and wakes from idle. The function wakes the sleeping thread currently used by the OS.
+The 6LoWPAN Stack calls this function when it receives an external event and wakes from idle. The function wakes the sleeping thread currently used by the OS.
 
 ```
 void eventOS_scheduler_signal
@@ -275,9 +272,9 @@ where:
 
 ## Device driver API
 
-The 6LoWPAN stack uses the Device driver API to communicate with different physical layer drivers. The 6LoWPAN stack supports different device types for PHY layer and special cases where raw IPv6 datagrams are forwarded to a driver.
+The 6LoWPAN Stack uses the Device driver API to communicate with different physical layer drivers. The 6LoWPAN Stack supports different device types for PHY layer and special cases where raw IPv6 datagrams are forwarded to a driver.
 
-The driver must first be registered with the 6LoWPAN stack using the `phy_device_driver_s` structure defined in section [_PHY device driver register_](#phy-device-driver-register). This structure defines all the functions that a stack uses in calling a device driver. When the device driver must call the driver API from the stack, it uses the ID number received in the registration phase to distinct between different devices. The following sections define the contents of the driver structures and API interfaces that the driver can use.
+The driver must first be registered with the 6LoWPAN Stack using the `phy_device_driver_s` structure defined in section [_PHY device driver register_](#phy-device-driver-register). This structure defines all the functions that a stack uses in calling a device driver. When the device driver must call the driver API from the stack, it uses the ID number received in the registration phase to distinct between different devices. The following sections define the contents of the driver structures and API interfaces that the driver can use.
 
 ### How to create a new RF driver
 
@@ -285,9 +282,9 @@ The following steps describe how you can create a new RF driver.
 
 1. Read through the section [_Example RF driver_](#example-rf-driver). You can use this example code as your starting point
 
-2. Fill in the actual transceiver specific parts of the RF driver.
+2. Fill in the actual transceiver-specific parts of the RF driver.
 
-3. Register the driver to 6LoWPAN stack on your application. You can use the example node applications with your driver.
+3. Register the driver to 6LoWPAN Stack on your application. You can use the example node applications with your driver.
 
 4. Configure the interface. See instructions in section _How to configure a network interface_ of the chapter [_6LoWPAN Stack Initialisation_](07_API_initialize.md).
 
@@ -329,9 +326,9 @@ The following describes the basic states in more detail:
 
 The driver initialization and registration using the function `arm_net_phy_register` are not covered here and must be performed before the driver is functional.
 
-For more details on the TX process, see _Figure 11-2_.
+For more details on the TX process, see _Figure 4-1_.
 
-**Figure 11-1 RF driver states**
+**Figure 4-1 RF driver states**
 
 ![scan](img/ed_scan_process.png)
 
@@ -350,7 +347,7 @@ The following commands are received as a parameter of the function `extension` d
 - `PHY_EXTENSION_READ_CHANNEL_ENERGY`
 - `PHY_EXTENSION_SET_CHANNEL`
 
-_Figure 11-2_ describes the TX process.
+_Figure 4-2_ describes the TX process.
 
 The following describes the states in more detail:
 
@@ -363,13 +360,13 @@ Before starting the actual CCA process, the driver checks that it is not current
 <dd>In this state, the driver commands the radio to send the data given to the driver as a parameter from the function tx defined in the struct of type <code>phy_device_driver_s</code>.</dd>
 </dl>
 
-**Figure 11-2 TX process**
+**Figure 4-2 TX process**
 
 ![tx](img/tx_process.png)
 
 ### PHY device driver register
 
-This function is for the dynamic registration of a PHY device driver. The 6LoWPAN stack allocates its own device driver list internally. This list is used when an application creates network interfaces to a specific PHY driver.
+This function is for the dynamic registration of a PHY device driver. The 6LoWPAN Stack allocates its own device driver list internally. This list is used when an application creates network interfaces to a specific PHY driver.
 
 To register a PHY driver to the stack, use the following function call:
 
@@ -383,9 +380,10 @@ int8_t arm_net_phy_register
 where:
 
 <dl>
-<dt><code>phy_driver</dt></code>
+<dt><code>phy_driver</code></dt>
 <dd>A pointer to a driver structure.</dd>
-<dt><code>Return value</dt></code>
+
+<dt><code>Return value</code></dt>
 <dd>>=0 The registration is OK and the return value indicates a unique ID for the device driver. The ID is required for pairing a network stack interface with the correct driver instance.</dd>
 <dd>-1 A structure parameter failure or a NULL pointer.</dd>
 </dl>
@@ -412,31 +410,31 @@ int8_t arm_net_phy_rx
 where:
 
 <dl>
-<dt><code>data_type</dt></code>
+<dt><code>data_type</code></dt>
 <dd>Defines the received data packet content. The value can be one of the following:</dd>
 <dd><code>NANOSTACK_LOCAL_SOCKET_DATA</code> Local socket data between tunnel drivers.</dd>
 <dd><code>NANOSTACK_INTERFACE_DATA</code> Interface configuration data.</dd>
 <dd><code>PHY_LAYER_PAYLOAD</code> PHY layer packet, for example Ethernet.</dd>
 <dd><code>IPV6_DATAGRAM</code> Packet is IPv6 frame.</dd>
 
-<dt><code>data_ptr</dt></code>
+<dt><code>data_ptr</code></dt>
 <dd>A pointer to data.</dd>
 
-<dt><code>data_len</dt></code>
+<dt><code>data_len</code></dt>
 <dd>Data length.</dd>
 
-<dt><code>link_quality</dt></code>
+<dt><code>link_quality</code></dt>
 <dd>A link quality value. A value of <code>0x00</code> indicates the worst possible and <code>0xFF</code> the best possible link quality. If the device driver cannot determine the link quality, the value must be
 set to <code>0x80</code>.</dd>
 
-<dt><code>dbm</dt></code>
+<dt><code>dbm</code></dt>
 <dd>A received signal strength indication, in the range of -128 to +127, expressed as dBm. If the device driver cannot determine the signal strength, the value must be
 set to <code>0</code>.</dd>
 
-<dt><code>interface_id</dt></code>
+<dt><code>interface_id</code></dt>
 <dd>The interface ID where the packet is coming from.</dd>
 
-<dt><code>Return value</dt></code>
+<dt><code>Return value</code></dt>
 <dd>>=0 Data allocation is OK and the Packet push to the stack was successful.</dd>
 <dd>-1 A memory allocation failure or a stack RX queue overflow.</dd>
 </dl>
@@ -461,26 +459,26 @@ int8_t arm_net_phy_tx_done
 where:
 
 <dl>
-<dt><code>interface_id</dt></code>
+<dt><code>interface_id</code></dt>
 <dd>An interface ID for the TX done event.</dd>
 
-<dt><code>tx_handle</dt></code>
+<dt><code>tx_handle</code></dt>
 <dd>A handle to indicate the packet this event is related to.</dd>
 
-<dt><code>status</dt></code>
+<dt><code>status</code></dt>
 <dd><code>PHY_LINK_TX_DONE</code>Packet transmitted and ACK received succesfully.</dd>
 <dd><code>PHY_LINK_TX_DONE_PENDING</code> Transmitted succesfully and ACKed. The received ACK contains indirect data pending flag set.</dd>
 <dd><code>PHY_LINK_TX_SUCCESS</code> Packet transmitted. Might be pending for ACK packet (on unicast packets).</dd>
 <dd><code>PHY_LINK_TX_FAIL</code> Failed to receive ACK from destination.</dd>
 <dd><code>PHY_LINK_CCA_FAIL</code> CCA process failed, channel busy.</dd>
 
-<dt><code>cca_retry</dt></code>
+<dt><code>cca_retry</code></dt>
 <dd>Defines the number of CCA attempts made. Used for CSMA-CA.</dd>
 
-<dt><code>tx_retry</dt></code>
+<dt><code>tx_retry</code></dt>
 <dd>Number of TX attempts made. Used for auto-retry mode.</dd>
 
-<dt><code>Return value</dt></code>
+<dt><code>Return value</code></dt>
 <dd>>=0 OK.</dd>
 <dd>-1 An unknown interface ID or handle.</dd>
 </dl>
@@ -489,7 +487,7 @@ When the PHY device handles the CSMA-CA and auto-retry, the stack needs to know 
 
 If the CSMA-CA is handled by the hardware, the `cca_retry` should return a value larger than 7 if returning `PHY_LINK_CCA_FAIL` status to the stack. If the total number of CCA retries is less than 8, the stack initiates a new CCA phase.
 
-When hardware handles the auto-retry mode, the error cases should report the number of TX attempts made in the `tx_retry` parameter. IF the total number of retries is less that 4, the stack initiates a retransmission.
+When the hardware handles the auto-retry mode, the error cases should report the number of TX attempts made in the `tx_retry` parameter. If the total number of retries is less that 4, the stack initiates a retransmission.
 
 ### PHY driver structure and enumeration definitions
 
@@ -513,20 +511,20 @@ typedef enum phy_link_tx_status_e
 where:
 
 <dl>
-<dt><code>TX_DONE</dt></code>
-<dd>the TX process is Ready and ACK RX.</dd>
+<dt><code>TX_DONE</code></dt>
+<dd>TX process is Ready and ACK RX.</dd>
 
-<dt><code>TX_DONE_PENDING</dt></code>
-<dd>the TX process is OK with an ACK pending flag.</dd>
+<dt><code>TX_DONE_PENDING</code></dt>
+<dd>TX process is OK with an ACK pending flag.</dd>
 
-<dt><code>TX_SUCCESS</dt></code>
-<dd>the MAC TX complete MAC will make a decision to enter a wait ack or TX Done state.</dd>
+<dt><code>TX_SUCCESS</code></dt>
+<dd>MAC TX complete MAC will make a decision to enter a wait ack or TX Done state.</dd>
 
-<dt><code>TX_FAIL</dt></code>
-<dd>the link TX process fails.</dd>
+<dt><code>TX_FAIL</code></dt>
+<dd>The link TX process fails.</dd>
 
-<dt><code>CCA_FAIL</dt></code>
-<dd>the RF link CCA process fails.</dd>
+<dt><code>CCA_FAIL</code></dt>
+<dd>RF link CCA process fails.</dd>
 </dl>
 
 #### PHY address types
@@ -546,16 +544,16 @@ typedef enum phy_address_type_e
 where:
 
 <dl>
-<dt><code>MAC_48BIT</dt></code>
+<dt><code>MAC_48BIT</code></dt>
 <dd>is an IPv4 or IPv6 link layer address for Ethernet. This is optional information.</dd>
 
-<dt><code>MAC_64BIT</dt></code>
+<dt><code>MAC_64BIT</code></dt>
 <dd>is an RF or a generic link layer address.</dd>
 
-<dt><code>MAC_16BIT</dt></code>
+<dt><code>MAC_16BIT</code></dt>
 <dd>is an RF interface short address.</dd>
 
-<dt><code>MAC_PANID</dt></code>
+<dt><code>MAC_PANID</code></dt>
 <dd>is an RF interface 16-bit PAN ID.</dd>
 </dl>
 
@@ -575,13 +573,13 @@ typedef enum phy_interface_state_e
 where:
 
 <dl>
-<dt><code>RESET</dt></code>
+<dt><code>RESET</code></dt>
 <dd>resets a PHY driver and sets it to idle.</dd>
 
-<dt><code>DOWN</dt></code>
+<dt><code>DOWN</code></dt>
 <dd>disables the PHY interface driver (RF radio disabled).</dd>
 
-<dt><code>UP</dt></code>
+<dt><code>UP</code></dt>
 <dd>enables the PHY interface driver (RF radio receiver ON).</dd>
 </dl>
 
@@ -602,16 +600,16 @@ typedef enum phy_extension_type_e
 where:
 
 <dl>
-<dt><code>CTRL_PENDING_BIT</dt></code>
+<dt><code>CTRL_PENDING_BIT</code></dt>
 <dd>controls the MAC pending bit for indirect data.</dd>
 
-<dt><code>SET_CHANNEL</dt></code>
+<dt><code>SET_CHANNEL</code></dt>
 <dd>sets the RF channel.</dd>
 
-<dt><code>READ_CHANNEL_ENERGY</dt></code>
+<dt><code>READ_CHANNEL_ENERGY</code></dt>
 <dd>reads the ED scan energy of the RF interface.</dd>
 
-<dt><code>READ_LINK_STATUS</dt></code>
+<dt><code>READ_LINK_STATUS</code></dt>
 <dd>reads the link status.</dd>
 </dl>
 
@@ -640,40 +638,40 @@ typedef struct phy_device_driver_s
 where:
 
 <dl>
-<dt><code>link_type</dt></code>
+<dt><code>link_type</code></dt>
 <dd>defines the device driver type.</dd>
 
-<dt><code>data_request_layer</dt></code>
+<dt><code>data_request_layer</code></dt>
 <dd>defines the interface Data OUT protocol.</dd>
 
-<dt><code>PHY_MAC</dt></code>
+<dt><code>PHY_MAC</code></dt>
 <dd>is a pointer to a 48-bit or 64-bit MAC address.</dd>
 
-<dt><code>driver_description</dt></code>
+<dt><code>driver_description</code></dt>
 <dd>is a short driver-specific description in Null-terminated string format.</dd>
 
-<dt><code>phy_MTU</dt></code>
+<dt><code>phy_MTU</code></dt>
 <dd>defines the maximum MTU size of the physical layer.</dd>
 
-<dt><code>phy_tail_length</dt></code>
+<dt><code>phy_tail_length</code></dt>
 <dd>defines the tail length used by the PHY driver.</dd>
 
-<dt><code>phy_header_length</dt></code>
+<dt><code>phy_header_length</code></dt>
 <dd>defines the header length used by the PDU PHY driver.</dd>
 
-<dt><code>state_control</dt></code>
+<dt><code>state_control</code></dt>
 <dd>is a function pointer to the interface state control.</dd>
 
-<dt><code>tx</dt></code>
+<dt><code>tx</code></dt>
 <dd>is a function pointer to the interface TX functionality.</dd>
 
-<dt><code>address_write</dt></code>
+<dt><code>address_write</code></dt>
 <dd>is a function pointer to the interface address writing (PAN ID, short address).</dd>
 
-<dt><code>extension</dt></code>
+<dt><code>extension</code></dt>
 <dd>is a function pointer to the interface extension control.</dd>
 
-<dt><code>link_channel_info</dt></code>
+<dt><code>link_channel_info</code></dt>
 <dd>this pointer must be set only when the interface type is:</dd>
 <dd><code>NET_INTERFACE_WIFI</code></dd>
 <dd><code>NET_INTERFACE_RF_6LOWPAN</code></dd>
@@ -697,13 +695,13 @@ typedef struct phy_device_channel_info_s
 where:
 
 <dl>
-<dt><code>link_type</dt></code>
+<dt><code>link_type</code></dt>
 <dd>defines the link type.</dd>
 
-<dt><code>channel_count</dt></code>
+<dt><code>channel_count</code></dt>
 <dd>defines the supported channel count for an FHSS link.</dd>
 
-<dt><code>channel_mask</dt></code>
+<dt><code>channel_mask</code></dt>
 <dd>defines channels for 802.15.4 radio. Channels from 0 to 10 are for sub-GHz radio and from 11 to 26 for 2.4GHz radio.</dd>
 </dl>
 
@@ -724,16 +722,16 @@ typedef enum phy_link_type_e
 where:
 
 <dl>
-<dt><code>ETHERNET_TYPE</dt></code>
+<dt><code>ETHERNET_TYPE</code></dt>
 <dd>is a standard IEEE 802 Ethernet type.</dd>
 
-<dt><code>15_4_2_4GHZ_TYPE</dt></code>
+<dt><code>15_4_2_4GHZ_TYPE</code></dt>
 <dd>is a standard 802.15.4 2.4GHz radio.</dd>
 
-<dt><code>15_4_SUBGHZ_TYPE</dt></code>
+<dt><code>15_4_SUBGHZ_TYPE</code></dt>
 <dd>is a standard 802.15.4 sub-1GHz radio 868/915MHz.</dd>
 
-<dt><code>TUN</dt></code>
+<dt><code>TUN</code></dt>
 <dd>is a Linux virtual TUN interface or similar.</dd>
 </dl>
 

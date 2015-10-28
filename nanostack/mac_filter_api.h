@@ -12,19 +12,37 @@
  *
  */
 
-/*
- * \file mac_filter.h
- * \brief Filter API to allow modification of link qualities and filtering of devices in MAC level.
+/**
+ * \file mac_filter_api.h
+ * \brief API to allow filtering of packets based upon link quality and received power levels.
  *
- * Modifies the link qualities of devices as following.
- * lqi range 0x00 - 0xff
- *   lqi_result = initial_value*lqi_m/256 + lqi_add
- *   if value becomes 0 the packet is ignored
+ * \section app-mac-fil Applying a  MAC filter
+ *  - mac_filter_start(), Starts a MAC level filter
+ *  - mac_filter_add_short(), A function to add a filter using short MAC address
+ *  - mac_filter_add_long(), A function to add a filter using long MAC address
  *
- * dbm range -90dbm - 127
- *   dbm_result = initial_value*dbm_m/256 + dbm_add
- *   If value drops below -90 as result of modification the packet is ignored
+ * \section rem-mac-fil Removing a  MAC filter
+ *  - mac_filter_stop(), A function to stop MAC level filter and clears all defaults
+ *  - mac_filter_clear(), A function to stop MAC level filter and leaves the default link configuration
+ *  - mac_filter_delete_short(), Deletes filter for a device specified by short MAC address
+ *  - mac_filter_delete_long(), Deletes filter for a device specified by long MAC address
+ *
+ *  \section reg-mac-fil Setting up address mapping for filter
+ *  -  mac_filter_set_address_mapping(), Registers address mapping functions.
+ *
+ * \section macr-help Helper macros
+ * - mac_filter_start(interface_id, MAC_FILTER_BLOCKED) , Black list filter
+ * - mac_filter_start(interface_id, MAC_FILTER_ALLOWED) , White list filter not modifying the qualities
+ * - mac_filter_start(interface_id, MAC_FILTER_FIXED(0x01, -80)) , Fixed value for default link quality poor quality
+ * - mac_filter_start(interface_id, MAC_FILTER_FIXED(0xff, -20)) , Fixed value for default link quality good quality
+ * - mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_BLOCKED)
+ * - mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_ALLOWED)
+ * - mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_FIXED(0xff,-30))
+ * - mac_filter_add_long(interface_id, mac64, MAC_FILTER_BLOCKED)
+ * - mac_filter_add_long(interface_id, mac64, MAC_FILTER_ALLOWED)
+ * - mac_filter_add_long(interface_id, mac64, MAC_FILTER_FIXED(0x7f, -60))
  */
+
 
 #ifndef MAC_FILTER_API_H_
 #define MAC_FILTER_API_H_
@@ -59,24 +77,11 @@ int_fast8_t mac_filter_start(int8_t interface_id, int16_t lqi_m, int16_t lqi_add
 
 void mac_filter_stop(int8_t interface_id);
 
-/**
- * Helper macros
- * usage:
- * mac_filter_start(interface_id, MAC_FILTER_BLOCKED) //Black list filter
- * mac_filter_start(interface_id, MAC_FILTER_ALLOWED) //White list filter not modifying the qualities
- * mac_filter_start(interface_id, MAC_FILTER_FIXED(0x01, -80)) //Fixed value for default link quality poor quality
- * mac_filter_start(interface_id, MAC_FILTER_FIXED(0xff, -20)) //Fixed value for default link quality good quality
- *
- * mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_BLOCKED)
- * mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_ALLOWED)
- * mac_filter_add_short(interface_id, 0x0001, MAC_FILTER_FIXED(0xff,-30))
- *
- * mac_filter_add_long(interface_id, mac64, MAC_FILTER_BLOCKED)
- * mac_filter_add_long(interface_id, mac64, MAC_FILTER_ALLOWED)
- * mac_filter_add_long(interface_id, mac64, MAC_FILTER_FIXED(0x7f, -60))
- */
+/** White list filter not modifying the qualities*/
 #define MAC_FILTER_ALLOWED 0x100, 0, 0x100, 0
+/** Black list filter*/
 #define MAC_FILTER_BLOCKED 0, 0, 0, 0
+/** Fixed value for default link quality*/
 #define MAC_FILTER_FIXED(lqi,dbm) 0, lqi, 0, dbm
 
 /**

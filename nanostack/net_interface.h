@@ -21,23 +21,35 @@
 extern "C" {
 #endif
 
-/** Platform is not valid for ZigBeeIP library */
-#define ZIGBEE_IP_INVALID_PART -2
+/**
+ * \file net_interface.h
+ * \brief  Network API
+*/
 
+/*!
+ * \enum arm_nwk_interface_status_type_e
+ * \brief Interface status type definition.
+ */
+/** Network Interface Status */
 typedef enum arm_nwk_interface_status_type_e {
     ARM_NWK_BOOTSTRAP_READY = 0, /**< Interface configured Bootstrap is ready*/
     ARM_NWK_RPL_INSTANCE_FLOODING_READY, /**< RPL instance have been flooded */
     ARM_NWK_SET_DOWN_COMPLETE, /**< Interface DOWN command successfully */
     ARM_NWK_NWK_SCAN_FAIL,  /**< Interface have not detect any valid network*/
-    ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL, /*!*< IP address allocation fail(ND, DHCPv4 or DHCPv6 */
-    ARM_NWK_DUPLICATE_ADDRESS_DETECTED, /*!*< User specific GP16 was not valid */
+    ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL, /**< IP address allocation fail(ND, DHCPv4 or DHCPv6 */
+    ARM_NWK_DUPLICATE_ADDRESS_DETECTED, /**< User specific GP16 was not valid */
     ARM_NWK_AUHTENTICATION_START_FAIL, /**< No valid Authentication server detected behind access point */
     ARM_NWK_AUHTENTICATION_FAIL,    /**< Network authentication fail by Handshake */
-    ARM_NWK_NWK_CONNECTION_DOWN, /*!*< No connection between Access point or Default Router */
-    ARM_NWK_NWK_PARENT_POLL_FAIL, /*!*< Sleepy host poll fail 3 time */
-    ARM_NWK_PHY_CONNECTION_DOWN, /*!*< Interface PHY cable off or serial port interface not respond anymore */
+    ARM_NWK_NWK_CONNECTION_DOWN, /**< No connection between Access point or Default Router */
+    ARM_NWK_NWK_PARENT_POLL_FAIL, /**< Sleepy host poll failed 3 times. Interface is shut down. */
+    ARM_NWK_PHY_CONNECTION_DOWN, /**< Interface PHY cable off or serial port interface not respond anymore */
 } arm_nwk_interface_status_type_e;
 
+/*!
+ * \enum arm_library_event_type_e
+ * \brief Event library type definition.
+ */
+/** Event library type. */
 typedef enum arm_library_event_type_e {
     ARM_LIB_TASKLET_INIT_EVENT = 0, /**< Tasklet Init come always when generate tasklet*/
     ARM_LIB_NWK_INTERFACE_EVENT,    /**< Interface Bootstrap  or state update event */
@@ -87,13 +99,18 @@ typedef enum arm_library_event_type_e {
  * \enum net_interface_type_e
  * \brief Interface type definition.
  */
+/** Network Interfaces. */
 typedef enum {
     NET_INTERFACE_ETHERNET,     /**< IPv4 or IPv6*/
-    NET_INTERFACE_WIFI,         /**< WIFI RF interface*/
+    NET_INTERFACE_WIFI,         /**< WIFI RF interface, currently unsupported. */
     NET_INTERFACE_RF_6LOWPAN,   /**< RF 6LoWPAN interface*/
     NET_INTERFACE_VIRTUAL,  /**< IPv6 over anyserial interface */
 } net_interface_type_e;
 
+/*!
+ * \enum nwk_interface_id
+ * \brief Determines ID of the network interface.
+ */
 /** Network Interface IDs */
 typedef enum {
     IF_6LoWPAN,
@@ -104,7 +121,8 @@ typedef enum {
 /*!
  * \enum net_security_t
  * Network Security Levels
- * */
+ */
+/** Network level security type. */
 typedef enum net_security_t {
     NW_NO_SECURITY = 0,                       /**< No Security*/
     NW_SECURITY_LEVEL_MIC32 = 1,              /**< 32-bit Mic verify no Encoding. */
@@ -120,12 +138,18 @@ typedef enum net_security_t {
  * \enum net_address_t
  * \brief addresses for arm_net_address_get().
  */
+/** Ipv6 address type.*/
 typedef enum net_address_t {
     ADDR_IPV6_GP,             /**< Node Default Global address */
     ADDR_IPV6_GP_SEC,         /**< Node Secondary Global address */
     ADDR_IPV6_LL              /**< Node Default Link Local address */
 } net_address_t;
 
+/*!
+ * \enum net_mac_address_t
+ * \brief MAC addresses of nodes.
+ */
+/** MAC address type. */
 typedef enum net_mac_address_t {
     ADDR_MAC_SHORT16,             /**< Nodes 16-bit Short Address */
     ADDR_MAC_LONG64,              /**< IP layer EUID64 which based on MAC layer 64-bit long Addressafter  U/I -bit conversion  */
@@ -135,6 +159,7 @@ typedef enum net_mac_address_t {
  * \enum net_tls_cipher_e
  * \brief TLS cipher mode enumeration types.
  */
+/** TLS cipher type */
 typedef enum {
     NET_TLS_PSK_CIPHER,         /**< Network Authentication support only PSK */
     NET_TLS_ECC_CIPHER,         /**< Network Authentication support only ECC */
@@ -145,6 +170,7 @@ typedef enum {
  * \enum net_pana_session_mode_e
  * \brief PANA session cache support.
  */
+/** PANA session type. */
 typedef enum {
     NET_PANA_SINGLE_SESSION,        /**< Client keep track only 1 Pana session data, Default use case */
     NET_PANA_MULTI_SESSION,         /**< Client support many Start network coordinator session data */
@@ -154,6 +180,7 @@ typedef enum {
  * \enum net_6lowpan_link_layer_sec_mode_e
  * \brief 6Lowpan network Security & authentication modes.
  */
+/** 6lowpan security mode. */
 typedef enum {
     NET_SEC_MODE_NO_LINK_SECURITY,      /**< Security Disabled at Link Layer � DEFAULT */
     NET_SEC_MODE_PSK_LINK_SECURITY,     /**< Link Security by PSK key*/
@@ -165,10 +192,11 @@ typedef enum {
  * \enum net_6lowpan_mode_e
  * \brief 6LoWPAN bootstrap modes.
  */
+/** Bootstrap mode types. */
 typedef enum {
     NET_6LOWPAN_BORDER_ROUTER,  /**< Root device for 6LoWPAN ND */
     NET_6LOWPAN_ROUTER,         /**< Router device */
-    NET_6LOWPAN_HOST,           /**< Host device � DEFAULT setting */
+    NET_6LOWPAN_HOST,           /**< Host device DEFAULT setting */
     NET_6LOWPAN_SLEEPY_HOST,    /**< Sleepy Host device */
     NET_6LOWPAN_NETWORK_DRIVER, /**< 6Lowpan Radio Host device no bootstrap */
     NET_6LOWPAN_SNIFFER         /**< Sniffer device no bootstrap */
@@ -178,6 +206,7 @@ typedef enum {
  * \enum net_6lowpan_mode_extension_e
  * \brief 6LoWPAN Extension modes.
  */
+/** Bootstrap extension mode types.. */
 typedef enum {
     NET_6LOWPAN_ND_WITHOUT_MLE,         /**< 6LoWPAN ND without MLE */
     NET_6LOWPAN_ND_WITH_MLE,            /**< 6LoWPAN ND with MLE */
@@ -190,17 +219,18 @@ typedef enum {
  * \enum net_ipv6_mode_e
  * \brief IPv6 bootstrap modes.
  */
+/** IPv6 bootstrap mode type. */
 typedef enum {
-    NET_IPV6_BOOTSTRAP_STATIC,  /**< Application defines the IPv6 prefix*/
-    NET_IPV6_BOOTSTRAP_AUTONOMOUS
+    NET_IPV6_BOOTSTRAP_STATIC,  /**< Application defines the IPv6 prefix */
+    NET_IPV6_BOOTSTRAP_AUTONOMOUS /**< Interface gets IPv6 address automatically from network using ICMP and DHCP */
 }
 net_ipv6_mode_e;
 
 /*!
  * \struct link_layer_setups_s
  * \brief Network Cordinator Parameter List.
- * Structure is used to read network parameter for warm start.
  */
+/** Structure is used to read network parameter for warm start.*/
 typedef struct link_layer_setups_s {
     uint16_t PANId;            /**< Network PAN-ID */
     uint8_t LogicalChannel;    /**< Network Logical Channel */
@@ -212,8 +242,8 @@ typedef struct link_layer_setups_s {
 /*!
  * \struct link_layer_address_s
  * \brief Network MAC address info.
- * Structure is used to read link layer Adress.
  */
+/**Structure is used to read link layer Address. */
 typedef struct link_layer_address_s {
     uint16_t PANId;            /**< Network PAN-ID */
     uint16_t mac_short;        /**< MAC short address if <0xfffe then is valid */
@@ -224,8 +254,8 @@ typedef struct link_layer_address_s {
 /*!
  * \struct network_layer_address_s
  * \brief Network layer parent address info.
-
  */
+/**Structure is used to read network layer Address of the parent node. */
 typedef struct network_layer_address_s {
     uint8_t border_router[16]; /**< ND Border Router Address */
     uint8_t prefix[8];        /**< Long64-bit Network ID */
@@ -235,11 +265,11 @@ typedef struct network_layer_address_s {
  * \enum net_6lowpan_gp_address_mode_e
  * \brief 6LoWPAN stack address modes.
  */
-
+/**Different addressing modes for a network interface. */
 typedef enum {
-    NET_6LOWPAN_GP64_ADDRESS,       /**< Interface will register only GP64 Address � DEFAULT */
+    NET_6LOWPAN_GP64_ADDRESS,       /**< Interface will register only GP64 Address*/
     NET_6LOWPAN_GP16_ADDRESS,       /**< Interface will register only GP16 Address */
-    NET_6LOWPAN_MULTI_GP_ADDRESS,   /**< Interface will register GP16 & GP64 Address�s */
+    NET_6LOWPAN_MULTI_GP_ADDRESS,   /**< Interface will register GP16 & GP64 Addresses */
 } net_6lowpan_gp_address_mode_e;
 
 
@@ -247,6 +277,7 @@ typedef enum {
  * \struct net_tls_psk_info_s
  * \brief TLS PSK info structure.
  */
+/**Structure is used to set TLS PSK key. */
 typedef struct net_tls_psk_info_s {
     uint32_t key_id;    /**< PSK Key ID can be 0x01-0xffff, storage size is intentionally 32 bits */
     uint8_t key[16];    /**< 128-bit PSK Key  */
@@ -256,6 +287,7 @@ typedef struct net_tls_psk_info_s {
  * \struct net_link_layer_psk_security_info_s
  * \brief NETWORK PSK link key structure.
  */
+/**Structure is used to set link level PSK key. */
 typedef struct {
     uint8_t key_id;             /**< Link Layer PSK Key ID can be 0x01-0xff */
     uint8_t security_key[16];   /**< Link layer 128-bit PSK Key */
@@ -266,6 +298,7 @@ typedef struct {
  * \struct arm_certificate_chain_entry_s
  * \brief Certificate chain structure.
  */
+/**Structure is used to define a certificate chain. */
 typedef struct {
     uint8_t chain_length;           /**< Certificate Chain length, indicate chain length */
     const uint8_t *cert_chain[4];   /**< Certificate Chain pointer List */
@@ -273,10 +306,11 @@ typedef struct {
     const uint8_t *key_chain[4];    /**< Certificate private key */
 } arm_certificate_chain_entry_s;
 
-/**
-* /struct ns_keys_t
-* /brief Struct for the network keys  used by net_network_key_get
+/*!
+* \struct ns_keys_t
+* \brief Struct for the network keys  used by net_network_key_get
 */
+/**Structure is used to hold currently active and previously used network keys. */
 typedef struct ns_keys_t
 
 {
@@ -291,6 +325,7 @@ typedef struct ns_keys_t
  * \struct border_router_setup_s
  * \brief 6LoWPAN Border Router information structure.
  */
+/**Structure is used to set up a border router device. */
 typedef struct {
     uint8_t channel;                /**< Channel 1-26 802.15.4 Radios */
     uint16_t mac_panid;             /**< Link Layer PAN-id accepts only < 0xfffe  */
@@ -306,6 +341,7 @@ typedef struct {
  * \struct network_driver_setup_s
  * \brief 6LoWPAN Radion interface setup.
  */
+/**Structure is used to setup a network interface driver. */
 typedef struct {
     uint16_t mac_panid;                 /**< Link Layer PAN-id accepts only < 0xfffe  */
     uint16_t mac_short_adr;             /**<  Define 802.15.4 short address if value is <0xfffe that indicate that GP16 is activated at */
@@ -319,7 +355,6 @@ typedef struct {
   * \brief Init 6LoWPAN library
   *
   * \return 0, Init OK
-  * \return ZIGBEE_IP_INVALID_PART, Platform is not valid to Run ZigBeeIP Library
   */
 extern int8_t net_init_core(void);
 
@@ -675,7 +710,7 @@ extern int8_t arm_net_address_get(int8_t nwk_interface_id, net_address_t addr_id
  * \param addr_id identifies the address information type to be read.
  * \param integer pointer, which will be incremented every call. Start looping with n=0.
  * \param address_buffer[16] there will be address copied
- * \return 0 on success, 
+ * \return 0 on success,
  * \return -1 no more addresses available.
  */
 extern int8_t arm_net_address_list_get_next(int8_t nwk_interface_id, int *n, uint8_t address_buffer[16]);
@@ -701,11 +736,16 @@ extern int8_t arm_net_interface_address_list_size(int8_t nwk_interface_id, uint1
 extern int8_t arm_net_address_list_get(int8_t nwk_interface_id, uint8_t address_buf_size, uint8_t *address_buffer, int *writed_address_count);
 
 /** Border Router ND NVM update types */
-#define ND_PROXY_CONTEXT_NVM_UPDATE         0 /* ND Context Update, 20  bytes data behind pointer */
-#define ND_PROXY_CONTEXT_FLAGS_NVM_UPDATE   1 /* ND Context Update flags update */
-#define ND_PROXY_CONTEXT_NVM_REMOVE         2 /* ND Context Removed */
-#define ND_PROXY_PREFIX_NVM_UPDATE          3 /* ND Prefix Update */
-#define ND_PROXY_ABRO_VERSION_NVM_UPDATE    4 /* ND ABRO version updated */
+/** ND Context Update, 20  bytes data behind pointer */
+#define ND_PROXY_CONTEXT_NVM_UPDATE         0
+/** ND Context Update flags update */
+#define ND_PROXY_CONTEXT_FLAGS_NVM_UPDATE   1
+/** ND Context Removed */
+#define ND_PROXY_CONTEXT_NVM_REMOVE         2
+/** ND Prefix Update */
+#define ND_PROXY_PREFIX_NVM_UPDATE          3
+/** ND ABRO version updated */
+#define ND_PROXY_ABRO_VERSION_NVM_UPDATE    4
 /**
  * \brief Border Router ND setup NVM update callback set
  *

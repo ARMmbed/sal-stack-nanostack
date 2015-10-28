@@ -1,13 +1,22 @@
-An Event-driven Scheduling Model
+An Event-driven Scheduling Model & Eventing API
 ================================
 This chapter describes the event-driven scheduling model. It contains the following sections:
 
+- [_API Headers_](#api-headers)
 - [_About events_](#about-events)
-- [_Dynamical tasklet_](#dynamical-tasklet)
+- [_Dynamic tasklet_](#dynamic-tasklet)
 - [_Event structure_](#event-structure)
 - [_Events sent by the stack_](#events-sent-by-the-stack)
 - [_Sending application-specific events_](#sending-application-specific-events)
 
+## API Headers
+
+In order to use the eventing API, include the following headers to your application:
+
+```
+#include eventOS_event.h
+#include net_interface.h
+```
 
 ## About events
 
@@ -15,7 +24,7 @@ The 6LoWPAN stack uses an event-driven scheduling model and this section  descri
 
 ### Handling events
 
-An application should register at least one event handler. These tasklets are then used to send and receive events between the stack or between other tasklets. Also socket events are sent to a tasklet that opened them.
+An application should register at least one event handler. The tasklets are then used to send and receive events between the stack or between other tasklets. Also socket events are sent to a tasklet that opened them.
 
 The following is a prototype of a tasklet:
 
@@ -30,9 +39,9 @@ where:
 <dd>is a pointer to the event structure that contains the event information.</dd>
 </dl>
 
-The most important event information is the event type. There are four main types of event that the tasklet may receive. _Table 3-1_ lists the event types.
+The most important event information is the event type. There are four main types of events that a tasklet may receive. _Table 3-2_ lists the event types.
 
-**Table 3-1 Event types**
+**Table 3-2 Event types**
 
 Event type|Description
 ----------|-----------
@@ -42,7 +51,7 @@ Event type|Description
 `APPLICATION_EVENT`|These events are sent from another tasklet and they do not originate from the stack. These are used for communicating between tasklets.
 
 
-The rest of the information is stored in the event structure received by the tasklet. For more information on the structure content, see section [_Event structure_](#es).
+The rest of the information is stored in the event structure received by the tasklet. For more information on the structure content, see section [_Event structure_](#event-structure).
 
 The following example shows the basic structure of an empty tasklet:
 
@@ -66,11 +75,11 @@ void tasklet(arm_event_s *event)
 }
 ```
 
-## Dynamical tasklet
+## Dynamic tasklet
 
-With a dynamical tasklet, you can easily generate a small tasklet for an application.
+With a dynamic tasklet, you can easily generate a small tasklet for an application.
 
-### Register tasklet
+### Register a tasklet
 
 To register a tasklet handler, use the following function call:
 
@@ -116,27 +125,27 @@ where:
 
 <dl>
 <dt><code>receiver</code></dt>
-<dd>Represents the event tasklet handler ID.</dd>
+<dd>Event tasklet handler ID.</dd>
 <dt><code>sender</code></dt>
-<dd>Represents the event tasklet sender ID. Zero means the sender is the stack.</dd>
+<dd>Event tasklet sender ID. Zero means the sender is the stack.</dd>
 <dt><code>event_type</code></dt>
 <dd>Represents the <code>typecast arm_library_event_type_e.</code></dd>
 <dt><code>event_id</code></dt>
-<dd>Represents the timer ID, NWK interface ID or an application-specific ID.</dd>
+<dd>Timer ID, NWK interface ID or an application-specific ID.</dd>
 <dt><code>data_ptr</code></dt>
-<dd>Represents the application ability to share a data pointer tasklet with a tasklet.</dd>
+<dd>Application's ability to share a data pointer tasklet with a tasklet.</dd>
 <dt><code>priority</code></dt>
-<dd>Represents the task priority.</dd>
+<dd>Task priority.</dd>
 <dt><code>event_data</code></dt>
-<dd>Represents extra event data. Used in network events.</dd>
+<dd>Extra event data. Used in network events.</dd>
 </dl>
 
 
 ### Reference events
 
-_Tables 3-2, 3-3 and 3-4_ below show some examples of different events within the system.
+_Tables 3-3, 3-4 and 3-5_ below show some examples of different events within the system.
 
-**Table 3-2 System timer event for timer ID 1**
+**Table 3-3 System timer event for timer ID 1**
 
 Name|Value
 ----|-----
@@ -145,7 +154,7 @@ Name|Value
 `event_type`|`ARM_LIB_SYSTEM_TIMER_EVENT:`
 `event_id`|`1`
 
-**Table 3-3 Network ready event**
+**Table 3-4 Network ready event**
 
 Name|Value
 ----|-----
@@ -155,7 +164,7 @@ Name|Value
 `event_type`|`ARM_LIB_NWK_INTERFACE_EVENT:`
 `event_data`|`(arm_nwk_interface_status_type_e) event information for interface`
 
-**Table 3-4 Tasklet init event**
+**Table 3-5 Tasklet init event**
 
 Name|Value
 ----|-----
@@ -169,16 +178,16 @@ This section describes all the events that the stack sends.
 
 ### Tasklet initialization event
 
-When creating a tasklet, an initialization event type is defined as a parameter in a function call. The tasklet receives it following the startup. Usually, `ARM_LIB_TASKLET_INIT_EVENT` is used for this purpose. Typically, when an initialization event has been received, the application will set up all interfaces and open up the sockets for network communication.
+When creating a tasklet, an initialization event type is defined as a parameter in a function call. The tasklet receives it after the startup. Usually, `ARM_LIB_TASKLET_INIT_EVENT` is used for this purpose. Typically, when an initialization event has been received, the application will set up all interfaces and open up the sockets for network communication.
 
 ### Timer events
-For information on timer events, see Chapter [_Library Timer API_](10_API_timer.md)
+For information on timer events, see Chapter [_Library Timer API_](10_API_timer.md).
 
 ### Network interface event
 
-Network interface events `ARM_LIB_NWK_INTERFACE_EVENT` are enabled after the interface has been started with an `arm_nwk_interface_up()` function call or following an indicated network failure status. The stack uses the events to inform the application of the network connection status. Possible event types are described in _Table 3-5._
+Network interface events `ARM_LIB_NWK_INTERFACE_EVENT` are enabled after the interface has been started with an `arm_nwk_interface_up()` function call or after an indicated network failure status. The stack uses the events to inform the application of the network connection status. Possible event types are described in _Table 3-6._
 
-**Table 3-5 Possible event types for network interface event**
+**Table 3-6 Possible event types for network interface event**
 
 Event type|Description
 ----------|-----------
@@ -188,15 +197,15 @@ Event type|Description
 `ARM_NWK_DUPLICATE_ADDRESS_DETECTED`|The user-specific GP16 was invalid.
 `ARM_NWK_AUHTENTICATION_START_FAIL`|An invalid authentication server was detected behind an access point.
 `ARM_NWK_AUHTENTICATION_FAIL`|Network authentication fails by handshake.
-`ARM_NWK_CONNECTION_DOWN`|No connection to access point or default router
+`ARM_NWK_CONNECTION_DOWN`|No connection to access point or default router.
 `ARM_NWK_PARENT_POLL_FAIL`|Sleepy host poll fails three times.
 `ARM_NWK_PHY_CONNECTION_DOWN`|The interface PHY cable is off or the serial port interface does not respond anymore.
 
 When an `ARM_NWK_SCAN_FAIL`, `ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL` or `ARM_NWK_DUPLICATE_ADDRESS_DETECTED` event type occurs, the stack will enter an IDLE state automatically. If the `ARM_NWK_CONNECTION_DOWN` event type is received, the stack will start scanning automatically for a new network; however, the application must wait for the result of the `arm_nwk_interface_up()` call before transmitting data.
 
-_Table 3-6_ describes how to analyze the status events of a network interface.
+_Table 3-7_ describes how to analyze the status events of a network interface.
 
-**Table 3-6  Network status events**
+**Table 3-7  Network status events**
 
 Event structure field|Description
 ---------------------|-----------
@@ -208,43 +217,43 @@ Event structure field|Description
 `event_data`|Defines the interface status. Typecast to `arm_nwk_interface_status_type_e.`
 
 
-### 6LoWPAN network bootstrap
+### An Example: 6LoWPAN network bootstrap
 
-When the network interface is brought up, the stack will perform a bootstrap process, as illustrated in **Figure 3-1** _The 6LoWPAN network bootstrapping process_. The result of the bootstrap phase is signaled to the tasklet that registered the network interface. Those phases and events are described in the following paragraphs.
+When the network interface is brought up, the stack will perform a bootstrap process, as illustrated in **Figure 3-3** _The 6LoWPAN network bootstrapping process_. The result of the bootstrap phase is signaled to the tasklet that registered the network interface. Those phases and events are described in the following paragraphs.
 
 In the _Media Access Control (MAC) beacon scan_ state, the stack will scan all channels that have been pre-defined. The stack will select the best available network coordinator and store the network setup and channel.
 
-Following a successful beacon scan and link layer coordinator selection, the stack will perform a _Mesh Link Establishment_ (MLE) request to the coordinator and to other nodes which responded to the active scan on the same channel. If the selected coordinator does not respond to the MLE request, the stack will select a new one if there are more coordinator devices that were returned in the scan result list. If the MLE request phase fails, the stack returns an `ARM_NWK_SCAN_FAIL` response event to the application.
+After a successful beacon scan and link layer coordinator selection, the stack will perform a _Mesh Link Establishment_ (MLE) request to the coordinator and to other nodes that responded to the active scan on the same channel. If the selected coordinator does not respond to the MLE request, the stack will select a new one if there are more coordinator devices that were returned in the scan result list. If the MLE request phase fails, the stack returns an `ARM_NWK_SCAN_FAIL` response event to the application.
 
 After a successful scan and MLE request operation, the stack will initiate the _IPv6 over Low power Wireless Personal Area Network - Neighbor Discovery_ (6LoWPAN-ND) process. If no networks are available, the stack will report a failure event with the `ARM_NWK_SCAN_FAIL` status. During the ND process, the stack scans for ND routers, learns 6LoWPAN-ND parameters and performs _Internet Protocol_ (IP)v6 address allocation and registration. If the node does not reach any valid router device, it will report an `ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL` or `ARM_NWK_DUPLICATE_ADDRESS_DETECTED` event to the application.
 
-Alternatively, the node will proceed to advertise its own MLE security parameters and start the _Routing Protocol for Low power and Lossy networks_ (RPL) process. In the 6LoWPAN RPL state, the node will scan for RPL routers and join the best available DAG. The metric according to which the node will perform the RPL router or DAG selection is defined by the used objective function. Following a successful completion of the join process, the stack will report an `ARM_NWK_BOOTSTRAP_READY` event to the application. If the RPL join process fails, the stack will re-start the bootstrap process.
+Alternatively, the node will proceed to advertise its own MLE security parameters and start the _Routing Protocol for Low power and Lossy networks_ (RPL) process. In the 6LoWPAN RPL state, the node will scan for RPL routers and join the best available DAG. The metric according to which the node will perform the RPL router or DAG selection is defined by the used objective function. After a successful completion of the join process, the stack will report an `ARM_NWK_BOOTSTRAP_READY` event to the application. If the RPL join process fails, the stack will re-start the bootstrap process.
 
-**Figure 3-1 The 6LoWPAN network bootstrapping process**
+**Figure 3-3 The 6LoWPAN network bootstrapping process**
 
 ![nw-bootstrap](img/network_bootstrapping_process.png)
 
 ## Sending application-specific events
 
-This section describes how an application can transmit events to itself. This is useful if the application wants to, for example, receive a signal from an interrupt. _Table 3-7_ provides a generic description of the parameters an event can have.
+This section describes how an application can transmit events to itself. This is useful if the application wants to, for example, receive a signal from an interrupt. _Table 3-8_ provides a generic description of the parameters an event can have.
 
-**Table 3-7 Possible event parameters**
+**Table 3-8 Possible event parameters**
 
 Name|Value
 ----|-----
-`receiver`|Tasklet ID for the selected tasklet
-`sender`|Tasklet ID for the sender
-`event_type`|Developer-defined event type
-`event_data`|Developer can give a 32-bit data value, if required
-`event_id`|Developer-defined ID
-`data_ptr`|Developer can pass a data pointer using this field, if required
+`receiver`|Tasklet ID for the selected tasklet.
+`sender`|Tasklet ID for the sender.
+`event_type`|Developer-defined event type.
+`event_data`|Developer can give a 32-bit data value, if required.
+`event_id`|Developer-defined ID.
+`data_ptr`|Developer can pass a data pointer using this field, if required.
 
 ### Event send API
 
 To send an event, use the following function call:
 
 ```
-extern int8_t eventOS_event_send
+int8_t eventOS_event_send
 (
 	arm_event_s *event
 )

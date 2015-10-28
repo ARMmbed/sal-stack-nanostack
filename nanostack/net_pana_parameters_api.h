@@ -17,10 +17,21 @@
 
 #include "ns_types.h"
 
+/**
+ * \file net_pana_parameters_api.h
+ * \brief API to setup or change PANA library parameters.
+ *
+ * \section set-pana-param Setting up PANA parameters
+ *  -  net_pana_parameter_set(), a function to setup PANA library parameters
+ * \section check-pana-param Checking existing PANA setup
+ *  -  net_pana_parameter_read(), a function to read current PANA library setup
+ */
+
 /*!
- * \struct nd_parameters_s
+ * \struct pana_lib_parameters_s
  * \brief PANA library dynamic parameters
  */
+/** The structure defines PANA library parameters.*/
 typedef struct pana_lib_parameters_s {
     uint16_t PCI_IRT;                   /**< Initial PCI timeout in seconds, Default 10 */
     uint16_t PCI_MRT;                   /**< Max PCI timeout value in seconds,Default 60  */
@@ -36,7 +47,7 @@ typedef struct pana_lib_parameters_s {
 } pana_lib_parameters_s;
 
 /**
- * \brief API to change PANA library parameters.
+ * \brief Function to set PANA library parameters.
  *
  * Note: This function should be called after net_init_core() and definitely
  * before creating any 6LoWPAN interface.
@@ -45,7 +56,7 @@ typedef struct pana_lib_parameters_s {
  * the current parameters using net_pana_parameter_read(),
  * modify known fields, then set.
  *
- * \param parameter_ptr Pointer for PANAparameters
+ * \param parameter_ptr Pointer for PANA parameters
  *
  * \return 0, Change OK
  * \return -1, Invalid values
@@ -56,7 +67,7 @@ extern int8_t net_pana_parameter_set(const pana_lib_parameters_s *parameter_ptr)
 
 
 /**
- * \brief API to read PANA library parameters.
+ * \brief Function to read existing PANA library parameters.
  *
  * \param parameter_ptr Output pointer for Pana parameters
  *

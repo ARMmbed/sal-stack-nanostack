@@ -17,10 +17,19 @@
 
 #include "net_interface.h"
 
+/**
+ * \file whiteboard_api.h
+ * \brief An API for DAD, intercepting messages from backhaul network and keeping track of routes inside the PAN.
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/*!
+ * \struct whiteboard_entry_t
+ * \brief A structure describing a Whiteboarding Entry.
+ */
 typedef struct whiteboard_entry_t {
     uint8_t                         address[16];        /*!< registered IP address */
     uint_least24_t                  ttl;                /*!< whiteboard entry TTL (seconds) */
@@ -31,8 +40,10 @@ typedef struct whiteboard_entry_t {
 #endif
 } whiteboard_entry_t;
 
-/** \brief Read whiteboard entries
+/**
+ * \brief Read whiteboard entries
  * \param cur NULL to read first entry, or get next entry after cur
+ * \return a pointer to whiteboard_entry_t structure
  */
 extern whiteboard_entry_t *whiteboard_get(whiteboard_entry_t *cur);
 #ifdef __cplusplus

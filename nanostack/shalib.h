@@ -12,8 +12,7 @@
  *
  */
 /**
- *
- * \file SHALIB.h
+ * \file shalib.h
  * \brief SHA256 Library API.
  *
  *  \section sha256-api SHA256 Library API:

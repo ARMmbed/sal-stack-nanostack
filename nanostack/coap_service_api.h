@@ -25,27 +25,64 @@ extern "C" {
 #include "sn_coap_header.h"
 
 /**
- * This interface is used in sending and receiving of CoAP messages to multicast address and receive multiple responses.
+ * \file coap_service_api.h
+ *  \brief CoAP (Constrained Application Protocol) Service API. This interface is used for sending and receiving of CoAP messages.
+ *  This will be replaced in future by an external CoAP library.
+ *
+ *  \section coap-service CoAP Server Service
+ *  	- coap_service_initialize() , A function to initialize and generate a CoAP server tasklet.
+ *  	- coap_service_delete() , A function to remove any CoAP Server instance using the service_id.
+ *
+ *  \section coap-security CoAP Service Security
+ *  	- coap_service_security_key_set() , A function to set a security key mechanism for CoAP service instance.
+ *
+ *  \section coap-vs CoAP Service Virtual Sockets
+ *  	- coap_service_virtual_socket_set_cb() , A function to set up a virtual socket for a CoAP service identified by its id.
+ *  	- coap_service_virtual_socket_recv() , A function to receive data from virtual socket for a particular CoAP service instance.
+ *
+ *  \section coap-uri CoAP Service URI Handling
+ *      - coap_service_register_uri() , A function to set up all or some specific URI access methods (insecure).
+ *      - coap_service_register_uri_secure_cb_set() , A function to set up all or some specific URI access methods (secure).
+ *      - coap_service_unregister_uri() , A function to remove all or some specific URI access methods (insecure).
+ *
+ *   \section coap-msg CoAP Service Messages
+ *      - coap_service_send() , A function to send CoAP messages. Currently not being used.
+ *      - coap_service_request_send(),  A function to send CoAP request messages.
+ *      - coap_service_response_send() , A function to send CoAP response messages.
  */
 
 // Allowed_methods
+/** All URI methods allowed */
 #define COAP_SERVICE_ACCESS_ALL_ALLOWED         0x0F
+/** GET is allowed */
 #define COAP_SERVICE_ACCESS_GET_ALLOWED         0x01
+/** PUT is allowed */
 #define COAP_SERVICE_ACCESS_PUT_ALLOWED         0x02
+/** POST is allowed */
 #define COAP_SERVICE_ACCESS_POST_ALLOWED        0x04
+/** DELETE is allowed */
 #define COAP_SERVICE_ACCESS_DELETE_ALLOWED      0x08
 
 // Bits for service options
+/** No options are set */
 #define COAP_SERVICE_OPTIONS_NONE  	        	0x00
+/** Virtual socket option is set */
 #define COAP_SERVICE_OPTIONS_VIRTUAL_SOCKET     0x01
+/** Secure service option is set*/
 #define COAP_SERVICE_OPTIONS_SECURE 	        0x02
 
 // Bits for request options
+/** No Request options */
 #define COAP_REQUEST_OPTIONS_NONE  		        0x00
+/** Use default address for CoAP requests */
 #define COAP_REQUEST_OPTIONS_ADDRESS_DEFAULT    0x00//!< default is not setting either short or long.
+/** Use only long address for CoAP requests */
 #define COAP_REQUEST_OPTIONS_ADDRESS_LONG       0x01
+/** Use only short address for CoAP requests */
 #define COAP_REQUEST_OPTIONS_ADDRESS_SHORT      0x02
+/** Group comm. is enabled. Multicast Support */
 #define COAP_REQUEST_OPTIONS_MULTICAST          0x04 //!< indicates that CoAP library support multicasting
+/** Bypass CoAP security option */
 #define COAP_REQUEST_OPTIONS_SECURE_BYPASS      0x08
 
 
@@ -55,7 +92,7 @@ extern "C" {
  * Initialise CoAP services for the registered application.
  *
  * \param interface_id     Informs registered application interface id. This parameter is passed to socket implementation.
- * \param listen_port      Port that Application wants to use for communicate with coap server.
+ * \param listen_port      Port that Application wants to use for communicate with the CoAP server.
  * \param service_options  Options of the current service.
  *
  *  \return service_id / -1 for failure
@@ -179,9 +216,9 @@ int16_t coap_service_virtual_socket_recv(int8_t service_id, uint8_t source_addr_
 int16_t coap_service_virtual_socket_set_cb(int8_t service_id, coap_service_virtual_socket_send_cb *send_method_ptr);
 
 /**
- * \brief Register unsecure callback methods to CoAP server
+ * \brief Registers a URI and sets up callback handler
  *
- * Register application and informs CoAP services unsecure registery callback function.
+ * Register application and informs CoAP services about the callback function.
  *
  * \param service_id       Id number of the current service.
  * \param *uri             Uri address.
@@ -194,9 +231,7 @@ int16_t coap_service_virtual_socket_set_cb(int8_t service_id, coap_service_virtu
 int8_t coap_service_register_uri(int8_t service_id, const char *uri, uint8_t allowed_method, coap_service_request_recv_cb *request_recv_cb);
 
 /**
- * \brief Unregister unsecure callback methods to CoAP server
- *
- * Register application and informs CoAP services unsecure registery callback function.
+ * \brief Unregister a URI and removes callback methods to CoAP server
  *
  * \param service_id       Id number of the current service.
  * \param *uri             Uri address.

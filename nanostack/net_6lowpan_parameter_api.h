@@ -22,8 +22,11 @@
 extern "C" {
 #endif
 
-/*
- * 6LoWPAN Default timer values:
+/**
+ * \file net_6lowpan_parameter_api.h
+ * \brief API for setting up 6lowpan network parameters
+ *
+ * \section tim-para-def 6LoWPAN Default timer values
  * - Timer values are specified in ticks
  * - Default 6LoWPAN ND Bootstrap tick is 1 tick = 100ms
  *
@@ -39,9 +42,9 @@ extern "C" {
  *
  * - Default NS forward timeout is 300 --> 30.0 seconds
  *
- *  Note for changing random and interval values:
- *  Random parameter + NS or RS minimum interval must sum to less than 0xFFFF
- *  Random maximums are manipulated as bit masks, so must be (2^n)-1.
+ *  \section Changing random and interval values
+ *  - Random parameter + NS or RS minimum interval must sum to less than 0xFFFF
+ *  - Random maximums are manipulated as bit masks, so must be (2^n)-1.
  */
 
 /*!
@@ -63,7 +66,7 @@ typedef struct nd_parameters_s {
 } nd_parameters_s;
 
 /**
- * \brief API to change 6LoWPAN ND bootstrap parameters.
+ * \brief Function to change 6LoWPAN ND bootstrap parameters.
  *
  * Note: This function should be called after net_init_core() and definitely
  * before creating any 6LoWPAN interface.
@@ -82,7 +85,7 @@ typedef struct nd_parameters_s {
 extern int8_t net_6lowpan_nd_parameter_set(const nd_parameters_s *parameter_ptr);
 
 /**
- * \brief API for change 6LoWPAN bootstrap base tick 100ms multiplier.
+ * \brief Function to change 6LoWPAN bootstrap base tick 100ms multiplier.
  *
  * Note: This function MUST be called after net_init_core(). Do not change this
  * unless you really want 6LoWPAN bootstrap working slower than normally.
@@ -99,7 +102,7 @@ extern int8_t net_6lowpan_nd_parameter_set(const nd_parameters_s *parameter_ptr)
 extern int8_t net_6lowpan_nd_timer_base_tick_set(uint8_t base_tick_x_100ms);
 
 /**
- * \brief API to read 6LoWPAN ND bootstrap parameters.
+ * \brief Function to read 6LoWPAN ND bootstrap parameters.
  *
  * \param parameter_ptr Output pointer for ND parameters
  *

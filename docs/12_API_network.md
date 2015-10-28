@@ -1,26 +1,43 @@
-The Network Control Layer
+The Network Layer Control APIs
 =========================
 
 This chapter describes the functions of the network control layer. It contains the following sections:
 
 - [_Network control API_](#network-control-api)
 - [_6LoWPAN MAC layer configuration API_](#6lowpan-mac-layer-configuration-api)
-- [_Network start and stop control_](#network-start-and-stop-control)
-- [_Network sleep control (2.4GHz only)_](#network-sleep-control-24ghz-only)
-- [_NET address get API_](#net-address-get-api)
-- [_6LoWPAN ND parameter configure_](#6lowpan-nd-parameter-configure)
-- [_PANA protocol configure_](#pana-protocol-configure)
-- [_Network generic info read_](#network-generic-info-read)
+- [_Network start and stop control API_](#network-start-and-stop-control-api)
+- [_Interface address mode API_](#interface-address-mode-api)
+- [_Border router interface API_](#border-router-interface-api)
+- [_Network sleep control API_](#network-sleep-control-api)
+- [_RPL structures and definitions API_](#rpl-structures-and-definitions-api)
+- [_RPL root configuration API_](#rpl-root-configuration-api)
+- [_NET address retrieval API_](#net-address-retrieval-api)
+- [_6LoWPAN ND configuration API_](#6lowpan-nd-configuration-api)
+- [_PANA configuration API_](#pana-configuration-api)
+- [_Network Information retrieval API_](#network-information-retrieval-api)
 - [_Multicast API_](#multicast-api)
 
+## API Headers
 
+To use the Network Layer Control APIs, include the following headers:
+
+```
+#include net_interface.h
+#include net_pana_parameters_api.h
+#include net_6lowpan_parameter_api.h
+#include net_nwk_scan.h
+#include net_rpl.h
+#include net_sleep.h
+#include net_polling.h
+#include multicast_api.h
+```
 ## Network control API
 
 This section describes the functions of the network control layer where each function is presented with its valid parameters.
 
-The 6LoWPAN stack contains the following features and related functions, as shown in _Table 7-1_.
+The 6LoWPAN Stack contains the features and related functions shown in _Table 3-13_.
 
-**Table 7-1 The network control API features and related functions**
+**Table 3-13 The network control API features and related functions**
 
 Feature|API function
 -------|------------
@@ -31,7 +48,7 @@ Network interface stop|`arm_nwk_interface_down()`
 
 ### Interface enable
 
-To set the configured network interface up and enable the interface-specific bootstrap, use the following function:
+To set up the configured network interface and enable the interface-specific bootstrap, use the following function:
 
 ```
 int8_t arm_nwk_interface_up
@@ -46,7 +63,6 @@ where:
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
-
 <dd>>=0 The interface is set up OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 Already in up state.</dd>
@@ -105,7 +121,7 @@ Starting the network with security enabled, but without having set the security 
 
 ### Scan channel list (2.4GHz only)
 
-The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27-bits are used to set the channels to be scanned, as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
+The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27 bits are used to set the channels to be scanned, as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
 
 ```
 int8_t arm_nwk_6lowpan_link_scan_paramameter_set
@@ -132,7 +148,6 @@ where:
 <dd>-1 Unknown interface ID.</dd>
 <dd>-3 Too long scan time.</dd>
 <dd>-4 Interface is not active.</dd>
-
 </dl>
 
 The default value is `0x07FFF800` which scans channels 11 to 26. For example, to scan only channels 11 and 26, the value would be `0x04000800`. The exact function call would then be as follows:
@@ -146,7 +161,7 @@ If the channel list has not been set by the `arm_nwk_6lowpan_link_scan_paramamet
 
 ### Beacon protocol ID filter
 
-During an active 802.15.4 MAC scan, the 6LoWPAN stack transmits MAC beacon requests to the pre-defined channels. If it receives a beacon, it will filter the beacon by using the protocol ID (this filter is disabled by default).
+During an active 802.15.4 MAC scan, the 6LoWPAN Stack transmits MAC beacon requests to the pre-defined channels. If it receives a beacon, it will filter the beacon by using the protocol ID (this filter is disabled by default).
 
 To set the protocol ID filter, use the following function:
 
@@ -224,7 +239,7 @@ where:
 <dt><code>nwk_id_filter</code></dt>
 
 <dd>A pointer to a 16-byte array used to filter network.</dd>
-<dd>The value 	NULL (default) disables the filter.</dd>
+<dd>The value NULL (default) disables the filter.</dd>
 
 <dt><code>Return value</code></dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
@@ -315,11 +330,11 @@ where:
 </dl>
 
 
-## Network start and stop control
+## Network start and stop control API
 
 This section specifies how to start and stop the network state of the stack.
 
-After configuring the network interface, start the network by using `arm_nwk_interface_up()` function that starts the 6LoWPAN bootstrap process:
+After configuring the network interface, start the network using the `arm_nwk_interface_up()` function that starts the 6LoWPAN bootstrap process:
 
 - An Edge router in use is required.
 - Mesh network in use.
@@ -335,9 +350,9 @@ To configure the 6LoWPAN bootstrap, use the following function:
 ```
 int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set
 (
-	int8_t nwk_interface_id,
-	net_6lowpan_mode_e bootstrap_mode,
-	uint8_t enable_mle_protocol
+	int8_t				nwk_interface_id,
+	net_6lowpan_mode_e	bootstrap_mode,
+	uint8_t				enable_mle_protocol
 )
 ```
 
@@ -362,7 +377,7 @@ where:
 <dd>>=0 The bootstrap mode is set OK.</dd>
 <dd>-1 An unknown network ID.</dd>
 <dd>-2 An unsupported bootstrap type in this stack.</dd>
-<dd>-3 No memory for a 6LoWPAN stack.</dd>
+<dd>-3 No memory for a 6LoWPAN Stack.</dd>
 <dd>-4 A <code>NULL</code> pointer parameter.</dd>
 </dl>
 
@@ -371,8 +386,7 @@ The `arm_nwk_interface_up()` function call starts the stack bootstrap process. T
 
 If the application wants to save power and enter sleep, the network mode should use `NET_6LOWPAN_HOST` or `NET_6LOWPAN_SLEEPY_HOST`; sleepy host mode uses indirect transmission. When the device awakens, it uses polling data from its parent. A host device does not route packets so it can continue to sleep. Router devices can, likewise, enter sleep; however, the network topology will become unstable for the duration while the device remains in sleep.
 
-All configuration calls (such as channel selection) must be performed prior to calling `arm_nwk_interface_up()`.
-
+All configuration calls (such as channel selection) must be performed before calling `arm_nwk_interface_up()`.
 
 **Note**
 
@@ -385,9 +399,9 @@ To configure the IPv6 bootstrap, use the following function:
 ```
 int8_t arm_nwk_interface_configure_ipv6_bootstrap_set
 (
-	int8_t 		nwk_interface_id,
+	int8_t 			nwk_interface_id,
 	net_ipv6_mode_e bootstrap_mode,
-	uint8_t 	*ipv6_prefix_pointer
+	uint8_t 		*ipv6_prefix_pointer
 )
 ```
 
@@ -419,9 +433,9 @@ To set a security mode for the link layer of a configured network interface, use
 ```
 int8_t arm_nwk_link_layer_security_mode
 (
-	int8_t nwk_interface_id,
+	int8_t 					nwk_interface_id,
 	net_6lowpan_link_layer_sec_mode_e  mode,
-	uint8_t sec_level,
+	uint8_t 				sec_level,
 	net_link_layer_psk_security_info_s *psk_key_info
 )
 ```
@@ -453,18 +467,17 @@ where:
 <dd>-5 A <code>NULL</code> pointer psk_key_info parameter.</dd>
 </dl>
 
-
-### Interface address mode API
+## Interface address mode API
 
 To set the global address mode for a configured network interface, use the following function:
 
 ```
 int8_t arm_nwk_6lowpan_gp_address_mode
 (
-	int8_t nwk_interface_id,
-	net_6lowpan_gp_address_mode_e mode,
-	uint16_t short_address_base,
-	uint8_t define_new_short_address_at_DAD
+	int8_t 					nwk_interface_id,
+	net_6lowpan_gp_address_mode_e 	mode,
+	uint16_t 				short_address_base,
+	uint8_t 				define_new_short_address_at_DAD
 )
 ```
 
@@ -493,8 +506,7 @@ where:
 <dd>-3 An unsupported short address at this platform.</dd>
 </dl>
 
-
-### Border router interface configuration API
+## Border router interface API
 
 The border router is configured in three phases:
 
@@ -526,8 +538,8 @@ To define the border router MAC and 6LoWPAN ND setup for a selected interface, u
 ```
 int8_t arm_nwk_6lowpan_border_router_init
 (
-	int8_t nwk_interface_id,
-	border_router_setup_t *border_router_setup_ptr
+	int8_t 					nwk_interface_id,
+	border_router_setup_t	*border_router_setup_ptr
 )
 ```
 
@@ -666,6 +678,7 @@ To reload all 6LoWPAN contexts from the proxy and update the ABRO version number
 int8_t arm_nwk_6lowpan_border_router_configure_push
 (
 	int8_t nwk_interface_id
+	uint8_t c_id
 )
 ```
 
@@ -685,12 +698,11 @@ where:
 <dd>-3 The interface bootstrap is not <code>NET_6LOWPAN_BORDER_ROUTER</code> or the border router init was not called.</dd>
 </dl>
 
+## Network sleep control API
 
-## Network sleep control (2.4GHz only)
+If the application wants to save power, the 6LoWPAN Stack can enter sleep state by calling the `arm_net_enter_sleep()` function. The 6LoWPAN Stack will respond with an `EV_READY_TO_SLEEP` event in the core idle function that was defined during initialization, when it is possible to change the power mode. The application must return the time spent in sleep mode to the 6LoWPAN Stack when the processor wakes up.
 
-If the application wants to save power, the 6LoWPAN stack can enter sleep state by calling the `net_sleep( )` function. The 6LoWPAN stack will respond with an `EV_READY_TO_SLEEP` event in the core idle function that was defined during initialization, when it is possible to change the power mode. The application must return the time spent in sleep mode to the 6LoWPAN stack when the processor wakes up.
-
-Sleep is only supported when the 6LoWPAN bootstrap mode is `NET_6LOWPAN_SLEEPY_HOST`. The stack will automatically call `platform_event_os_sleep()` when it sets the CPU to sleep or sets the  current task to sleep for a given time.
+Sleep is only supported when the 6LoWPAN bootstrap mode is `NET_6LOWPAN_SLEEPY_HOST`. The stack will automatically call `platform_event_os_sleep()` when it sets the CPU to sleep or sets the current task to sleep for a given time.
 
 An example of how to place the processor in sleep mode:
 
@@ -717,117 +729,52 @@ uint32_t app_ns_core_idle
 }
 ```
 
-where `hal_sleep( )` and `hal_idle_sleep( )` are functions in the application, which places the processor in sleep or in an idle state.
+where `hal_sleep( )` and `hal_idle_sleep( )` are functions in the application, which put the processor in sleep or in an idle state.
 
+### Checking if sleep mode possible
 
-### RF interface sleepy host API
-
-This section introduces the functionality of the sleepy host API of the RF interface.
-
-#### Set new host mode
-
-To set a new host mode, use the following function:
+Use the function `arm_net_check_enter_deep_sleep_possibility()` to check whether there is a possibility of putting the stack in deep sleep or not.
 
 ```
-int8_t arm_nwk_6lowpan_sleepy_host_mode_set
-(
-	int8_t 		nwk_interface_id,
-	net_host_mode_t mode,
-	uint32_t 	slow_poll_frequency_in_seconds
-)
+uint32_t time_to_sleep=0;
+time_to_sleep = arm_net_check_enter_deep_sleep_possibility()
 ```
-
-where:
-
 <dl>
-<dt><code>nwk_interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>mode</code></dt>
-<dd>Polling modes for the sleepy host:</dd>
-<dd><code>NET_HOST_FAST_POLL_MODE</code>, the maximum polling period of the default setup is 400ms.</dd>
-<dd><code>NET_HOST_SLOW_POLL_MODE</code>, slow polling state of the sleepy host, a user-defined maximum period in seconds.</dd>
-<dd><code>NET_HOST_RX_ON_IDLE_MODE</code>, the sleepy host becomes a host, the parent can now use Direct Data Send and Host not poll.</dd>
-
-<dt><code>slow_poll_frequency_in_seconds</code></dt>
-<dd>Slow polling time in seconds. This parameter is only checked when the mode is <code>NET_HOST_SLOW_POLL_MODE</code>. Valid polling time for <code>NET_HOST_SLOW_POLL_MODE</code> is 0 < <code>Slow_poll_frequency_in_seconds</code>
-< 864001 (1 day).</dd>
-
 <dt><code>Return value</code></dt>
-<dd>>=0 The link layer security of the interface is OK.</dd>
-<dd>-1 An unknown interface ID.</dd>
-<dd>-2 Unknown mode.</dd>
-<dd>-3 Unsupported polling time.</dd>
-<dd>-4 Sleepy host mode is not selected.</dd>
-<dd>-5 Polling is not supported in this stack.</dd>
+<dd>0, not possible to sleep.</dd>
+<dd>Time in milliseconds, possible to sleep for that amount of time.</dd>
 </dl>
 
+### Enter sleep mode
 
-#### Read new host mode
-
-To read a new host mode, use the following function:
+Use `arm_net_enter_sleep()` function to put the stack to sleep.
 
 ```
-int8_t arm_nwk_6lowpan_sleepy_host_mode_read
-(
-	int8_t 		nwk_interface_id,
-	net_host_mode_t mode
-)
+int arm_net_enter_sleep(void);
 ```
-
-where:
-
 <dl>
-<dt><code>nwk_interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>mode</code></dt>
-<dd>A pointer to where to save the mode.</dd>
-
 <dt><code>Return value</code></dt>
-<dd>>=0 Read mode is OK and saved to the pointer.</dd>
-<dd>-1 An unknown interface ID.</dd>
-<dd>-2 Sleepy host mode is not selected.</dd>
-<dd>-3 Polling is not supported in this stack.</dd>
+<dd>0, stack stopped.</dd>
+<dd>-1, action not supported at the moment.</dd>
 </dl>
 
+### Restart stack and synch timers
 
-#### Control host sleep state
-
-When an application wants to save more power, it calls the function `enable_deep_sleep=1`. After the call, the idle callback event of the stack is `EV_READY_TO_SLEEP` which indicates sleep time in milliseconds. When the application wants to disable the sleep, it calls `enable_deep_sleep=0`.
-
-To control the host sleep state, use the following function:
+Use `arm_net_wakeup_and_timer_synch()` function to restart the stack and synchronize timers.
 
 ```
-int8_t arm_nwk_6lowpan_sleepy_host_enable_deep_sleep_control
-(
-	int8_t 	nwk_interface_id,
-	uint8_t enable_deep_sleep
-)
+int arm_net_wakeup_and_timer_synch(uint32_t time_to_sleep);
 ```
-
-where:
-
 <dl>
-<dt><code>nwk_interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>enable_deep_sleep</code></dt>
-
-<dd>1 Enables deep sleep. When the application wants to save more power, it calls <code>net_host_enter_sleep_state_set(1)</code>.</dd>
-<dd>0  Disables deep sleep. When the application wants to disable sleep, it calls <code>net_host_enter_sleep_state_set(0)</code>.</dd>
-
 <dt><code>Return value</code></dt>
-<dd>>=0 Read mode is OK and saved to the pointer.</dd>
-<dd>-1 An unknown interface ID.</dd>
-<dd>-2 Sleepy host mode is not selected.</dd>
-<dd>-3 Polling is not supported in this stack.</dd>
+<dd>0, stack restarted.</dd>
+<dd>1, stack will restart after sleeping for a time defined as time_to_sleep.</dd>
+<dd>-1, stack already active.</dd>
 </dl>
 
+## RPL structures and definitions API
 
-### RPL root structures and definition
-
-The 6LoWPAN Border Router defines an RPL MOP and DODAG preference, the ZigBeeIP must use `(BR_DODAG_MOP_NON_STRORING | BR_DODAG_PREF_7)` only one RPL DODAG root. The RPL module defines a DODAG ID for an interface DAG from the default GP address of the interface. Therefore, before the interface can use the RPL module, the interface bootstrap and address must first be configured.
+The 6LoWPAN Border Router defines an RPL MOP and DODAG preference. The ZigBeeIP must use `(BR_DODAG_MOP_NON_STORING | BR_DODAG_PREF_7)` only one RPL DODAG root. The RPL module defines a DODAG ID for an interface DAG from the default GP address of the interface. Therefore, before the interface can use the RPL module, the interface bootstrap and address must first be configured.
 
 The DODAG instance ID is dynamically allocated. It generates the first free number starting from `0x01`, and ends to `0xFE`.
 
@@ -880,11 +827,11 @@ where:
 
 </dl>
 
-#### DODAG root setup
+### DODAG root setup
 
 The DODAG root setup is as follows:
 
-**_DODAGPreference_** **(Prf)**
+**_DODAGPreference_ (Prf)**
 
 A 3-bit unsigned integer that defines how preferable the root of this DODAG is compared to other DODAG roots within the instance. The DAGPreference ranges from `0x00` (least preferred) to `0x07` (most preferred).
 The default is `0` least preferred).
@@ -900,7 +847,7 @@ The default is `0` least preferred).
 #define BR_DODAG_PREF_7 7
 ```
 
-**_Mode of Operation_** **(MOP)**
+**_Mode of Operation_ (MOP)**
 
 The MOP field identifies the mode of operation of the RPL instance as administratively provisioned at and distributed by the DODAG root. All nodes that join the DODAG must be able to honor the MOP to fully participate as a router, or else they must only join as a leaf.
 
@@ -911,9 +858,9 @@ The MOP field identifies the mode of operation of the RPL instance as administra
 #define BR_DODAG_MOP_STRORING 16
 ```
 
-**_Grounded_** **(G)**
+**_Grounded_ (G)**
 
-The Grounded 'G' flag indicates that the DODAG advertised can satisfy the application-defined goal:
+The Grounded `G` flag indicates that the DODAG advertised can satisfy the application-defined goal:
 
 - If the flag is set, the DODAG is grounded.
 - If the flag is cleared, the DODAG is floating.
@@ -921,17 +868,17 @@ The Grounded 'G' flag indicates that the DODAG advertised can satisfy the applic
 ```
 #define BR_DODAG_FLOATIN 0<<7
 #define BR_DODAG_GROUNDED 1<<7
-/** RPL Prefix update Flags for A-flag AUTONOUS address generation*/
+/** RPL Prefix update Flags for A-flag AUTONOMOUS address generation*/
 #define RPL_PREFIX_AUTONOMOUS_ADDRESS_FLAG 0x40
 /** RPL Prefix update Flags for R-Flag */
 #define RPL_PREFIX_ROUTER_ADDRESS_FLAG 0x20
 ```
 
-### RPL root API
+## RPL root configuration API
 
 This section introduces the functionality of the RPL root API.
 
-#### Define RPL DODAG root proxy
+### Define RPL DODAG root proxy
 
 To define the RPL DODAG root proxy for a selected interface, use the following function:
 
@@ -964,7 +911,7 @@ where:
 <dd>-4 No memory for DODAG root base.</dd>
 </dl>
 
-#### Update RPL prefix
+### Update RPL prefix
 
 To update the RPL prefix to the DODAG proxy, use the following function:
 
@@ -1007,7 +954,7 @@ where:
 <dd>-4 No memory for the prefix.</dd>
 </dl>
 
-#### Update RPL route information
+### Update RPL route information
 
 To update the RPL route information to the DODAG proxy, use the following function:
 
@@ -1048,9 +995,9 @@ where:
 <dd>-4 No memory for the route.</dd>
 </dl>
 
-#### Activate RPL DODAG
+### Activate RPL DODAG
 
-To activate the defined and configured RPL DODAG, if the configuration was done when the interface was in up state, use the following function:
+To activate the defined and configured RPL DODAG, if the configuration was done when the interface was in _up_ state, use the following function:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_start
@@ -1071,7 +1018,7 @@ where:
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
 
-#### DODAG DAO trig
+### DODAG DAO trig
 
 To trigger an RPL DODAG DAO by DTSN increment, use the following function. DODAG nodes send DAO routing information to the root.
 
@@ -1094,7 +1041,7 @@ where:
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
 
-#### DODAG version increment
+### DODAG version increment
 
 Network devices reset the current RPL instance. To do a unicast DIS/DIO and DAO/DAO ACK handshake, use the following function:
 
@@ -1117,7 +1064,7 @@ where:
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
 
-#### Run down RPL DODAG
+### Run down RPL DODAG
 
 To run down the RPL DODAG interface by flooding the poison rank, use the following function. Wait for an event from the stack when the flooding is completed. After this call, DODAG removal is recommended.
 
@@ -1140,7 +1087,7 @@ where:
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
 
-#### Remove DODAG root setup
+### Remove DODAG root setup
 
 To remove the DODAG root setup from the selected interface, use the following function:
 
@@ -1163,18 +1110,18 @@ where:
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
 
-## NET address get API
+## NET address retrieval API
 
-An application can read the interface NET address (see _Table 7-2_) from the selected interface.
+An application can read the interface NET address (see _Table 3-14_) from the selected interface.
 
-**Table 7-2 NET address**
+**Table 3-14 NET address**
 
 Address|Description
 -------|-----------
-ADDR_IPV6_GP|Primary GP IPv6 address. Every IPv6 and 6LoWPAN interface supports this by default.
-ADDR_IPV6_GP_SEC|Secondary IPv6 address. The 6LoWPAN interface supports this only when the address mode for bootstrap is `NET_6LOWPAN_MULTI_GP_ADDRESS`.
+`ADDR_IPV6_GP`|Primary GP IPv6 address. Every IPv6 and 6LoWPAN interface supports this by default.
+`ADDR_IPV6_GP_SEC`|Secondary IPv6 address. The 6LoWPAN interface supports this only when the address mode for bootstrap is `NET_6LOWPAN_MULTI_GP_ADDRESS`.
 
-To read network address information, use the following function:
+To read the network address information, use the following function:
 
 ```
 extern int8_t arm_net_address_get
@@ -1198,16 +1145,16 @@ where:
 <dd>-1 Failure.</dd>
 </dl>
 
-## 6LoWPAN ND parameter configure
+## 6LoWPAN ND configuration API
 
-This section introduces the functions to configure 6LoWPAN ND parameters. _Table 7-3_ shows the configuration functions available.
+This section introduces the functions to configure 6LoWPAN ND (Neighbour Discovery) parameters. _Table 3-15_ shows the configuration functions available.
 
-**Table 7-3 Functions to configure 6LoWPAN ND parameters**
+**Table 3-15 Functions to configure 6LoWPAN ND parameters**
 
 Function|Description
 --------|-----------
-`net_6lowpan_nd_parameter_read()`|Read a 6LoWPAN ND parameter
-`net_6lowpan_nd_parameter_set()`|Set a 6LoWPAN ND parameter
+`net_6lowpan_nd_parameter_read()`|Read a 6LoWPAN ND parameter.
+`net_6lowpan_nd_parameter_set()`|Set a 6LoWPAN ND parameter.
 
 
 ### Parameter structure
@@ -1312,16 +1259,16 @@ where:
 </dl>
 
 
-## PANA protocol configure
+## PANA configuration API
 
-This section introduces the functions to configure PANA protocol parameters. _Table 7-4_ shows the configuration functions available.
+This section introduces the functions to configure PANA protocol parameters. _Table 3-16_ shows the configuration functions available.
 
-**Table 7-4 Functions to configure PANA protocol parameters**
+**Table 3-16 Functions to configure PANA protocol parameters**
 
 Function|Description
 --------|-----------
-`net_pana_parameter_read()`|Read the currently used parameters
-`net_pana_parameter_set()`|Write new parameters
+`net_pana_parameter_read()`|Read the currently used parameters.
+`net_pana_parameter_set()`|Write new parameters.
 
 ### Parameter structure
 
@@ -1435,17 +1382,17 @@ where:
 <dd>-1 PANA is not supported.</dd>
 </dl>
 
-## Network generic info read
+## Network Information retrieval API
 
-This section introduces functions to read network parameters. _Table 7-5_ shows the configuration functions available.
+This section introduces functions to read network parameters. _Table 3-17_ shows the configuration functions available.
 
-**Table 7-5 Functions to read network parameters**
+**Table 3-17 Functions to read network parameters**
 
 Function|Description
 --------|-----------
-`arm_nwk_param_read()`|Read network layer configurations
-`arm_nwk_mac_address_read()`|Read MAC PAN ID, short address and EUI-64
-`arm_nwk_nd_address_read()`|Read the 6LoWPAN ND border router address and NWK prefix
+`arm_nwk_param_read()`|Read network layer configurations.
+`arm_nwk_mac_address_read()`|Read MAC PAN ID, short address and EUI-64.
+`arm_nwk_nd_address_read()`|Read the 6LoWPAN ND border router address and NWK prefix.
 
 ### Network layer configurations
 
@@ -1544,7 +1491,7 @@ where:
 <dd>Network PAN ID.</dd>
 
 <dt><code>mac_short</code></dt>
-<dd>MAC short address. Valid, if the value is <0xFFFE.</dd>
+<dd>MAC short address. Valid, if the value is <code><0xFFFE</code>.</dd>
 
 <dt><code>mac_long</code></dt>
 <dd>MAC long address (EUI-64 for IEEE 802.15.4; EUI-48 for Ethernet).</dd>
@@ -1555,7 +1502,7 @@ where:
 
 ### 6LoWPAN parameter read
 
-To read the 6LoWPAN ND border router address and NWK prefix,  use the following function:
+To read the 6LoWPAN ND border router address and NWK prefix, use the following function:
 
 ```
 int8_t arm_nwk_nd_address_read
@@ -1600,11 +1547,9 @@ where:
 
 This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
 
-**Note**
+**Note**: The site local multicast is the only multicast scope that can be routed through the border router.
 
-The site local multicast is the only multicast scope that can be routed through the border router.
-
-The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters( )`where multicast groups are managed using the function calls `multicast_add_address( )` and `multicast_free_address( )`.
+The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters()`where multicast groups are managed using the function calls `multicast_add_address()` and `multicast_free_address()`.
 
 **Note**
 
@@ -1643,7 +1588,7 @@ where:
 <dt><code>timer_expirations</code></dt>
 <dd>Number if trickle timer expires before terminating the trickle process.</dd>
 
-<dt><code>window_expiration</code></dt>	
+<dt><code>window_expiration</code></dt>
 <dd>Time window state is kept after the trickle process has ended in 50ms resolution.</dd>
 </dl>
 

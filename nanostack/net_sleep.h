@@ -18,12 +18,22 @@
 #include "ns_types.h"
 
 /**
- * \brief Check network stack enter deep sleep possibility and max sleep time.
+ * \file net_sleep.h
+ * \brief Checks out if there is a sleep possibility for the stack and the max. sleep time.
  *
- * \return Time in milliseconds for sleep 0 means not possibility to enter deep sleep.
- *
+ * \section check-slp-poss Checking sleep possibility
+ * - arm_net_check_enter_deep_sleep_possibility(), checks if there is any possibility that stack can enter a sleep cycle.
+ * - arm_net_enter_sleep(), a function to enter sleep cycle.
+ * - arm_net_wakeup_and_timer_synch(), restarts the stack and synchronize the timeer
+ */
+
+/**
+ *\brief Check sleep possibility
+ * \return Time in milliseconds for sleep.
+ * \return 0,  no possibility to enter deep sleep.
  */
 uint32_t arm_net_check_enter_deep_sleep_possibility(void);
+
 /**
  * \brief Set Stack to sleep.
  *
@@ -31,13 +41,14 @@ uint32_t arm_net_check_enter_deep_sleep_possibility(void);
  * \return -1 Not supported action at moment
  *
  */
+
 int arm_net_enter_sleep(void);
 /**
  * \brief Restart stack after sleep.
  *
  *  Stack enable and synch timers after sleep
  *
- *  \param sleeped_time_in_ms time sleeped time in milli seconds what stack need to synch
+ *  \param sleeped_time_in_ms time total sleep time in milliseconds what stack need to synch with
  *
  * \return 0 Stack Restarted.
  * \return 1 Stack can continue sleep for sleeped_time_in_ms define time

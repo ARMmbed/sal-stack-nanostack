@@ -1,11 +1,17 @@
 Data Structures, Types and Variables
 ====================================
-
 This chapter describes data structure, types and variables used in the socket and RF layers. It contains the following sections:
 
 - [_Basic data types_](#basic-data-types)
 - [_Socket address type definition_](#socket-address-type-definition)
 - [_Address type_](#address-type)
+
+## API Headers
+
+```
+#include ns_types.h
+#include ns_addres.h
+```
 
 ## Basic data types
 

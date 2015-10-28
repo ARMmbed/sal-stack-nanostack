@@ -21,25 +21,39 @@ extern "C" {
 #endif
 
 /**
-  * \brief Set manually Link layer short address
+  * \file net_address_extension.h
+  * \brief API for setting up Link layer short address manually
   *
-  * NOTE: At Duplicated address detection case (DAD) normally generate new short address but when
-  * generate_dynamical_at_DAD = 0 Stack will generate user want use static value
-  * \param short_id 16-bit user selected short address
-  * \param generate_dynamical_at_DAD Set 1 if stack can generate new short address at DAD otherwise set 0.
+  * \section set-addr Setting short address
+  *  - net_ext_set_short_address_from_app(), sets up a user specified short address and enables or disables DAD
   *
-  * \return 0xfffe or 0xffff when Stack not use any short address
+  * NOTE: In case of duplication of address and DAD (duplicate address detection) enabled, i.e., DAD=1, the stack will
+  * generate a short address dynamically.
+  *
+  * - \section reset-addr Resetting short address
+  * - net_ext_reset_short_address_from_app(), clears any user specified static or default short address and enables dynamic generation.
   */
-extern void net_ext_set_short_address_from_app(uint16_t short_id, uint8_t generate_dynamical_at_DAD);
+
 /**
-  * \brief Clean current used Static or default short address and enable dynamically generation for new short address.
+  * \brief Function to set short address from application.
   *
+  * \param short_id 16-bit user specified short address
+  * \param generate_dynamical_at_DAD Set 1 if stack is allowed to generate new short address dynamically in case of DAD otherwise set 0.
+  *
+  * \return 0xfffe or 0xffff when the stack does not use any short address
+  */
+
+extern void net_ext_set_short_address_from_app(uint16_t short_id, uint8_t generate_dynamical_at_DAD);
+
+/**
+  * \brief Clears currently being used Static or default short address and enables dynamic generation of new short address.
   */
 extern void net_ext_reset_short_address_from_app(void);
+
 /**
-  * \brief Get current used network short address.
+  * \brief Get current short address being used in the network for this particular interface.
   *
-  * \return 0xfffe or 0xffff when Stack not use any short address
+  * \return 0xfffe or 0xffff if stack is not using any short address
   */
 extern uint16_t net_ext_get_short_address(void);
 #ifdef __cplusplus
