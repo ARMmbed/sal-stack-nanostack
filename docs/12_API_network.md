@@ -12,6 +12,7 @@ This chapter describes the functions of the network control layer. It contains t
 - [_RPL structures and definitions API_](#rpl-structures-and-definitions-api)
 - [_RPL root configuration API_](#rpl-root-configuration-api)
 - [_NET address retrieval API_](#net-address-retrieval-api)
+- [_MLE router and host lifetime API_](#mle-router-and-host-lifetime-configuration)
 - [_6LoWPAN ND configuration API_](#6lowpan-nd-configuration-api)
 - [_PANA configuration API_](#pana-configuration-api)
 - [_Network Information retrieval API_](#network-information-retrieval-api)
@@ -25,6 +26,7 @@ To use the Network Layer Control APIs, include the following headers:
 #include net_interface.h
 #include net_pana_parameters_api.h
 #include net_6lowpan_parameter_api.h
+#include net_lowpan_opt.h
 #include net_nwk_scan.h
 #include net_rpl.h
 #include net_sleep.h
@@ -1109,6 +1111,60 @@ where:
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
+
+## MLE router and host lifetime configuration
+
+6LoWPAN and Thread use global router lifetime between neighbours. Routers refresh router neighbours entry when they receive MLE Advertisment message. Router lifetime is global so whole network should use same value. Host lifetime is node spesific lifetime and host will change that information between MLE link handshake. Host will refresh neighbour connection when about 70% lifetime have been running.
+Thread define 100 seconds router lifetime which should not touch when running Thread stack.
+
+6LoWPAN default router lifetime is 128 seconds which define 32 seconds MLE advetisment interval with [0.9-1.1] times random. Router need to miss 4 advertisment from router neighbour device before it silencely remove entry.
+
+How network affect when setting longer router lifetime:
+* MLE advertisment period is longer (Router lifetime in sconds / 4)
+* Router's react slower when neighbour router is not reachable
+* New Neighbour are learned slower after bootstrap
+* Good setup with bigger network setup
+
+How network affct when setting shorter router lifetime:
+* Shorter MLE advertisment period
+* Detect faster new neighbours and dissappier routers
+* Good solution for small network which need to react fast for dynamic enviroment
+
+### How to control lifetime parameters
+Lifetime parameters can be change from default values when interface is created but before start bootstrap.
+
+```
+int lowpan_opt_set(
+int8_t interface_id, 
+enum lowpan_opt option, 
+const void *opt_value, 
+uint16_t opt_len
+)
+```
+where:
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>Interface Id for setting new lifetime values.</dd>
+
+<dt><code>option</code></dt>
+<dd>A option type which update: LOWPAN_ROUTER_DEFAULT_LIFETIME or LOWPAN_HOST_DEFAULT_LIFETIME.</dd>
+<dd> Supported lifetime values are between 64-2560 seconds.</dd>
+
+<dt><code>opt_value</code></dt>
+<dd>Pointer which include lifetime in seconds.</dd>
+
+<dt><code>opt_len</code></dt>
+<dd> Define value length behind opt_value. For lifetime this should be 2 ( sizeof(int16_t) )
+
+<dt><code>Return value</code></dt>
+<dd>0 Success.</dd>
+<dd>-1 Failure.</dd>
+</dl>
+
+Example for setting router lifetime to 256 seconds.
+
+`int16_t lifetime=256;`
+`lowpan_opt_set(lowpan_interface_id, LOWPAN_ROUTER_DEFAULT_LIFETIME, &lifetime, sizeof(int16_t));`
 
 ## NET address retrieval API
 
