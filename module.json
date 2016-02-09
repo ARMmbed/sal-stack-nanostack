@@ -14,7 +14,7 @@
     "nanostack"
   ],
   "dependencies": {
-    "mbed-client-c": "^1.0.0",
+    "coap-service": "^1.0.0",
     "nanostack-libservice": "^3.0.0",
     "sal-stack-nanostack-eventloop": "^1.0.0",
     "nanostack-randlib": "^1.0.0"
