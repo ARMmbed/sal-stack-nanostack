@@ -15,4 +15,5 @@ target_link_libraries(sal-stack-nanostack
     nanostack-libservice
     sal-stack-nanostack-eventloop
     nanostack-randlib
+    coap-service
 )
