@@ -1,6 +1,6 @@
 {
   "name": "sal-stack-nanostack",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Nanostack",
   "keywords": [
     "nanostack"
@@ -17,7 +17,7 @@
     "nanostack-libservice": "^3.0.0",
     "sal-stack-nanostack-eventloop": "^1.0.0",
     "nanostack-randlib": "^1.0.0",
-    "coap-service": "^1.0.0"
+    "coap-service": "^2.0.0"
   },
   "targetDependencies": {}
 }
