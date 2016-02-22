@@ -17,10 +17,10 @@
  * \file multicast_api.h
  * \brief Multicast Trickle Forwarding API.
  * \section multi-init Init API:
- * - multicast_set_parameters(), Set Trickle Parameters
+ * - multicast_set_parameters(), Set trickle parameters.
  * \section multi-cnf Configure API:
- * - multicast_add_address(), Add new address to multicast group and control Trickle forwarding
- * - multicast_free_address(), Remove supported Multicast address from List
+ * - multicast_add_address(), Add new address to a multicast group and control trickle forwarding.
+ * - multicast_free_address(), Remove supported multicast address from list.
  *
  * \section ZigBeeIP Trickle Setups for Multicast Init
  *
@@ -41,16 +41,16 @@ extern "C" {
 #endif
 
 /**
- * \brief Set new parameters for Trickle Multicast.
+ * \brief Set new parameters for trickle multicast.
  *
- * \param i_min Minimum Trickle timer interval in 50ms resolution: Imin = i_min * 50ms.
- * \param i_max Maximum Trickle timer interval as number if doubling of minimum interval.
+ * \param i_min Minimum trickle timer interval in 50ms resolution: Imin = i_min * 50ms.
+ * \param i_max Maximum trickle timer interval as a number if doubling the minimum interval.
  * \param k Redundancy constant.
- * \param timer_expirations Number if Trickle timer expirations before terminating Trickle process.
- * \param window_expiration Time window state is kept after Trickle process has ended in 50ms resolution.
+ * \param timer_expirations Number of trickle timer expirations before terminating the trickle process.
+ * \param window_expiration The time window for keeping the state after the end of trickle process in 50ms resolution.
  *        NOTE: If window_expiration value is set too small an infinite retransmission loop may occur when using the trickle multicast.
  */
-extern void multicast_set_parameters(uint8_t i_min, uint8_t i_max, uint8_t k, uint8_t timer_expirations, uint8_t window_expiration);
+extern void multicast_set_parameters(uint8_t i_min, uint8_t i_max, uint8_t k, uint8_t timer_expirations, uint16_t window_expiration);
 
 
 /**
@@ -59,10 +59,10 @@ extern void multicast_set_parameters(uint8_t i_min, uint8_t i_max, uint8_t k, ui
  * \param address_ptr Pointer to a 16-byte array that includes the address to be added.
  * \param use_trickle 0 = no trickle multicast forwarding, all other values = trickle multicast forwarding will be used with this address.
  *
- * \return 0 general error.
- * \return 1 address updated.
- * \return 2 address added.
- * \return 255 link local not allowed when using multicast.
+ * \return 0 General error.
+ * \return 1 Address updated.
+ * \return 2 Address added.
+ * \return 255 Link local not allowed when using multicast.
 *
  */
 extern uint8_t multicast_add_address(const uint8_t *address_ptr, uint8_t use_trickle);

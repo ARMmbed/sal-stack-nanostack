@@ -61,7 +61,7 @@ To configure a network interface, follow these instructions:
 2. To define the 6LoWPAN bootstrap, call the function `arm_nwk_interface_configure_6lowpan_bootstrap_set()`.
 3. To configure the 6LoWPAN link layer security, call the function `arm_nwk_6lowpan_link_layer_security_mode()`.
 4. (Optional) To configure the 6LoWPAN address mode, call the function  `arm_nwk_6lowpan_gp_address_mode()`.
-5. (Optional) To configure the 6LoWPAN node NWK scan parameters, call the function  `arm_nwk_6lowpan_link_scan_paramameter_set()`.
+5. (Optional) To configure the 6LoWPAN node NWK scan parameters, call the function  `arm_nwk_6lowpan_link_scan_parameter_set()`.
 6. (Optional) To configure the 6LoWPAN node NWK scan filters, call the functions:
 	* PAN ID:  `arm_nwk_6lowpan_link_panid_filter_for_nwk_scan()`.
 	* Network ID: `arm_nwk_6lowpan_link_nwk_id_filter_for_nwk_scan().`

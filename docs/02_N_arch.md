@@ -96,28 +96,36 @@ The related standards supported by the stack are:
 	* RFC4944
 	* RFC6282
 	* RFC6775
-	* RFC2460 (parts)
+- IPv6:
+	* RFC2460
+	* RFC2464
+	* RFC3168 (parts)
 	* RFC4291 (parts)
-	* RFC6275 (parts)
+	* RFC6040
+	* RFC6437
+	* RFC6946
 - UDP:
-	* RFC6282
-	* RFC768 (parts)
+	* RFC768
 - TCP:
 	* RFC793 (parts)
 - RPL:
-	* RFC6553
-	* RFC6551
 	* RFC6550
+	* RFC6552
+	* RFC6553
+	* RFC6554
+	* RFC6719
 	* RFC2473 (parts)
 - ICMPv6:
-	* RFC6775
 	* RFC4443 (parts)
 	* RFC4861 (parts)
+	* RFC4862 (parts)
 - MLE:
-	* IETF draft-kelsey-intarea-mesh-link-establishment-04
+	* IETF draft-kelsey-intarea-mesh-link-establishment-06
 	* IEEE802.15.4
 	* IEEE802.15.4-2006 (certified)
 	* IEEE802.15.4g (parts)
+- MPL:
+	* IETF draft-ietf-roll-trickle-mcast-12 (parts)
 - AES:
 	* FIPS 197
 	* SP 800-38C

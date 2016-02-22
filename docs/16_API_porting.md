@@ -631,7 +631,7 @@ typedef struct phy_device_driver_s
 	int8_t (*tx)(uint8_t *,uint16_t,uint8_t, data_protocol_e);
 	int8_t (*address_write)(phy_address_type_e ,uint8_t *);
 	int8_t (*extension)(phy_extension_type_e,uint8_t *);
-	phy_device_channel_info_s *link_channel_info;
+	const phy_device_channel_page_s *phy_channel_pages;
 } phy_device_driver_s;
 ```
 
@@ -671,7 +671,7 @@ where:
 <dt><code>extension</code></dt>
 <dd>is a function pointer to the interface extension control.</dd>
 
-<dt><code>link_channel_info</code></dt>
+<dt><code>phy_channel_pages</code></dt>
 <dd>this pointer must be set only when the interface type is:</dd>
 <dd><code>NET_INTERFACE_WIFI</code></dd>
 <dd><code>NET_INTERFACE_RF_6LOWPAN</code></dd>
@@ -679,30 +679,26 @@ where:
 <dd><code>NET_INTERFACE_PLC_6LOWPAN</code></dd>
 </dl>
 
-#### PHY device channel information
+#### PHY device channel page information
 
-This structure defines the PHY device channel information and comprises the following variables:
+This structure defines the PHY device channel page information and comprises the following variables:
 
 ```
-typedef struct phy_device_channel_info_s
+typedef struct phy_device_channel_page_s
 {
-	phy_link_type_e link_type;
-	uint8_t channel_count;
-	uint32_t channel_mask
-} phy_device_channel_info_s;
+	channel_page_e channel_page;
+	const phy_rf_channel_configuration_s *rf_channel_configuration;
+} phy_device_channel_page_s;
 ```
 
 where:
 
 <dl>
-<dt><code>link_type</code></dt>
-<dd>defines the link type.</dd>
+<dt><code>channel_page</code></dt>
+<dd>defines the supported channel page(s).</dd>
 
-<dt><code>channel_count</code></dt>
-<dd>defines the supported channel count for an FHSS link.</dd>
-
-<dt><code>channel_mask</code></dt>
-<dd>defines channels for 802.15.4 radio. Channels from 0 to 10 are for sub-GHz radio and from 11 to 26 for 2.4GHz radio.</dd>
+<dt><code>rf_channel_configuration</code></dt>
+<dd>defines the used rf configuration for channel page.</dd>
 </dl>
 
 #### PHY device link type
@@ -735,21 +731,121 @@ where:
 <dd>is a Linux virtual TUN interface or similar.</dd>
 </dl>
 
+#### PHY device channel page
+
+This enumeration defines the PHY device channel pages:
+
+```
+typedef enum
+{
+	CHANNEL_PAGE_0 = 0,
+	CHANNEL_PAGE_1 = 1,
+	CHANNEL_PAGE_2 = 2,
+	CHANNEL_PAGE_3 = 3,
+	CHANNEL_PAGE_4 = 4,
+	CHANNEL_PAGE_5 = 5,
+	CHANNEL_PAGE_6 = 6,
+	CHANNEL_PAGE_9 = 9,
+	CHANNEL_PAGE_10 = 10
+} channel_page_e;
+```
+
+where:
+
+<dl>
+<dt><code>CHANNEL_PAGE_x</code></dt>
+<dd>is a IEEE 802.15.4 channel page</dd>
+</dl>
+
+#### PHY device RF channel configuration
+
+This enumeration defines the PHY device RF configuration:
+
+```
+typedef struct phy_rf_channel_configuration_s
+{
+	uint32_t channel_0_center_frequency;
+	uint32_t channel_spacing;
+	uint32_t datarate;
+	uint16_t number_of_channels;
+	phy_modulation_e modulation;
+} phy_rf_channel_configuration_s;
+```
+
+where:
+
+<dl>
+<dt><code>channel_0_center_frequency</code></dt>
+<dd>is first channel center frequency.</dd>
+
+<dt><code>channel_spacing</code></dt>
+<dd>is RF channel spacing.</dd>
+
+<dt><code>datarate</code></dt>
+<dd>is RF datarate.</dd>
+
+<dt><code>number_of_channels</code></dt>
+<dd>is a number of supported channels.</dd>
+
+<dt><code>modulation</code></dt>
+<dd>is RF modulation method.</dd>
+</dl>
+
+#### PHY device RF modulation methods
+
+This enumeration defines the PHY device RF modulation methods:
+
+```
+typedef enum phy_modulation_e
+{
+	M_OFDM,
+	M_OQPSK,
+	M_BPSK,
+	M_GFSK,
+	M_UNDEFINED
+} phy_modulation_e;
+```
+
+where:
+
+<dl>
+<dt><code>M_OFDM</code></dt>
+<dd>is OFDM modulation method.</dd>
+
+<dt><code>M_OQPSK</code></dt>
+<dd>is OQPSK modulation method.</dd>
+
+<dt><code>M_BPSK</code></dt>
+<dd>is BPSK modulation method.</dd>
+
+<dt><code>M_GFSK</code></dt>
+<dd>is GFSK modulation method.</dd>
+
+<dt><code>M_UNDEFINED</code></dt>
+<dd>is RF modulation method undefined.</dd>
+</dl>
+
 ### Example RF driver
 
 The following code example is not a complete driver but shows you how to use the API to create a RF driver.
 
 ```
 static uint8_t mac_address[8];
-static phy_device_channel_info_s channel_info;
 static phy_device_driver_s device_driver;
 static int8_t rf_radio_driver_id = -1;
+
+const phy_rf_channel_configuration_s phy_2_4ghz = {2405000000, 5000000, 250000, 16, M_OQPSK};
+const phy_rf_channel_configuration_s phy_subghz = {868300000, 2000000, 250000, 11, M_OQPSK};
+
+static phy_device_channel_page_s phy_channel_pages[] = {
+	{CHANNEL_PAGE_0, &phy_2_4ghz},
+	{CHANNEL_PAGE_0, NULL}
+};
 
 int8_t rf_device_register(void)
 {
     /* Do some initialization */
     rf_init();
-
     /* Set pointer to MAC address */
     device_driver.PHY_MAC = mac_address;
     /* Set driver Name */
@@ -757,23 +853,18 @@ int8_t rf_device_register(void)
 
     if(subghz_radio) /* Configuration for Sub GHz Radio */
     {
-        /*Number of channels in PHY*/
-        channel_info.channel_count = 11;
-        /*Channel mask 0-10*/
-        channel_info.channel_mask = 0x000007ff;
         /*Type of RF PHY is SubGHz*/
         device_driver.link_type = PHY_LINK_15_4_SUBGHZ_TYPE;
+        phy_channel_pages[0].channel_page = CHANNEL_PAGE_2;
+        phy_channel_pages[0].rf_channel_configuration = &phy_subghz;
     }
     else /* Configuration for 2.4 GHz Radio */
     {
-        /*Number of channels in PHY*/
-        channel_info.channel_count = 16;
-        /*Channel mask 26-11*/
-        channel_info.channel_mask = 0x07FFF800;
         /*Type of RF PHY is 2.4 GHz*/
         device_driver.link_type = PHY_LINK_15_4_2_4GHZ_TYPE;
+        phy_channel_pages[0].channel_page = CHANNEL_PAGE_0;
+        phy_channel_pages[0].rf_channel_configuration = &phy_2_4ghz;
     }
-    device_driver.link_channel_info = &channel_info;
 
     /*Maximum size of payload is 127*/
     device_driver.phy_MTU = 127;
@@ -787,7 +878,8 @@ int8_t rf_device_register(void)
     device_driver.extension = &rf_extension;
     device_driver.state_control = &rf_interface_state_control;
     device_driver.tx = &rf_start_cca;
-
+    /*Set supported channel pages*/
+    device_driver.phy_channel_pages = phy_channel_pages;
     /*Register device driver*/
     rf_radio_driver_id = arm_net_phy_register(&device_driver);
 

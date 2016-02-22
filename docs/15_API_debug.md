@@ -69,7 +69,7 @@ void protocol_stats_reset
 
 Various types of network stats can be collected using the structure `typedef struct nwk_stats_t `. The following statistics can be collected:
 
-#### General MAC related stats
+### General MAC related stats
 
 <dl>
 <dt><code>mac_tx_buffer_overflow</code></dt>
@@ -85,7 +85,7 @@ Various types of network stats can be collected using the structure `typedef str
 <dd>Number of dropped MAC packets.</dd>
 </dl>
 
-#### MAC payload flow
+### MAC payload flow
 
 <dl>
 <dt><code>mac_tx_bytes</code></dt>
@@ -110,7 +110,7 @@ Various types of network stats can be collected using the structure `typedef str
 <dd>Number of security packets dropped.</dd>
 </dl>
 
-#### 6LoWPAN related statistics
+### 6LoWPAN related statistics
 
 <dl>
 <dt><code>ip_rx_count</code></dt>
@@ -126,7 +126,7 @@ Various types of network stats can be collected using the structure `typedef str
 <dd>IP checksum error count.</dd>
 </dl>
 
-#### IP payload flow
+### IP payload flow
 
 <dl>
 <dt><code>ip_tx_bytes</code></dt>
@@ -139,7 +139,11 @@ Various types of network stats can be collected using the structure `typedef str
 <dd>Number of bytes routed as IP packets.</dd>
 </dl>
 
-#### Fragmentation statistics
+<dt><code>ip_no_route</code></dt>
+<dd>Number of times an IP route was not found.</dd>
+</dl>
+
+### Fragmentation statistics
 
 <dl>
 <dt><code>frag_rx_errors</code></dt>
@@ -149,7 +153,7 @@ Various types of network stats can be collected using the structure `typedef str
 <dd>Fragmentation errors in transmission.</dd>
 </dl>
 
-#### RPL statistics
+### RPL statistics
 
 <dl>
 <dt><code>rpl_route_routecost_better_change</code></dt>
@@ -158,14 +162,32 @@ Various types of network stats can be collected using the structure `typedef str
 <dt><code>ip_routeloop_detect</code></dt>
 <dd>Number of times an RPL IP loop creation was detected.</dd>
 
-<dt><code>ip_routeloop_detect</code></dt>
-<dd>Number of times an RPL route loop creation was detected.</dd>
+<dt><code>rpl_memory_overflow</code></dt>
+<dd>Total of allocations failed due RPL memory overflow.</dd>
 
-<dt><code>ip_no_route</code></dt>
-<dd>Number of times an RPL route was not found.</dd>
+<dt><code>rpl_parent_tx_fail</code></dt>
+<dd>Number of times transmission to a DODAG parent failed.</dd>
+
+<dt><code>rpl_unknown_instance</code></dt>
+<dd>Number of times a packet was received with an unknown RPL Instance ID</dd>
+
+<dt><code>rpl_local_repair</code></dt>
+<dd>Number of times local repair was initiated.</dd>
+
+<dt><code>rpl_global_repair</code></dt>
+<dd>Number of times global repair was initiated.</dd>
+
+<dt><code>rpl_malformed_message</code></dt>
+<dd>Number of malformed RPL messages received.</dd>
+
+<dt><code>rpl_time_no_next_hop</code></dt>
+<dd>Number of seconds spent with no RPL next hop.</dd>
+
+<dt><code>rpl_total_memory</code></dt>
+<dd>Total memory currently allocated by RPL.</dd>
 </dl>
 
-#### Various buffers
+### Various buffers
 
 <dl>
 <dt><code>buf_alloc</code></dt>

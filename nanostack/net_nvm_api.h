@@ -13,25 +13,25 @@
  */
 /**
  * \file net_nvm_api.h
- * \brief Library Pana NVM API for Client and Server.
+ * \brief Library PANA NVM API for Client and Server.
  *
  * \section server-api Server NVM API
  *
- * Pana Server Security material is crypted always and if you change border router RF module
+ * PANA server security material is crypted always and if you change the border router RF module
  * decrypt does not work properly.
  *
- *  - pana_server_nvm_callback_set(),  Init Pana Server NVM functionality
- *  - pana_server_restore_from_nvm(), Load crypted Pana server base and security material from NVM
- *  - pana_server_nvm_client_session_load(), Load crypted Client session from NVM
+ *  - pana_server_nvm_callback_set(),  Initialize PANA server NVM functionality.
+ *  - pana_server_restore_from_nvm(), Load crypted PANA server base and security material from NVM.
+ *  - pana_server_nvm_client_session_load(), Load crypted client session from NVM.
  *
  * \section client-api Client NVM API
  *
- * nw_nvm.c use already this API and Application can just use net_nvm_api.h.
+ * nw_nvm.c use already this API and the application can just use net_nvm_api.h.
  *
- * - pana_client_nvm_callback_set(), Init Pana session NVM
- * - net_read_persistent_data(), Read NWK ID & MAC 16-bit Address
- * - net_nvm_data_load(), Load Pana session, NWK-ID and short address to stack for re-use.
- * - net_pana_client_session_nvm_data_load(), Load saved pana session with spesific address or not
+ * - pana_client_nvm_callback_set(), Initialize PANA session NVM.
+ * - net_read_persistent_data(), Read NWK ID & MAC 16-bit address.
+ * - net_nvm_data_load(), Load PANA session, NWK-ID and short address to stack for re-use.
+ * - net_pana_client_session_nvm_data_load(), Load saved PANA session with specific address or not.
  *
  */
 #ifndef PANA_NVM_API_H_
@@ -56,125 +56,125 @@ extern "C" {
 #define PANA_SERVER_MATERIAL_BUF_SIZE 90
 /*!
  * \enum pana_nvm_update_process_t
- * \brief Pana Server NVM update states.
+ * \brief PANA server NVM update states.
  */
 typedef enum pana_nvm_update_process_t {
-    PANA_SERVER_MATERIAL_UPDATE,                /**< Pana Server Security Material Update */
-    PANA_SERVER_CLIENT_SESSION_UPDATE,          /**< Pana Client Session Update */
-    PANA_SERVER_CLIENT_SESSION_SEQ_UPDATE,      /**< Pana Client Session Sequence number Update */
-    PANA_SERVER_CLIENT_SESSION_REMOVE_UPDATE,   /**< Pana Client Session remove */
+    PANA_SERVER_MATERIAL_UPDATE,                /**< PANA server security material update. */
+    PANA_SERVER_CLIENT_SESSION_UPDATE,          /**< PANA client session update. */
+    PANA_SERVER_CLIENT_SESSION_SEQ_UPDATE,      /**< PANA client session sequence number update. */
+    PANA_SERVER_CLIENT_SESSION_REMOVE_UPDATE,   /**< PANA client session remove. */
 } pana_nvm_update_process_t;
 
 /*!
  * \enum pana_client_nvm_update_process_t
- * \brief Pana Client NVM update states.
+ * \brief PANA client NVM update states.
  */
 typedef enum pana_client_nvm_update_process_t {
-    PANA_CLIENT_SESSION_UPDATE,     /**< Pana Session information Fully Update  */
-    PANA_CLIENT_SESSION_SEQ_UPDATE, /**< Pana key Pull or Push Operation update REQ and RES sequence number */
+    PANA_CLIENT_SESSION_UPDATE,     /**< PANA session information fully update.  */
+    PANA_CLIENT_SESSION_SEQ_UPDATE, /**< PANA key pull or push operation update REQ and RES sequence number. */
 } pana_client_nvm_update_process_t;
 
 /* NVM API PART */
 /**
- * \brief Pana Server NVM functionality init
+ * \brief PANA server NVM functionality initialization
  *
- * \param passed_fptr function pointer to NVM update process
- * \param nvm_static_buffer pointer to Application allocated static memory, Needed minimal size is 115 bytes
+ * \param passed_fptr A function pointer to NVM update process.
+ * \param nvm_static_buffer A pointer to application allocated static memory, minimum size 115 bytes.
  *
  *
- * Reference Callback function structure which use EEPROM:
- * - nvm_static_buffer is application is allocated static buffer
+ * Reference callback function structure using EEPROM:
+ * - nvm_static_buffer Application is allocated a static buffer.
  *
- * \return 0, Init OK
- * \return -1, Null parameter detect
+ * \return 0, Init OK.
+ * \return -1, Null parameter detect.
  *
  */
 extern int8_t pana_server_nvm_callback_set(uint16_t (*passed_fptr)(pana_nvm_update_process_t), uint8_t *nvm_static_buffer);
 /**
- * \brief Pana Server Base restore form NVM
+ * \brief PANA server base restore from NVM.
  *
- * \param nvm_data pointer to Crypted Pana server base data
+ * \param nvm_data A pointer to crypted PANA server base data.
  *
- * \return 0, Restore OK
- * \return -1, Memory Allocation fail
+ * \return 0, Restore OK.
+ * \return -1, Memory allocation fail.
  *
  */
 extern int8_t pana_server_restore_from_nvm(uint8_t *nvm_data, int8_t interface_id);
 /**
- * \brief Pana Client session load from NVM API
+ * \brief PANA client session load from NVM API.
  *
- * \param nvm_data pointer to Crypted Pana client session
+ * \param nvm_data A pointer to crypted PANA client session.
  *
- * \return 0, Restore OK
- * \return -1, Memory Allocation fail
+ * \return 0, Restore OK.
+ * \return -1, Memory allocation fail.
  *
  */
 extern int8_t pana_server_nvm_client_session_load(uint8_t *nvm_pointer);
 
 /**
- * \brief Pana Client NVM functionality init
+ * \brief PANA client NVM functionality init.
  *
- * \param passed_fptr function pointer to NVM update process
- * \param nvm_static_buffer pointer to Application allocated static memory, Needed minimal size is 88 bytes
+ * \param passed_fptr A function pointer to NVM update process.
+ * \param nvm_static_buffer A pointer to application allocated static memory, minimum size 88 bytes.
  *
- * Reference Callback function structure which use EEPROM:
- * - nvm_static_buffer is application is allocated static buffer
+ * Reference callback function structure using EEPROM:
+ * - nvm_static_buffer Application allocated static buffer.
  *
- * \return 0, Init OK
- * \return -1, Null parameter detect
+ * \return 0, Init OK.
+ * \return -1, Null parameter detect.
  *
  */
 extern int8_t pana_client_nvm_callback_set(void (*passed_fptr)(pana_client_nvm_update_process_t), uint8_t *nvm_static_buffer);
 /**
- * \brief Read Network persistent data
+ * \brief Read network persistent data.
  *
- * \param data_buffer pointer to where stack save 18 bytes [NWK-ID 16bytes, Short Address 2bytes]
+ * \param data_buffer A pointer to location where the stack saves 18 bytes [NWK-ID 16bytes, Short Address 2bytes].
  *
  *
- * \return 0, Read OK
- * \return -1, Null parameter detect
- * \return -2 Bootstrap not ready yet
+ * \return 0, Read OK.
+ * \return -1, Null parameter detected.
+ * \return -2 Bootstrap not ready yet.
  *
  * This function should call when network bootstrap is ready.
  *
  */
 extern int8_t net_read_persistent_data(uint8_t *data_buffer, int8_t interface_id);
 /**
- * \brief Load ZigBeeIP node persistent data to stack for re-use
+ * \brief Load ZigBeeIP node persistent data to stack for re-use.
  *
- * \param data_buffer pointer to data which should include 88 bytes[NWK-ID 16bytes, Short Address 2bytes, Pana 70 bytes]
+ * \param data_buffer A pointer to data with 88 bytes [NWK-ID 16bytes, Short Address 2bytes, Pana 70 bytes].
  *
  *
- * \return 0, Read OK
- * \return -1, Null parameter detect
- * \return -2, Stack is active
- * \return <-2 Memory allocation fail
+ * \return 0, Read OK.
+ * \return -1, Null parameter detected.
+ * \return -2, Stack is active.
+ * \return <-2 Memory allocation fail.
  *
  */
 extern int8_t net_nvm_data_load(uint8_t *data_buffer, int8_t interface_id);
 
 /**
- * \brief Load Pana Client Session data to stack for re-use
+ * \brief Load PANA client session data to stack for re-use.
  *
- * \param data_buffer pointer to data which should include encrypted Pana session 70 bytes
- * \param session_address pointer to session specific address, Give address if you want re-use session with specific parent other wise give NULL
+ * \param data_buffer A pointer to data with encrypted PANA session 70 bytes.
+ * \param session_address A pointer to a session-specific address. Give the address if you want to re-use the session with specific parent, otherwise give NULL.
  *
  *
- * \return 0, Read OK
- * \return -1, Null parameter detect
- * \return -2, Stack is active
- * \return <-2 Memory allocation fail
+ * \return 0, Read OK.
+ * \return -1, Null parameter detected.
+ * \return -2, Stack is active.
+ * \return <-2 Memory allocation fail.
  *
  */
 extern int8_t net_pana_client_session_nvm_data_load(uint8_t *data_buffer, uint8_t *session_address, int8_t interface_id);
 /**
- * \brief Clean node persistent data and All Pana Client sessions from stack
+ * \brief Clean node persistent data and all PANA client sessions from the stack.
  *
- * Function disable Network ID filter, set EUID-16 to 0xffff and remove Pana client sessions. Function is only for client purpose.
+ * Function disables the network ID filter, sets EUID-16 to 0xffff and removes PANA client sessions. It is only for client purposes.
  *
  *
- * \return 0, Clean OK
- * \return -1, Stack is active
+ * \return 0, Clean OK.
+ * \return -1, Stack is active.
  *
  */
 extern int8_t net_nvm_data_clean(int8_t interface_id);

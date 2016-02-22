@@ -12,6 +12,9 @@ This chapter describes the functions of the network control layer. It contains t
 - [_RPL structures and definitions API_](#rpl-structures-and-definitions-api)
 - [_RPL root configuration API_](#rpl-root-configuration-api)
 - [_NET address retrieval API_](#net-address-retrieval-api)
+- [_MLE router and host lifetime configuration API_](#mle-router-and-host-lifetime-configuration-api)
+- [_MLE neighbor limits configuration API_](#mle-neighbor-limits-configuration-api)
+- [_MLE token bucket configuration API_](#mle-token-bucket-configuration-api)
 - [_6LoWPAN ND configuration API_](#6lowpan-nd-configuration-api)
 - [_PANA configuration API_](#pana-configuration-api)
 - [_Network Information retrieval API_](#network-information-retrieval-api)
@@ -23,8 +26,10 @@ To use the Network Layer Control APIs, include the following headers:
 
 ```
 #include net_interface.h
+#include net_ipv6_api.h
 #include net_pana_parameters_api.h
 #include net_6lowpan_parameter_api.h
+#include net_mle.h
 #include net_nwk_scan.h
 #include net_rpl.h
 #include net_sleep.h
@@ -53,13 +58,13 @@ To set up the configured network interface and enable the interface-specific boo
 ```
 int8_t arm_nwk_interface_up
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -76,14 +81,14 @@ To stop and set the interface to idle, use the following function:
 ```
 int8_t arm_nwk_interface_down
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -101,11 +106,16 @@ Use the 6LoWPAN MAC layer API to configure:
 	* No security.
 	* PANA network authentication.
 	* PSK network authentication.
-- The channel mask and scan time for an active scan.
+- The channel page, channel mask and scan time for an active scan.
+- The channel hopping mode:
+	* Single channel
+	* FHSS
+- FHSS tuning parameters.
 - Node interface filters:
 	* Beacon protocol ID.
 	* PAN ID.
 	* Network ID.
+- Beacon join priority.
 - Node interface address mode:
 	* Use only GP64.
 	* Use only GP16.
@@ -119,29 +129,38 @@ You must configure these before calling the `arm_nwk_interface_up()` function.
 
 Starting the network with security enabled, but without having set the security level and key, will result in an error. The stack will store the 6LoWPAN MAC configuration after the first call and will use the existing configuration until it is explicitly changed by the application, or if the device is power-cycled.
 
-### Scan channel list (2.4GHz only)
+### Scan parameters
 
-The configuration API for MAC scan channel list uses the `arm_nwk_6lowpan_link_scan_paramameter_set` function. The channel list is set up using a 32-bit variable where 27 bits are used to set the channels to be scanned, as described in the [IEEE 802.15.4-2011 standard](https://standards.ieee.org/findstds/standard/802.15.4-2011.html).
+The configuration API for setting scan time uses the `arm_nwk_6lowpan_link_scan_parameter_set` function. Parameter `scan_time` is a scan duration exponent, which defines the Beacon wait duration after Beacon request in active scanning. Scan durations in table below are directional.
+
+`scan_time` | scan duration(ms) | `scan_time` | scan duration(ms)
+-------|------------|-------|------------
+0|16|8|4000
+1|32|9|8000
+2|64|10|16000
+3|125|11|32000
+4|250|12|64000
+5|500|13|128000
+6|1000|14|256000
+7|2000
+
+
 
 ```
-int8_t arm_nwk_6lowpan_link_scan_paramameter_set
+int8_t arm_nwk_6lowpan_link_scan_parameter_set
 (
-	int8_t 		nwk_interface_id,
-	uint32_t 	channel_mask,
+	int8_t 		interface_id,
 	uint8_t 	scan_time
 )
 ```
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
-<dt><code>channel_mask</code></dt>
-<dd>Value 0-0xFFFFFFFF to determine which channels to scan.</dd>
-
 <dt><code>scan_time</code></dt>
-<dd>Time in seconds to find a network</dd>
+<dd>Scan duration exponent</dd>
 
 <dt><code>Return value</code></dt>
 <dd>0 Success.</dd>
@@ -150,14 +169,253 @@ where:
 <dd>-4 Interface is not active.</dd>
 </dl>
 
-The default value is `0x07FFF800` which scans channels 11 to 26. For example, to scan only channels 11 and 26, the value would be `0x04000800`. The exact function call would then be as follows:
+### Setting channel list
 
-`int8_t arm_nwk_6lowpan_link_scan_paramameter_set(12, 0x04000800, 3)`
+This function is used for setting the channel page and channel in the border router and for setting the scanned channel page and channel mask in nodes.
 
-**Note**
+```
+int8_t arm_nwk_set_channel_list
+(
+	int8_t interface_id,
+	const channel_list_s *nwk_channel_list
+)
+```
+Where:
 
-If the channel list has not been set by the `arm_nwk_6lowpan_link_scan_paramameter_set` function, the default list shall contain all channels.
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
 
+<dt><code>nwk_channel_list</code></dt>
+<dd>Pointer to channel list structure.</dd>
+</dl>
+```
+typedef struct channel_list_s
+{
+	channel_page_e channel_page;
+	uint32_t channel_mask[8];
+} channel_list_s;
+```
+Where:
+<dl>
+<dt><code>channel_page</code></dt>
+<dd>The channel page.</dd>
+</dl>
+```
+typedef enum
+{
+	CHANNEL_PAGE_0 = 0,
+	CHANNEL_PAGE_1 = 1,
+	CHANNEL_PAGE_2 = 2,
+	CHANNEL_PAGE_3 = 3,
+	CHANNEL_PAGE_4 = 4,
+	CHANNEL_PAGE_5 = 5,
+	CHANNEL_PAGE_6 = 6,
+	CHANNEL_PAGE_9 = 9,
+	CHANNEL_PAGE_10 = 10
+} channel_page_e;
+```
+<dl>
+<dt><code>channel_mask</code></dt>
+<dd>Used channel mask.</dd>
+</dl>
+
+<dl>
+<dt><code>Return value</code></dt>
+<dd>>=0 Channel configuration OK.</dd>
+<dd>-1 Unknown network interface ID.</dd>
+<dd>-2 Empty channel list, no channel enabled.</dd>
+<dd>-3 If channel list is not supported by PHY driver.</dd>
+<dd>-4 If network interface is already active and cannot be re-configured.</dd>
+</dl>
+
+### Channel hopping mode
+
+Two hopping modes:
+
+- Single channel (non-hopping)
+	* After the network scan, the node changes to the channel from which it found the best available network.
+- FHSS
+	* Frequency hopping mode.
+	* After the network scan, the node synchronizes to the best available network and starts continuous channel hopping using a predefined channel list.
+
+By default, the 6LoWPAN Stack uses the single channel mode. 
+
+To enable the FHSS mode use the `arm_fhss_enable` function:
+
+```
+int8_t arm_fhss_enable
+(
+	int8_t nwk_interface_id,
+	fhss_platform_functions_s *fhss_platform_functions,
+	const fhss_configuration_s *fhss_configuration
+)
+```
+Where:
+
+<dl>
+<dt><code>nwk_interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>fhss_platform_functions</code></dt>
+<dd>A pointer to the platform functions structure.</dd>
+
+<dt><code>fhss_configuration</code></dt>
+<dd>A pointer to the FHSS configuration structure.</dd>
+
+<dt><code>Return value</code></dt>
+<dd> 0 on success.</dd>
+<dd>-1 in case of invalid input parameters.</dd>
+<dd>-2 if no channels are available in the channel list.</dd>
+<dd>-3 if broadcast channels or tx slots are 0 in the bootstrap mode Border Router or RF access point.</dd>
+<dd>-4 if number of super frames does not work with TX slots in the bootstrap mode Border Router or RF access point.</dd>
+<dd>-5 if the FHSS tasklet creation fails.</dd>
+<dd>-6 if the PHY driver mode cannot be changed.</dd>
+<dd>-7 if the used bootstrap mode is not supported.</dd>
+<dd>-8 if FHSS is already enabled.</dd>
+<dd>-9 if memory allocation failed.</dd>
+</dl>
+
+To implement and define the FHSS platform functions, use the `fhss_platform_functions_s` structure:
+
+```
+typedef struct
+{
+    int (*fhss_timer_start)(uint32_t, void (*fhss_timer_callback)(int8_t, uint16_t), int8_t);
+    int (*fhss_timer_stop)(void);
+    uint32_t (*fhss_get_remaining_slots)(void);
+    int (*fhss_time_measure_start)(void);
+    uint32_t (*fhss_time_measure_read)(void);
+    int (*fhss_time_measure_stop)(void);
+    uint8_t fhss_resolution_divider;
+} fhss_platform_functions_s;
+```
+Where:
+
+<dl>
+<dt><code>fhss_timer_start</code></dt>
+<dd>FHSS timer start platform function.</dd>
+
+<dt><code>fhss_timer_stop</code></dt>
+<dd>FHSS timer stop platform function.</dd>
+
+<dt><code>fhss_get_remaining_slots</code></dt>
+<dd>FHSS timer get remaining slots platform function.</dd>
+
+<dt><code>fhss_time_measure_start</code></dt>
+<dd>FHSS time measure start platform function.</dd>
+
+<dt><code>fhss_time_measure_read</code></dt>
+<dd>FHSS time measure read platform function.</dd>
+
+<dt><code>fhss_time_measure_stop</code></dt>
+<dd>FHSS time measure stop platform function.</dd>
+
+<dt><code>fhss_resolution_divider</code></dt>
+<dd>FHSS timer resolution divider.</dd>
+</dl>
+
+FHSS configuration is always given from the border router using the `fhss_configuration_s` structure. The endpoint learns the configuration from the received synchronization message. In the initialization phase, the endpoint sets the FHSS configuration as NULL:
+
+```
+typedef struct fhss_configuration_s
+{
+    uint8_t fhss_number_of_bc_channels;
+    uint8_t fhss_number_of_tx_slots;
+    uint16_t fhss_superframe_length;
+    uint8_t fhss_number_of_superframes;
+    uint32_t fhss_beacon_send_interval;
+} fhss_configuration_s;
+```
+Where:
+
+<dl>
+<dt><code>fhss_number_of_bc_channels</code></dt>
+<dd>Number of broadcast channels.</dd>
+
+<dt><code>fhss_number_of_tx_slots</code></dt>
+<dd>Number of TX slots per channel.</dd>
+
+<dt><code>fhss_superframe_length</code></dt>
+<dd>Superframe dwell time (us).</dd>
+
+<dt><code>fhss_number_of_superframes</code></dt>
+<dd>Number of superframes per channel.</dd>
+
+<dt><code>fhss_beacon_send_interval</code></dt>
+<dd>Interval of sending synchronization messages. This configuration is currently disabled.</dd>
+</dl>
+
+To disable the FHSS mode, use `arm_fhss_disable` function:
+
+```
+int8_t arm_fhss_disable
+(
+	int8_t nwk_interface_id,
+)
+```
+Where:
+
+<dl>
+<dt><code>nwk_interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>Return value</code></dt>
+<dd> 0 on success.</dd>
+<dd>-1 on fail.</dd>
+</dl>
+
+### FHSS tuning parameters
+
+When you have enabled FHSS, you can provide some platform-specific tuning parameters using the `arm_fhss_set_tuning_params` function:
+
+```
+int8_t arm_fhss_set_tuning_params
+(
+	int8_t nwk_interface_id,
+	const fhss_platform_tuning_params_s *fhss_tuning_params
+)
+```
+Where:
+
+<dl>
+<dt><code>nwk_interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>fhss_tuning_params</code></dt>
+<dd>A pointer to the FHSS tuning parameters.</dd>
+
+<dt><code>Return value</code></dt>
+<dd> 0 on success.</dd>
+<dd>-1 on fail.</dd>
+</dl>
+
+The FHSS device provides the tuning parameters using the `fhss_platform_tuning_params_s` structure:
+
+```
+typedef struct
+{
+    uint32_t synch_tx_processing_time;
+    uint32_t synch_rx_processing_time;
+    uint32_t data_tx_processing_time;
+    uint32_t data_rx_processing_time;
+} fhss_platform_tuning_params_s;
+```
+Where:
+
+<dl>
+<dt><code>synch_tx_processing_time</code></dt>
+<dd>Processing delay between synch info written and TX start (us).</dd>
+
+<dt><code>synch_rx_processing_time</code></dt>
+<dd>Processing delay between TX done and synch info read (us).</dd>
+
+<dt><code>data_tx_processing_time</code></dt>
+<dd>Processing delay between data pushed to driver and transmission started (us).</dd>
+
+<dt><code>data_rx_processing_time</code></dt>
+<dd>Processing delay between TX done and Ack TX start (us).</dd>
+</dl>
 
 ### Beacon protocol ID filter
 
@@ -168,15 +426,15 @@ To set the protocol ID filter, use the following function:
 ```
 int8_t arm_nwk_6lowpan_link_protocol_id_filter_for_nwk_scan
 (
-	int8_t 	nwk_interface_id,
-	uin8_t 	protocol_ID
+	int8_t 	interface_id,
+	uint8_t 	protocol_ID
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>protocol_ID</code></dt>
@@ -197,15 +455,15 @@ To set a PAN ID filter of a configured network interface for a network scan, use
 ```
 int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan
 (
-	int8_t 	nwk_interface_id,
+	int8_t 	interface_id,
 	uin16_t pan_id_filter
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>pan_id_filter</code></dt>
@@ -225,15 +483,15 @@ To set a network ID filter of a configured network interface for a network scan,
 ```
 int8_t arm_nwk_6lowpan_link_nwk_id_filter_for_nwk_scan
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	uin8_t *nwk_id_filter
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>nwk_id_filter</code></dt>
@@ -244,6 +502,114 @@ where:
 <dt><code>Return value</code></dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
+</dl>
+
+###  Beacon join priority
+
+This section defines the beacon join priority interface. 
+
+#### Beacon join priority transmit callback
+
+This callback defines the join priority that is transmitted in the beacon. Join priority is an 8-bit field in the beacon that can be set for example based on RPL protocol rank data.
+
+```
+typedef uint8_t beacon_join_priority_tx_cb
+(
+int8_t interface_id
+)
+```
+
+Where:
+
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>Join priority to be transmitted in beacon.</dd>
+</dl>
+
+#### Compare received beacon callback
+
+This callback defines the preference rate of the node that has sent beacon, when connecting to the network.
+
+```
+typedef uint8_t beacon_compare_rx_cb
+(
+int8_t interface_id, 
+uint8_t join_priority,
+uint8_t link_quality
+)
+```
+
+Where:
+
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>join_priority</code></dt>
+<dd>Join priority that has been received in beacon. 0 to 255.</dd>
+
+<dt><code>link_quality</code></dt>
+<dd>Link quality. 0 to 255. 255 is the best quality.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>Connect to preference. 0 to 255. 255 is highest connect to preference.</dd>
+</dl>
+
+#### Set callback for beacon join priority transmit
+
+Sets the callback that defines the join priority that is transmitted in beacon. If the callback is not set, the default functionality is used. By default, the join priority is combined from the RPL DAGRank and RPL DODAG preference.
+
+```
+int8_t arm_nwk_6lowpan_beacon_join_priority_tx_callback_set
+(
+int8_t interface_id, 
+beacon_join_priority_tx_cb *beacon_join_priority_tx_cb_ptr
+)
+```
+
+Where:
+
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>beacon_join_priority_tx_cb_ptr</code></dt>
+<dd>Function pointer.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>=0 Success.</dd>
+<dd>-1 Unknown network ID.</dd>
+<dd>-2 Other error.</dd>
+</dl>
+
+#### Set callback for comparing received beacon
+
+Sets the callback that defines the preference rate of the node that has sent the beacon, when connecting to the network. If the callback is not set, the default functionality is used. By default, the connecting priority is defined based on the link quality and the join priority received in the beacon.
+
+```
+int8_t arm_nwk_6lowpan_beacon_compare_rx_callback_set
+(
+int8_t interface_id, 
+beacon_compare_rx_cb *beacon_compare_rx_cb_ptr
+)
+```
+
+Where:
+
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>beacon_compare_rx_cb_ptr</code></dt>
+<dd>Function pointer.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>=0 Success.</dd>
+<dd>-1 Unknown network ID.</dd>
+<dd>-2 Other error.</dd>
 </dl>
 
 ### Security API
@@ -272,7 +638,7 @@ int8_t arm_tls_add_psk_key
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>key_ptr</code></dt>
@@ -297,7 +663,7 @@ int8_t arm_tls_remove_psk_key
 )
 ```
 
-where:
+Where:
 <dl>
 <dt><code>key_id</code></dt>
 <dd>ID for the PSK key.
@@ -317,7 +683,7 @@ int8_t arm_network_certificate_chain_set
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>chain_info</code></dt>
@@ -350,16 +716,16 @@ To configure the 6LoWPAN bootstrap, use the following function:
 ```
 int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set
 (
-	int8_t				nwk_interface_id,
+	int8_t				interface_id,
 	net_6lowpan_mode_e	bootstrap_mode,
 	uint8_t				enable_mle_protocol
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>bootstrap_mode</code></dt>
@@ -388,9 +754,7 @@ If the application wants to save power and enter sleep, the network mode should 
 
 All configuration calls (such as channel selection) must be performed before calling `arm_nwk_interface_up()`.
 
-**Note**
-
-After successfully calling the `arm_nwk_interface_up()` function, the application must wait for the `ARM_LIB_NWK_INTERFACE_EVENT` status event from the stack before proceeding to perform another communications stack related function.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: After successfully calling the `arm_nwk_interface_up()` function, the application must wait for the `ARM_LIB_NWK_INTERFACE_EVENT` status event from the stack before proceeding to perform another communications stack related function.</span>
 
 ### IPv6 bootstrap configure
 
@@ -399,16 +763,16 @@ To configure the IPv6 bootstrap, use the following function:
 ```
 int8_t arm_nwk_interface_configure_ipv6_bootstrap_set
 (
-	int8_t 			nwk_interface_id,
+	int8_t 			interface_id,
 	net_ipv6_mode_e bootstrap_mode,
 	uint8_t 		*ipv6_prefix_pointer
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>bootstrap_mode</code></dt>
@@ -433,17 +797,17 @@ To set a security mode for the link layer of a configured network interface, use
 ```
 int8_t arm_nwk_link_layer_security_mode
 (
-	int8_t 					nwk_interface_id,
+	int8_t 					interface_id,
 	net_6lowpan_link_layer_sec_mode_e  mode,
 	uint8_t 				sec_level,
 	net_link_layer_psk_security_info_s *psk_key_info
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>mode</code></dt>
@@ -474,17 +838,17 @@ To set the global address mode for a configured network interface, use the follo
 ```
 int8_t arm_nwk_6lowpan_gp_address_mode
 (
-	int8_t 					nwk_interface_id,
+	int8_t 					interface_id,
 	net_6lowpan_gp_address_mode_e 	mode,
 	uint16_t 				short_address_base,
 	uint8_t 				define_new_short_address_at_DAD
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>mode</code></dt>
@@ -538,15 +902,15 @@ To define the border router MAC and 6LoWPAN ND setup for a selected interface, u
 ```
 int8_t arm_nwk_6lowpan_border_router_init
 (
-	int8_t 					nwk_interface_id,
+	int8_t 					interface_id,
 	border_router_setup_t	*border_router_setup_ptr
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>border_router_setup_ptr</code></dt>
@@ -568,7 +932,7 @@ To update the context list of the interface border router at the configure proxy
 ```
 int8_t arm_nwk_6lowpan_border_router_context_update
 (
-int8_t nwk_interface_id,
+int8_t interface_id,
 	uint8_t c_id_flags,
 	uint8_t context_len,
 	uint16_t ttl,
@@ -576,10 +940,10 @@ int8_t nwk_interface_id,
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>c_id_flags</code></dt>
@@ -610,17 +974,17 @@ To change the compression state or time-to-live value of the context, use the fo
 ```
 int8_t arm_nwk_6lowpan_border_router_context_parameter_update
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	uint8_t c_id,
 	uint8_t compress_mode,
 	uint16_t ttl
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>c_id</code></dt>
@@ -648,15 +1012,15 @@ To delete the selected context, use the following function. The update will go t
 ```
 int8_t arm_nwk_6lowpan_border_router_context_remove_by_id
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	uint8_t c_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>c_id</code></dt>
@@ -677,15 +1041,15 @@ To reload all 6LoWPAN contexts from the proxy and update the ABRO version number
 ```
 int8_t arm_nwk_6lowpan_border_router_configure_push
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 	uint8_t c_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>c_id</code></dt>
@@ -700,36 +1064,52 @@ where:
 
 ## Network sleep control API
 
-If the application wants to save power, the 6LoWPAN Stack can enter sleep state by calling the `arm_net_enter_sleep()` function. The 6LoWPAN Stack will respond with an `EV_READY_TO_SLEEP` event in the core idle function that was defined during initialization, when it is possible to change the power mode. The application must return the time spent in sleep mode to the 6LoWPAN Stack when the processor wakes up.
+If the application wants to save power, the 6LoWPAN Stack can enter sleep state by calling the `arm_net_enter_sleep()` function. 
+Sleep functionality is supported when the 6LoWPAN bootstrap mode is `NET_6LOWPAN_HOST` or `NET_6LOWPAN_SLEEPY_HOST`.
 
-Sleep is only supported when the 6LoWPAN bootstrap mode is `NET_6LOWPAN_SLEEPY_HOST`. The stack will automatically call `platform_event_os_sleep()` when it sets the CPU to sleep or sets the current task to sleep for a given time.
-
-An example of how to place the processor in sleep mode:
+The following reference implementation for a "bare-metal" (no OS) port shows an implementation of idle that provides full sleep 
+functionality. It requires the platform to provide the `eventOS_scheduler_sleep()` and `eventOS_scheduler_wait()` calls. The 
+implementation will automatically call sleep when appropriate, based on feedback from the scheduler and the network 
+stack (with some input from application APIs to the stack).
 
 ```
-uint32_t app_ns_core_idle
-(
-	uint8_t		event,
-	uint32_t	sleep_time_ms
-)
+void eventOS_scheduler_idle(void)
 {
-	uint32_t returned_slept_time = 0;
-
-	if( event == EV_READY_TO_SLEEP )
+	uint32_t sleep_possible = arm_net_check_enter_deep_sleep_possibility();
+	if(sleep_possible)
 	{
-		/*Return time spent in sleep mode (milliseconds)*/
-		returned_slept_time = hal_sleep( SLEEPMODE_POWER_SAVE, 198000, 1 );
-	}
-	else /* EV_CORE_IDLE */
-	{
-		hal_idle_sleep( );
-	}
+		uint32_t system_timer_next_tick_time = eventOS_event_timer_shortest_active_timer();
+		if(system_timer_next_tick_time)
+		{
+			if(system_timer_next_tick_time < sleep_possible)
+				sleep_possible = system_timer_next_tick_time; //Select shorter next event
+		}
+		if(arm_net_enter_sleep() == 0)
+		{
+			if(eventOS_scheduler_timer_stop() != 0)
+			{
+				debug("EventOS timer sleep fail\n");
+			}
 
-	return returned_slept_time;
+			sleep_possible = eventOS_scheduler_sleep(sleep_possible);
+			//Enable Data Polling after sleep & Synch Times
+			arm_net_wakeup_and_timer_synch(sleep_possible);
+
+			//Update Runtime ticks and event timers
+			if(eventOS_scheduler_timer_synch_after_sleep(sleep_possible)!= 0)
+			{
+				debug("Timer wakeUP Fail\n");
+			}
+		}
+	}
+	else
+	{
+		eventOS_scheduler_wait();
+	}
 }
 ```
 
-where `hal_sleep( )` and `hal_idle_sleep( )` are functions in the application, which put the processor in sleep or in an idle state.
+Where `eventOS_scheduler_sleep( )` and `eventOS_scheduler_wait( )` are functions in the platform port, which put the processor in sleep or in an idle (=waiting signal) state.
 
 ### Checking if sleep mode possible
 
@@ -795,7 +1175,7 @@ typedef struct dodag_config_s
 } dodag_config_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>DAG_SEC_PCS</code></dt>
@@ -837,14 +1217,8 @@ A 3-bit unsigned integer that defines how preferable the root of this DODAG is c
 The default is `0` least preferred).
 
 ```
-#define BR_DODAG_PREF_0 0
-#define BR_DODAG_PREF_1 1
-#define BR_DODAG_PREF_2 2
-#define BR_DODAG_PREF_3 3
-#define BR_DODAG_PREF_4 4
-#define BR_DODAG_PREF_5 5
-#define BR_DODAG_PREF_6 6
-#define BR_DODAG_PREF_7 7
+#define RPL_DODAG_PREF_MASK 0x07
+#define RPL_DODAG_PREF(n) ((n) & RPL_DODAG_PREF_MASK)
 ```
 
 **_Mode of Operation_ (MOP)**
@@ -853,9 +1227,9 @@ The MOP field identifies the mode of operation of the RPL instance as administra
 
 ```
 /**Non-Storing Mode of Operation  */
-#define BR_DODAG_MOP_NON_STRORING 8
+#define RPL_MODE_NON_STORING 0x08
 /** Storing Mode of Operation with no multicast support */
-#define BR_DODAG_MOP_STRORING 16
+#define RPL_MODE_STORING 0x10
 ```
 
 **_Grounded_ (G)**
@@ -866,8 +1240,7 @@ The Grounded `G` flag indicates that the DODAG advertised can satisfy the applic
 - If the flag is cleared, the DODAG is floating.
 
 ```
-#define BR_DODAG_FLOATIN 0<<7
-#define BR_DODAG_GROUNDED 1<<7
+#define RPL_GROUNDED 0x80
 /** RPL Prefix update Flags for A-flag AUTONOMOUS address generation*/
 #define RPL_PREFIX_AUTONOMOUS_ADDRESS_FLAG 0x40
 /** RPL Prefix update Flags for R-Flag */
@@ -885,16 +1258,16 @@ To define the RPL DODAG root proxy for a selected interface, use the following f
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_init
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	dodag_config_s *config,
 	uint8_t flags
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>config</code></dt>
@@ -918,7 +1291,7 @@ To update the RPL prefix to the DODAG proxy, use the following function:
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_prefix_update
 (
-	int8_t 		nwk_interface_id,
+	int8_t 		interface_id,
 	uint8_t 	*prefix_ptr,
 	uint8_t 	prefix_len,
 	uint8_t 	flags,
@@ -926,10 +1299,10 @@ int8_t arm_nwk_6lowpan_rpl_dodag_prefix_update
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID that defines the root proxy where the prefix update will come.</dd>
 
 <dt><code>prefix_ptr</code></dt>
@@ -961,7 +1334,7 @@ To update the RPL route information to the DODAG proxy, use the following functi
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_route_update
 (
-	int8_t 		nwk_interface_id,
+	int8_t 		interface_id,
 	uint8_t 	*prefix_ptr,
 	uint8_t 	prefix_len,
 	uint8_t 	flags,
@@ -969,10 +1342,10 @@ int8_t arm_nwk_6lowpan_rpl_dodag_route_update
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID that defines the root proxy where the prefix update will come.</dd>
 
 <dt><code>prefix_ptr</code></dt>
@@ -1002,14 +1375,14 @@ To activate the defined and configured RPL DODAG, if the configuration was done 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_start
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -1025,14 +1398,14 @@ To trigger an RPL DODAG DAO by DTSN increment, use the following function. DODAG
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_dao_trig
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -1048,18 +1421,45 @@ Network devices reset the current RPL instance. To do a unicast DIS/DIO and DAO/
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_version_increment
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
 <dd>>=0 The RPL DODAG DAO trig is OK.</dd>
+<dd>-1 An unknown interface ID.</dd>
+<dd>-2 The interface has not defined any RPL DODAG root.</dd>
+</dl>
+
+### RPL DODAG preference set
+
+RPL DODAG preference set.
+
+```
+int8_t arm_nwk_6lowpan_rpl_dodag_pref_set
+(
+int8_t interface_id,
+uint8_t preference
+)
+```
+
+Where:
+
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>The network interface ID.</dd>
+
+<dt><code>preference</code></dt>
+<dd>DODAG preference. 0 to 7. 0 is least preferred.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>>=0 Set OK</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
 </dl>
@@ -1071,14 +1471,14 @@ To run down the RPL DODAG interface by flooding the poison rank, use the followi
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_poison
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -1094,14 +1494,14 @@ To remove the DODAG root setup from the selected interface, use the following fu
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_remove
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
-where:
+Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -1126,13 +1526,13 @@ To read the network address information, use the following function:
 ```
 extern int8_t arm_net_address_get
 (
-	int8_t 		nwk_interface_id
+	int8_t 		interface_id
 	net_address_t	addr_id,
 	uint8_t		*address
 )
 ```
 
-where:
+Where:
 <dl>
 <dt><code>addr_id</code></dt>
 <dd>Identifies the address information type to be read.</dd>
@@ -1145,9 +1545,231 @@ where:
 <dd>-1 Failure.</dd>
 </dl>
 
+## IPv6 API
+
+Behaviour of the IPv6 layer can be controlled by the following functions.
+
+### Maximum fragmented-datagram reception unit
+
+To adjust the maximum IPv6 fragmented datagram size that the IPv6 stack will
+allocate memory for, use the following function:
+
+```
+int8_t arm_nwk_ipv6_frag_mru(
+	uint16_t frag_mru
+)
+```
+
+Where:
+
+<dl>
+<dt><code>frag_mru</code></dt>
+<dd>Fragmented Maximum Reception Unit in octets.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0 Change OK - actual MRU is at least requested value.</dd>
+<dd><0 Change invalid - unable to set the specified MRU.</dd>
+</dl>
+
+RFC 2460 requires this value to be at least 1500. It should also be at least
+as large as the MTU of each attached link. Implementation details such as
+alignment mean that the actual MRU may be larger than requested - 1504 is
+typical.
+
+### Flow label generation
+
+The system default for automatic IPv6 flow label generation can be modified with
+the following function:
+
+```
+void arm_nwk_ipv6_auto_flow_label(
+	bool auto_flow_label
+)
+```
+
+Where:
+
+<dl>
+<dt><code>auto_flow_label</code></dt>
+<dd><code>true</code> to enable auto-generation.</dd>
+</dl>
+
+If enabled, the stack auto-generates flow labels on outgoing packets following
+the guidelines in [RFC 6437](https://tools.ietf.org/html/rfc6437), either by
+random assignment for connected sockets, otherwise by hashing the 5-tuple
+{dest addr, source addr, protocol, dest port, source port}.
+
+When acting as a tunnel entry point, flow labels are created for tunnel packets
+according to the guidelines in [RFC 6438](https://tools.ietf.org/html/rfc6438).
+
+Flow labels can also be controlled on a per-socket basis using
+`socket_setsockopt(SOCKET_IPV6_FLOW_LABEL)`.
+
+
+## MLE router and host lifetime configuration API
+
+**Router lifetime** is a global parameter in the 6LoWPAN network. The same value must be used within the network. When a router receives an MLE advertisement message, it refreshes all the neighbours. 
+
+**Host lifetime** is node-specific parameter and a host changes it during the MLE handshake. The host refreshes a neighbour connection when about 30% of the lifetime is left.
+
+In a 6LoWPAN network, the default router lifetime is 128 seconds. The MLE advertisement interval is 32 seconds with [0.9-1.1] times random. If a router misses four advertisment from a neighbour router it removes the entry silently.
+
+If you set a longer router lifetime:
+
+* The MLE advertisement period is longer (router lifetime in seconds/4).
+* Routers react slower when the neighbour router cannot be reached.
+* New neighbours are detected slower after the bootstrap.
+* Large networks work better.
+
+If you set a shorter router lifetime:
+
+* The  MLE advertisment period is shorter.
+* New neighbours and disappeared routers are detected faster.
+* Good solution for a small network that needs to react fast.
+
+### Router lifetime set
+
+The router lifetime can be changed when an interface is created. Setting must be set
+before the bootstrap is started.
+
+```
+int8_t arm_nwk_6lowpan_mle_router_lifetime_set(
+int8_t interface_id,
+uint16_t lifetime
+)
+```
+
+Where:
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>Interface ID for setting new lifetime value.</dd>
+
+<dt><code>lifetime</code></dt>
+<dd> Supported lifetime values are between 64 and 2560 seconds.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0, Lifetime update OK.</dd>
+<dd><0 Lifetime update fail.</dd>
+</dl>
+
+### Host lifetime set
+
+The host lifetime can be changed when an interface is created. Setting must be set before
+the bootstrap is started.
+
+```
+int8_t arm_nwk_6lowpan_mle_host_lifetime_set(
+int8_t interface_id,
+uint16_t lifetime
+)
+```
+
+Where:
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>Interface ID for setting new lifetime value.</dd>
+
+<dt><code>lifetime</code></dt>
+<dd> Supported lifetime values are between 64 and 2560 seconds.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0, Lifetime update OK.</dd>
+<dd><0 Lifetime update fail.</dd>
+</dl>
+
+## MLE neighbor limits configuration API
+
+MLE neighbor limits configuration settings limit the number of neighbors added to MLE neighbor list.
+
+If the number of neighbors reaches the lower threshold, MLE starts to limit addition
+of new neighbors by starting to ignore multicast MLE messages from unknown neighbors (ignore probability is randomized).
+The value must be smaller than the upper threshold and maximum value.
+
+If the number of neighbors reaches the upper threshold, MLE stops adding new neighbors
+based on multicast MLE messages. Only the nodes that select this node for a parent during the bootstrap will be accepted. 
+The value must be smaller or the same as the maximum value.
+
+If the number of neighbors reaches the maximum value, no new neighbors are added. 
+
+If the MLE neighbor list limits are not used, all values must be set to 0.
+  
+### Set MLE neighbor list limits
+
+The MLE neighbor limits can be changed when an interface is created. The limit must be set before
+the bootstrap is started.
+
+```
+int8_t arm_nwk_6lowpan_mle_neighbor_limits_set(
+int8_t interface_id,
+uint16_t lower_threshold,
+uint16_t upper_threshold,
+uint16_t max
+)
+```
+
+Where:
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>Interface ID for setting new MLE neighbor list limits.</dd>
+
+<dt><code>lower_threshold</code></dt>
+<dd>Lower threshold. 5 to 499. 0 limits not used.</dd>
+
+<dt><code>upper_threshold</code></dt>
+<dd>Upper threshold. 5 to 500. 0 limits not used.</dd>
+
+<dt><code>max</code></dt>
+<dd>Maximum number of neighbors. 5 to 500. 0 limits not used.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0, Limits update OK.</dd>
+<dd><0 Limits update fail.</dd>
+</dl>
+
+## MLE token bucket configuration API
+
+The MLE message token bucket limits the MLE message sending rate. The token bucket size
+controls the bucket size. The token bucket rate controls the rate of adding new tokens. The count defines how many tokens 
+at a time are added to the bucket.
+
+The minimum interval of the rate is 0.1 seconds (for example, if the rate is 3
+and the count is 4, then 4 new tokens are added to bucket every 0.3 seconds).
+
+If the token bucket is not used, all values must be set to 0.
+
+### Set MLE message token bucket settings
+
+```
+int8_t arm_nwk_6lowpan_mle_token_bucket_settings_set(
+int8_t interface_id,
+uint8_t size,
+uint8_t rate,
+uint8_t count
+)
+```
+
+Where:
+<dl>
+<dt><code>interface_id</code></dt>
+<dd>Interface ID for setting new MLE message token bucket settings.</dd>
+
+<dt><code>size</code></dt>
+<dd>Bucket size. 1 to 255. 0 token bucket not used.</dd>
+
+<dt><code>rate</code></dt>
+<dd>Token rate. 1 to 255. 0 token bucket not used.</dd>
+
+<dt><code>count</code></dt>
+<dd>Token count. 1 to 255. 0 token bucket not used.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0, Token bucket settings update OK.</dd>
+<dd><0 Token bucket settings update fail.</dd>
+</dl>
+
 ## 6LoWPAN ND configuration API
 
-This section introduces the functions to configure 6LoWPAN ND (Neighbour Discovery) parameters. _Table 3-15_ shows the configuration functions available.
+This section introduces the functions to configure the 6LoWPAN ND (Neighbour Discovery) parameters. _Table 3-15_ shows the configuration functions available.
 
 **Table 3-15 Functions to configure 6LoWPAN ND parameters**
 
@@ -1155,7 +1777,6 @@ Function|Description
 --------|-----------
 `net_6lowpan_nd_parameter_read()`|Read a 6LoWPAN ND parameter.
 `net_6lowpan_nd_parameter_set()`|Set a 6LoWPAN ND parameter.
-
 
 ### Parameter structure
 
@@ -1170,13 +1791,20 @@ typedef struct nd_parameters_s
 	uint16_t 	rs_retry_interval_min;
 	uint16_t 	ns_retry_interval_min;
 	uint16_t 	ns_retry_linear_backoff;
+	bool		multihop_dad;
+	bool		iids_map_to_mac;
+	bool		send_nud_probes;
 	uint16_t 	ra_interval_min;
 	uint8_t 	ra_transmits;
+	uint8_t		ra_cur_hop_limit;
+	uint32_t	ra_link_mtu;
+	uint32_t	ra_reachable_time;
+	uint32_t	ra_retrans_timer;
 	uint16_t 	ns_forward_timeout;
 } nd_parameters_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>rs_retry_max</code></dt>
@@ -1197,11 +1825,32 @@ where:
 <dt><code>ns_retry_linear_backoff</code></dt>
 <dd>Defines the linear backoff of the retry interval in bootstrap timer ticks.</dd>
 
+<dt><code>multihop_dad</code></dt>
+<dd>Defines whether routers perform duplicate address detection with border router or locally.</dd>
+
+<dt><code>iids_map_to_mac</code></dt>
+<dd>Defines whether IPv6 IIDs can be assumed to be based on MAC address (so no address resolution by routers).</dd>
+
+<dt><code>send_nud_probes</code></dt>
+<dd>Defines whether IPv6 NUD probes are enabled (disabling may limit fault detection).</dd>
+
 <dt><code>ra_interval_min</code></dt>
 <dd>Defines the initial transmission interval for Router Advertisements in standard timer ticks.</dd>
 
 <dt><code>ra_transmits</code></dt>
 <dd>Defines the number of RA transmissions.</dd>
+
+<dt><code>ra_cur_hop_limit</code></dt>
+<dd>Defines the value of current hop limit placed in Router Advertisements.</dd>
+
+<dt><code>ra_link_mtu</code></dt>
+<dd>Defines the value of link MTU placed in Router Advertisements.</dd>
+
+<dt><code>ra_reachable_time</code></dt>
+<dd>Defines the value of reachable time placed in Router Advertisements (in milliseconds).</dd>
+
+<dt><code>ra_retrans_time</code></dt>
+<dd>Defines the value of retrans timer placed in Router Advertisements (in milliseconds).</dd>
 
 <dt><code>ns_forward_timeout</code></dt>
 <dd>Defines the timeout when forwarding NS messages. If reached, our own address discovery process is restarted.</dd>
@@ -1211,9 +1860,7 @@ where:
 
 Use this API to change the 6LoWPAN ND bootstrap parameters.
 
-**Note**
-
-This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
 
 For future compatibility, to support extensions to this structure:
 
@@ -1228,7 +1875,7 @@ int8_t net_6lowpan_nd_parameter_set
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>parameter_ptr</code></dt>
@@ -1251,7 +1898,7 @@ void net_6lowpan_nd_parameter_read
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>parameter_ptr</code></dt>
@@ -1291,7 +1938,7 @@ typedef struct pana_lib_parameters_s
 } pana_lib_parameters_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>PCI_IRT</code></dt>
@@ -1332,9 +1979,7 @@ where:
 
 Use this API to change the PANA module parameters.
 
-**Note**
-
-This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
 
 For future compatibility, to support extensions to this structure:
 
@@ -1349,7 +1994,7 @@ int8_t net_pana_parameter_set
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>parameter_ptr</code></dt>
@@ -1372,7 +2017,7 @@ int8_t net_pana_parameter_read
 )
 ```
 
-where:
+Where:
 <dl>
 <dt><code>parameter_ptr</code></dt>
 <dd>An output pointer for PANA parameters.</dd>
@@ -1406,7 +2051,7 @@ int8_t arm_nwk_param_read
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>network_params</code></dt>
@@ -1430,7 +2075,7 @@ typedef struct link_layer_setups_s
 }link_layer_setups_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>PANId</code></dt>
@@ -1461,7 +2106,7 @@ int8_t arm_nwk_mac_address_read
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>mac_params</code></dt>
@@ -1484,7 +2129,7 @@ typedef struct link_layer_address_s
 }link_layer_address_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>PANId</code></dt>
@@ -1512,7 +2157,7 @@ int8_t arm_nwk_nd_address_read
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>nd_params</code></dt>
@@ -1533,7 +2178,7 @@ typedef struct network_layer_address_s
 }network_layer_address_s;
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>border_router</code></dt>
@@ -1547,15 +2192,15 @@ where:
 
 This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
 
-**Note**: The site local multicast is the only multicast scope that can be routed through the border router.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: The site local multicast is the only multicast scope that can be routed through the border router.</span>
 
 The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters()`where multicast groups are managed using the function calls `multicast_add_address()` and `multicast_free_address()`.
 
-**Note**
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**
 
 - Only multicast addresses are accepted.
 - Trickle forwarding cannot be used with link local addresses.
-- The maximum number of multicast groups is 100 where including multicast groups consumes memory allocated by the 6LoWPAN stack.
+- The maximum number of multicast groups is 100 where including multicast groups consumes memory allocated by the 6LoWPAN stack.</span>
 
 
 ### Set new parameters for trickle multicast
@@ -1573,7 +2218,7 @@ void multicast_set_parameters
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>i_min</code></dt>
@@ -1592,9 +2237,7 @@ where:
 <dd>Time window state is kept after the trickle process has ended in 50ms resolution.</dd>
 </dl>
 
-**Note**
-
-If the `window_expiration` value is set too small, an infinite retransmission loop can occur when using the trickle multicast.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: If the `window_expiration` value is set too small, an infinite retransmission loop can occur when using the trickle multicast.</span>
 
 ### Add a new address to a multicast group
 
@@ -1608,7 +2251,7 @@ uint8_t multicast_add_address
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>address_ptr</code></dt>
@@ -1637,7 +2280,7 @@ uint8_t multicast_free_address
 )
 ```
 
-where:
+Where:
 
 <dl>
 <dt><code>address_ptr</code></dt>

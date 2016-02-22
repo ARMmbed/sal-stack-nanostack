@@ -18,9 +18,9 @@
  *
  * \section br-listapi Border Router List NVM API
  * - br_list_nvm_callback_set(), Enable MLE, Whiteboard and Routing Table NVM functionality
- * - mle_entry_store_from_nvm(), load MLE entry from NVM
- * - WB_entry_store_from_nvm(), load Whiteboard entry from NVM
- * - route_entry_store_from_nvm(), load Routing table entry from NVM
+ * - mle_entry_store_from_nvm(), Load MLE entry from NVM
+ * - WB_entry_store_from_nvm(), Load Whiteboard entry from NVM
+ * - route_entry_store_from_nvm(), Load Routing table entry from NVM
  *
 
  * \section br-rplapi Border Router RPL NVM API
@@ -32,7 +32,7 @@
  * \section br-rpseq Border Router ZigBeeIP RPL NVM reload initialize sequence
  *
  * 1. rpl_nvm_base_reload(), Load RPL base
- * 2. rpl_prefix_store_from_nvm(), Load Prefix(s) from NVM memory
+ * 2. rpl_prefix_store_from_nvm(), Load Prefix(es) from NVM memory
  * 3. rpl_route_store_from_nvm(), Load Route(s) from NVM memory
  *
  */
@@ -51,11 +51,11 @@ extern "C" {
  */
 typedef enum br_nvm_update_process_t {
     BR_MLE_MATERIAL_UPDATE, /**< MLE entry NVM update: Data 17 bytes structure[(Offset 16-bit), Data 15 bytes */
-    BR_MLE_MATERIAL_REMOVE,/**< MLE entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM which need to remove*/
+    BR_MLE_MATERIAL_REMOVE,/**< MLE entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM that need to remove*/
     BR_WB_MATERIAL_UPDATE, /**< Whiteboard entry NVM update: Data 27 bytes structure[(Offset 16-bit), Data 25 bytes */
-    BR_WB_MATERIAL_REMOVE, /**< Whiteboard entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM which need to remove*/
+    BR_WB_MATERIAL_REMOVE, /**< Whiteboard entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM that need to remove*/
     BR_ROUTE_MATERIAL_UPDATE, /**< Routing table entry NVM update: Data 38 bytes structure[(Offset 16-bit), Data 36 bytes */
-    BR_ROUTE_MATERIAL_REMOVE, /**< Routing table entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM which need to remove*/
+    BR_ROUTE_MATERIAL_REMOVE, /**< Routing table entry NVM remove: Data 2 bytes structure Offset 16-bit pointer to NVM that need to remove*/
 } br_nvm_update_process_t;
 
 /** */
@@ -73,21 +73,21 @@ typedef enum br_rpl_nvm_update_process_t {
 /**
  * \brief Enable MLE, Whiteboard and Routing Table NVM functionality from stack
  *
- * \param passed_fptr function pointer to NVM update process
- * \param nvm_static_buffer pointer to Application allocated static memory, Needed minimal size is 33 bytes
+ * \param passed_fptr Function pointer to NVM update process.
+ * \param nvm_static_buffer Pointer to application allocated static memory, minimum size is 33 bytes.
  *
- * \return 0 NVM operation Init OK.
+ * \return 0 NVM operation init OK.
  * \return -1 Null pointer parameter.
  *
- * Reference Callback function structure which use EEPROM:
- * - nvm_static_buffer is application is allocated static buffer
+ * Reference callback function structure that uses EEPROM:
+ * - nvm_static_buffer Application allocated static buffer.
  *
  */
 extern int8_t br_list_nvm_callback_set(uint16_t (*passed_fptr)(br_nvm_update_process_t), uint8_t *nvm_static_buffer);
 /**
  * \brief Load MLE entry from NVM
  *
- * \param nvm_data pointer to MLE entry
+ * \param nvm_data Pointer to MLE entry.
  *
  * \return 0 NVM entry load OK.
  * \return -1 No memory for NVM entry.
@@ -96,7 +96,7 @@ extern int8_t mle_entry_store_from_nvm(const uint8_t *nvm_data);
 /**
   * \brief Load Whiteboard entry from NVM
   *
-  * \param nvm_data pointer to Whiteboard entry
+  * \param nvm_data Pointer to whiteboard entry.
   *
   * \return 0 NVM entry load OK.
   * \return -1 No memory for NVM entry.
@@ -105,7 +105,7 @@ extern int8_t WB_entry_store_from_nvm(const uint8_t *nvm_data);
 /**
   * \brief Load Routing table entry from NVM
   *
-  * \param nvm_data pointer to Routing table entry
+  * \param nvm_data Pointer to routing table entry.
   *
   * \return 0 NVM entry load OK.
   * \return -1 No memory for NVM entry.
@@ -116,14 +116,14 @@ extern int8_t route_entry_store_from_nvm(const uint8_t *nvm_data);
 /**
  * \brief Enable RPL Proxy NVM functionality (RPL Proxy Base, Routes, Prefix)
  *
- * \param passed_fptr function pointer to NVM update process
- * \param nvm_static_buffer pointer to Application allocated static memory, Needed minimal size is 33 bytes
+ * \param passed_fptr Function pointer to NVM update process.
+ * \param nvm_static_buffer Pointer to application allocated static memory, minimum size is 33 bytes.
  *
  * \return 0 NVM operation Init OK.
  * \return -1 Null pointer parameter.
  *
- * Reference Callback function structure which use EEPROM:
- * - nvm_static_buffer is application is allocated static buffer
+ * Reference callback function structure that uses EEPROM:
+ * - nvm_static_buffer Application allocated static buffer.
  *
  */
 extern int8_t rpl_nvm_callback_set(uint16_t (*passed_fptr)(br_rpl_nvm_update_process_t), uint8_t *nvm_static_buffer);
@@ -131,7 +131,7 @@ extern int8_t rpl_nvm_callback_set(uint16_t (*passed_fptr)(br_rpl_nvm_update_pro
 /**
    * \brief Restore RPL Proxy base from NVM
    *
-   * \param nvm_data pointer to RPL Proxy base
+   * \param nvm_data Pointer to RPL Proxy base.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.
@@ -141,7 +141,7 @@ extern int8_t rpl_nvm_base_reload(const uint8_t *nvm_data, int8_t interface_id);
 /**
    * \brief Load prefix entry from NVM
    *
-   * \param nvm_data pointer to RPL Prefix entry
+   * \param nvm_data Pointer to RPL Prefix entry.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.
@@ -150,7 +150,7 @@ extern int8_t rpl_prefix_store_from_nvm(const uint8_t *nvm_data, uint8_t instanc
 /**
    * \brief Load Route entry from NVM
    *
-   * \param nvm_data pointer to RPL Route entry
+   * \param nvm_data Pointer to RPL Route entry.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.

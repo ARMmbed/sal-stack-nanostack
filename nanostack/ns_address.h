@@ -15,30 +15,30 @@
 #define _NS_LIB_ADDRESS_H
 /**
  * \file ns_address.h
- * \brief 6LowPAN library Address format description
+ * \brief 6LowPAN library address format description.
  *
  */
 #include "ns_types.h"
 
 /**
  * /enum address_type_t
- * /brief Address types
+ * /brief Address types.
  */
 typedef enum address_type_t {
     ADDRESS_IPV6,                 /**< IPv6 Address type. Must be used always at socket interface. */
     ADDRESS_IPV4,                 /**< IPv4 Address type. Must be used always at socket interface. */
-    ADDRESS_TUN_DRIVER_ID         /**< Local socket Address type address only have 1 byte length which is driver ID for packet Source. */
+    ADDRESS_TUN_DRIVER_ID         /**< Local socket address type. The length is 1 byte (driver ID for packet source). */
 } address_type_t;
 
 
 /**
  * /struct ns_address_t
- * /brief Struct for the addresses used by socket interface functions and net_address_get()
+ * /brief Struct for the addresses used by the socket interface functions and net_address_get().
  */
 typedef struct ns_address_t {
-    address_type_t type;          /**< Address type. See above. */
-    uint8_t address[16];          /**< Address */
-    uint16_t identifier;          /**< TCP/UDP Port number */
+    address_type_t type;          /**< Address type. */
+    uint8_t address[16];          /**< Addresss. */
+    uint16_t identifier;          /**< TCP/UDP port number. */
 } ns_address_t;
 
 #endif /* _NS_ADDRESS_H */

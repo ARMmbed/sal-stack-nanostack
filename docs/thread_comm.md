@@ -6,7 +6,7 @@ The commissioning process has two phases:
 *  Petitioning
 *  Joining
 
-Petitioning must occur before any joiner can join, that is, there must be one sole authorized commissioner – an authenticator for subsequent joiners.
+Petitioning must occur before any joiner can join, that is, there must be one sole authorized commissioner - an authenticator for subsequent joiners.
 
 ## Mesh Commissioning Protocol (MeshCoP)
 
@@ -90,7 +90,7 @@ This is the most complex case out of the four presented scenarios. In this case,
 * Joiner Router to Border Router through Thread network
 * Border Router to commissioner through WLAN
 
-These paths are effectively connected to each other and the Joiner Router and Border Router’s relay agents and client-server bindings manage the authentication traffic accordingly.
+These paths are effectively connected to each other and the Joiner Router and Border Router's relay agents and client-server bindings manage the authentication traffic accordingly.
 
 **Figure 2-8 External commissioner connected to the WLAN, Border Router is not a Joiner Router**
 

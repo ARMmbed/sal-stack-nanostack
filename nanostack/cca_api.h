@@ -23,22 +23,30 @@
 #ifndef CCA_API_H_
 #define CCA_API_H_
 
-/* CCA modes (Only random in range supported) */
+/* CCA modes */
 #define CCA_RANDOM_IN_RANGE 1
+#define CCA_FHSS            2
+
+typedef enum
+{
+    CHANNEL_IDLE,
+    CHANNEL_NOT_IDLE,
+} channel_status_e;
 
 /**
  * \brief API to start new CCA timeout.
  *
- * \param mode CCA timeout mode, only CCA_RANDOM_IN_RANGE supported
- * \param mode min Minimum time for random timeout (50us slots)
- * \param mode max Maximum time for random timeout (50us slots)
- * \param mode cca_check_fptr pointer to CCA status check function (return values: 0 - Channel idle, -1 - Channel not idle)
- * \param mode cca_done_fptr pointer to CCA done function (parameter values: 0 - Channel idle, -1 - Channel not idle)
+ * \param device_id Device driver ID.
+ * \param mode CCA timeout mode, only CCA_RANDOM_IN_RANGE supported.
+ * \param min Minimum time for random timeout (50us slots).
+ * \param max Maximum time for random timeout (50us slots).
+ * \param cca_check_fptr Pointer to CCA status check function (return values: CHANNEL_IDLE, CHANNEL_NOT_IDLE).
+ * \param cca_done_fptr Pointer to CCA done function (parameter values: CHANNEL_IDLE, CHANNEL_NOT_IDLE).
  *
  * \return 0, Success
  * \return -1, Failure
  *
  */
-int cca_start(uint8_t mode, uint16_t min, uint16_t max, int (*cca_check_fptr)(void), void (*cca_done_fptr)(int));
+int cca_start(int8_t device_id, uint8_t mode, uint16_t min, uint16_t max, channel_status_e (*cca_check_fptr)(void), void (*cca_done_fptr)(channel_status_e));
 
 #endif /* CCA_API_H_ */

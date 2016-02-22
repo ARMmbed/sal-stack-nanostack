@@ -1,7 +1,7 @@
 API Introduction
 ============
 
-As discussed in previous chapters, Thread protocol is a wrapping around IPv6/6LoWPAN stack, which in turn is sufficiently capable to work stand-alone in bare-metal implementations. In subsequent chapters of this manual, we will take a look over the base of the networking stack which is IPv6/6LoWPAN and then finally we will discuss Thread. 
+Thread protocol is a wrapping around the IPv6/6LoWPAN stack, and it is capable to work stand-alone in bare-metal implementations. In subsequent chapters of this manual, we walk through the base of the networking stack that is IPv6/6LoWPAN and proceed further to Thread. 
 
 **Figure 3-1 High level API interfaces over Networking stack**
 
@@ -17,13 +17,13 @@ This chapter is an introduction to the 6LoWPAN stack, modules and API interfaces
 
 ## About the 6LoWPAN stack
 
-The 6LoWPAN stack is designed to be portable for various platforms and radio drivers. It uses a lightweight eventing system that allows to run on minimal design on the smallest microcontrollers even without operating systems. Application programming interfaces are designed to allow porting for new platforms. _Figure 3-2_ below shows high level API interfaces on the 6LoWPAN stack.
+The 6LoWPAN stack is designed to be portable for various platforms and radio drivers. It uses a lightweight eventing system that allows to run on minimal design on the smallest microcontrollers even without operating systems. The application programming interfaces are designed to allow porting for new platforms. _Figure 3-2_ shows the high level APIs on the 6LoWPAN stack.
 
 **Figure 3-2 High level API interfaces over 6LoWPAN stack**
 
 ![Bare metal 6LoWPAN](img/high_level_stack_API_interfaces.png)
 
-The 6LoWPAN stack offers application designers interfaces for sending and receiving packets, configuring a network and running the event base system in the form of tasklets. For more information on the interfaces, see chapters [_An Event-driven Scheduling Model_](08_API_events.md), [_Network API Definitions_](09_API_network_def.md) and [_Sockets Use and Available APIs_](11_API_sockets.md).
+The 6LoWPAN stack provides application designers with interfaces for sending and receiving packets, configuring the network and running the event base system in the form of tasklets. For more information on the interfaces, see chapters [_An Event-driven Scheduling Model_](08_API_events.md), [_Network API Definitions_](09_API_network_def.md) and [_Sockets Use and Available APIs_](11_API_sockets.md).
 
 The 6LoWPAN stack relies on two interfaces that must be ported to run it on a specific platform. Platform API defines an abstraction layer of the underlying microcontrollers or operating system. For more information on the Platform API, see section _Platform API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
 
@@ -33,10 +33,9 @@ For more information on the 6LoWPAN stack architecture, and the protocol and app
 
 ## Eventing system
 
-6LoWPAN stack eventing system is designed to be minimal and portable. Its main focus is on running in small embedded devices without any help of operating systems. Event based approach allows 6LoWPAN stack based applications to be designed for extremely low power use cases where thread (not to be confused with Thread, the stack) based systems may consume too much battery time. The eventing system is designed to rely entirely on the Platform API so it is possible to port it to run on any operating system when the thread based approach is favored.
+6LoWPAN stack eventing system is designed to be minimal and portable. Its main focus is on running in small embedded devices without any help of operating systems. The event-based approach allows 6LoWPAN stack based applications to be designed for extremely low power use cases where thread (not to be confused with Thread, the stack) based systems may consume too much battery life. The eventing system is designed to rely entirely on the Platform API so it is possible to port it to run on any operating system when the thread based approach is favored.
 
-
-The eventing system specifies event handlers called tasklets that form the application logic. The 6LoWPAN stack allows the developer to define multiple tasklets to ease the task of writing complex applications. Each of these tasklets can then have full access to the network stack and its features through Socket, Eventing and NET APIs.
+The eventing system specifies event handlers (tasklets) that form the application logic. The 6LoWPAN stack allows developers to define multiple tasklets to ease the task of writing complex applications. Each of these tasklets can then have full access to the network stack and its features through Socket, Eventing and NET APIs.
 
 The following example shows the usage of a simple tasklet:
 
@@ -76,5 +75,5 @@ void main(void)
 }
 ```
 
-In this code example, the main application registers an event handler called `tasklet_main`. This event handler is then used to send and receive timed events in one-second intervals. For a description of the functions used and their parameters, see chapter [_An Event-driven Scheduling Model_](08_API_events.md).
+In this code example, the main application registers an event handler called `tasklet_main`. This event handler is then used to send and receive timed events in one-second intervals. For a description of the functions and their parameters, see chapter [_An Event-driven Scheduling Model_](08_API_events.md).
 

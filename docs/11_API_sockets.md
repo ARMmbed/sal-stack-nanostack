@@ -23,6 +23,7 @@ Socket name|Socket description
 `SOCKET_UDP`|UDP socket type.
 `SOCKET_TCP`|TCP socket type.
 `SOCKET_ICMP`|ICMP raw socket type; see section _ICMP socket instruction_.
+`SOCKET_RAW`|raw IPv6 socket type.
 `SOCKET_LOCAL`|Local application space socket.
 
 ### ICMP socket instruction
@@ -57,7 +58,7 @@ Type|Code|Checksum|Payload
 
 ## Receive callback structure
 
-When there is data to read from the socket, a receive callback function is called from the stack with the socket event parameter. A socket event can be,for example, a change in the state of the _Transmission Control Protocol_ (TCP) socket and the socket _Transmit_ (TX) process is ready or the process failed `(SOCKET_TX_FAIL` or `SOCKET_TX_DONE)`. All supported socket event types are listed in _Table 3-22_. The receive callback function must be defined when a socket is opened using the `socket_open( )` API.
+When there is data to read from the socket, a receive callback function is called from the stack with the socket event parameter. A socket event can be, for example, a change in the state of the _Transmission Control Protocol_ (TCP) socket and the socket _Transmit_ (TX) process is ready or the process failed `(SOCKET_TX_FAIL` or `SOCKET_TX_DONE)`. All supported socket event types are listed in _Table 3-22_. The receive callback function must be defined when a socket is opened using the `socket_open( )` API.
 
 The socket call back structure, `socket_callback_t` is defined as below:
 
@@ -80,10 +81,10 @@ where:
 <dd>ID of the socket that caused the event.</dd>
 
 <dt><code>interface_id</code></dt>
-<dd>Network interface ID from where the packet came.</dd>
+<dd>The network interface ID. Same as received from <code>arm_nwk_interface_init</code> </dd>
 
 <dt><code>d_len</code></dt>
-<dd>Length of data readable from socket.
+<dd>Length of data available or sent.
 
 <dt><code>LINK_LQI</code></dt>
 <dd>Link quality indicator value if the interface can provide any.</dd>
@@ -149,11 +150,13 @@ void main_receive
 
 When a TCP socket is opened, it is in an unusable state and must be set to either a _listen_ or _connect_ state before it can be used to receive or transmit data.
 
-The socket can be set to a _listen_ state by calling the `socket_listen( )` function. After the call, the socket can accept an incoming connection from a remote host. The TCP implementation of the 6LoWPAN stack supports only one connection from a remote host. The _listen_ state closes the connection automatically after a server timeout or when the client or application closes the connection manually by using the `socket_close( )` function.
+You can set the socket to a _listen_ state with the `socket_listen( )` function. After the call, the socket can accept an incoming connection from a remote host. The TCP implementation of the 6LoWPAN stack supports only one connection from a remote host. 
 
-The TCP socket can be connected to a remote host by calling `socket_connect( )` with the correct arguments. After the function call, an application (non-blocking) must await the socket event to confirm the successful state change of the socket.
+To connect the TCP socket to a remote host, call `socket_connect( )` with the correct arguments. After the function call, an application (non-blocking) must await the socket event to confirm the successful state change of the socket.
 
-After receiving a successful state event, data can be sent using the `socket_send( )` call. The connection can be closed by calling `socket_close( )` or with a server timeout.
+After receiving a successful state event, data can be sent using the `socket_send( )` call. 
+
+The connection can be closed by calling function `socket_close( )`. The 6LoWPAN stack closes the connection automatically after a server timeout or when the remote end closes the connection. When the socket is no longer needed it must be released by calling the function `socket_free( )`.
 
 ## Using UDP and ICMP sockets
 
@@ -177,10 +180,6 @@ int8_t socket_open
 )
 ```
 
-**Note**
-
-A maximum of seven concurrent sockets is supported.
-
 where:
 
 <dl>
@@ -188,10 +187,12 @@ where:
 <dd>The protocol to be used over this socket and valid values for the argument are:</dd>
 <dd><code>SOCKET_UDP</code> UDP: standard communication.</dd>
 <dd><code>SOCKET_TCP</code> TCP: standard communication.</dd>
-<dd><code>SOCKET_ICMP</code> ICMP: used for ping functionality.</dd>
+<dd><code>SOCKET_ICMP</code> ICMPv6: used for ping functionality.</dd>
+<dd><code>SOCKET_RAW</code> raw IPv6: used for other specialised protocols.</dd>
 
 <dt><code>identifier</code></dt>
-<dd>The port identifier for UDP and TCP, or message ID for ICMP.</dd>
+<dd>The port identifier for UDP and TCP. 0 indicates that the port is not specified and it will be selected automatically when using the socket. The port can also be bound later with the function `socket_bind()`.</dd>
+<dd>For raw sockets, the identifier is the IPv6 protocol number.</dd>
 
 <dt><code>passed_fptr</code></dt>
 <dd>A function pointer to the desired socket receive callback function.</dd>
@@ -220,11 +221,8 @@ where:
 
 ### How to bind a socket
 
-To bind socket to a port, use the following function:
+To bind socket to a port and address, use the following function:
 
-**Note**
-
-Binding to address is not supported, therefore `address` in the structure `ns_address_t` must be set to `ns_in6addr_any`.
 
 ```
 int8_t socket_bind
@@ -239,14 +237,46 @@ where:
 <dl>
 <dt><code>socket</code></dt>
 <dd>The socket ID returned by <code>socket_open</code>.</dd>
+<dt><code>address</code></dt>
+<dd>Structure that contains port and/or address to be bound to the socket.</dd>
 
 <dt><code>Return value</code></dt>
 <dd>0 on success.</dd>
 <dd>-1 if given address is NULL.</dd>
 <dd>-2 if port is already bound to another socket.</dd>
-<dd>-3 if trying to bind to port 0.</dd>
 <dd>-4 if socket is already bound.</dd>
-<dd>-5 if given address is not equal to <code>ns_in6addr_any</code>.</dd>
+<dd>-5 bind is not supported on this type of socket.</dd>
+</dl>
+
+The port and the address can be bound only once. The port can also be bound to the socket with the function  `socket_open( )`.
+
+To bind a local address to a socket based on a destination address and address 
+selection preferences, use the following function:
+
+```
+int8_t socket_bind2addrsel
+(
+	int8_t 				socket,
+	const ns_address_t 	*dst_address
+)
+```
+
+where:
+
+<dl>
+<dt><code>socket</code></dt>
+<dd>The socket ID returned by <code>socket_open</code>.</dd>
+<dt><code>dst_address</code></dt>
+<dd>Destination address to which the socket wants to communicate.</dd>
+
+<dt><code>Return value</code></dt>
+<dd>0 on success.</dd>
+<dd>-1 if given address is NULL or socket ID is invalid.</dd>
+<dd>-2 if memory allocation failed.</dd>
+<dd>-3 if socket is already bound to address.</dd>
+<dd>-4 if interface cannot be found.</dd>
+<dd>-5 if source address selection fails.</dd>
+<dd>-6 bind2addrsel is not supported on this type of socket.</dd>
 </dl>
 
 ### How to read data from a socket
@@ -269,7 +299,7 @@ where:
 <dd>The socket ID of the socket to be read.</dd>
 
 <dt><code>address</code></dt>
-<dd>A pointer to an address structure containing the source address of the packet (populated by the stack).</dd>
+<dd>A pointer to an address structure containing the source address of the packet (populated by the stack). Can be NULL.</dd>
 
 <dt><code>buffer</code></dt>
 <dd>A pointer to a byte array containing the payload of the packet.</dd>
@@ -278,9 +308,14 @@ where:
 <dd>The length of the payload data to be stored in the buffer.</dd>
 
 <dt><code>Return value</code></dt>
-<dd>>0 Length of the received data.</dd>
-<dd>-1 Fail.</dd>
+<dd>&gt 0 The length of the data copied to the buffer.</dd>
+<dd>0 No data is available to read.</dd>
+<dd>-1 Invalid input parameters.</dd>
 </dl>
+
+The application receives an event type `SOCKET_DATA` to its receive socket callback when the data is available. The application
+must read the data from the callback because the stack frees the data after it has called the receive socket callback.
+All data must be read by one call. If data is too long to fit in the supplied buffer the excess bytes are discarded.
 
 ### How to send data to a socket
 
@@ -292,8 +327,8 @@ After successfully calling the function, the application must await the TX proce
 
 Function|Socket types
 --------|------------
-`socket_sendto( )`|UDP and ICMP
-`socket_send( )`|TCP
+`socket_sendto( )`|UDP, ICMP and RAW
+`socket_send( )`|TCP, or UDP if connected
 
 
 _Table 3-24_ describes the possible response events when the outcome of the function call is successful.
@@ -307,7 +342,7 @@ Response Event|Socket Type|Description
 `SOCKET_CONNECT_FAIL_CLOSED`|TCP|TX process fails and connection closed.
 
 
-To transmit UDP or raw ICMP data, use the following function:
+To transmit data on an unconnected socket, use the following function:
 
 ```
 int8_t socket_sendto
@@ -339,7 +374,7 @@ where:
 <dd>-1 Fail.</dd>
 </dl>
 
-To send data via a connected TCP socket, use the following function:
+To send data via a connected socket, use the following function:
 
 **Note**
 
@@ -555,4 +590,32 @@ Parameters for Traffic class:
 </dl>
 
 [RFC 4594](https://tools.ietf.org/html/rfc4594) specifies the appropriate traffic class values. The 6LoWPAN Stack does not interpret the specified traffic class. It is just passed through.
+
+### How to set flow label for a socket
+
+You can use `socket_setsockopt()` to set the socket flow label.
+
+Parameters for flow label:
+
+<dl>
+<dt><code>socket</code></dt>
+<dd>The socket identified.</dd>
+
+<dt><code>level</code></dt>
+<dd><code>SOCKET_IPPROTO_IPV6</code></dd>
+
+<dt><code>opt_name</code></dt>
+<dd><code>SOCKET_IPV6_FLOW_LABEL</code></dd>
+
+<dt><code>opt_value</code></dt>
+<dd>A pointer to <code>int32_t</code> value. Valid values are from 0 to 0xfffff. -1 is for system default (set with `arm_nwk_ipv6_auto_flow_label()`). -2 will always autogenerate a flow label, regardless of system default.</dd>
+
+<dt><code>opt_len</code></dt>
+<dd>Is the size of <code>int32_t</code>, 4 bytes.</dd>
+</dl>
+
+The stack auto-generates flow labels on outgoing packets following the
+guidelines in [RFC 6437]. The stack does not interpret the flow label on
+received packets, and nor does the socket API report flow label to the
+application.
 

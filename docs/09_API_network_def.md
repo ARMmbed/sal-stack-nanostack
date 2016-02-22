@@ -54,7 +54,7 @@ To initialize and configure the PANA network client interface, use the following
 ```
 int8_t arm_pana_client_library_init
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	net_tls_cipher_e cipher_mode,
 	uint32_t psk_key_id
 )
@@ -63,7 +63,7 @@ int8_t arm_pana_client_library_init
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>cipher_mode</code></dt>
@@ -83,14 +83,14 @@ To pull the PANA client key manually for testing purposes, use the following fun
 ```
 int8_t arm_pana_client_key_pull
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value:</code></dt>
@@ -116,7 +116,7 @@ To initialize and configure the PANA network server interface, use the following
 ```
 int8_t arm_pana_server_library_init
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	net_tls_cipher_e cipher_mode,
 	uint8_t *key_material,
 	uint32_t time_period_before_activate_key
@@ -126,7 +126,7 @@ int8_t arm_pana_server_library_init
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>cipher_mode</code></dt>
@@ -149,7 +149,7 @@ To trigger a network key update process, use the following function. This functi
 ```
 int8_t arm_pana_server_key_update
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	uint8_t * network_key_material
 )
 ```
@@ -157,7 +157,7 @@ int8_t arm_pana_server_key_update
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>network_key_material</code></dt>
@@ -175,14 +175,14 @@ To activate the new key material quicker before a standard timeout, use the foll
 ```
 int8_t arm_pana_activate_new_key
 (
-	int8_t nwk_interface_id
+	int8_t interface_id
 )
 ```
 
 where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value:</code></dt>
@@ -910,32 +910,6 @@ where:
 
 <dt><code>NET_INTERFACE_VIRTUAL</code></dt>
 <dd>IPv6 interface over any defined serial interface.</dd>
-</dl>
-
-### typedef enum nwk_interface_id
-
-This enumeration defines the information required to set up an id that represents a network interface and comprises the following variables:
-
-```
-typedef enum {
-    IF_6LoWPAN,
-    IF_IPV6,
-    IF_LOCAL_SOCKET,
-} nwk_interface_id;
-
-```
-
-where:
-
-<dl>
-<dt><code>IF_6LoWPAN</code></dt>
-<dd>Provides a 6LoWPAN interface ID.</dd>
-
-<dt><code>IF_IPV6</code></dt>
-<dd>Provides an IPv6 ID.</dd>
-
-<dt><code> IF_LOCAL_SOCKET</code></dt>
-<dd>Provides a local socket interface ID./dd>
 </dl>
 
 ### typedef enum net_security_t

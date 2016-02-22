@@ -25,5 +25,6 @@ pages:
 - ['14_API_data.md','API Reference Manual', 'Data Structures, Types & Variables API']
 - ['15_API_debug.md','API Reference Manual', 'Network Debug Statistics API']
 - ['thread_APIs.md','API Reference Manual', 'Thread Stack APIs']
+- ['api_changes_to_v4_0_0.md', 'API Reference Manual', 'API update v.4.0.0']
 - ['16_API_porting.md','Porting a new platform to ARM mbed Networking Stack', 'Porting to the Stack']
 - ['configuring.md', 'Configuring the stack', 'Build time configuration']

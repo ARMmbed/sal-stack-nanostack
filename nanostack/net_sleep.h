@@ -19,26 +19,26 @@
 
 /**
  * \file net_sleep.h
- * \brief Checks out if there is a sleep possibility for the stack and the max. sleep time.
+ * \brief Checks if there is a sleep possibility for the stack and the max sleep time.
  *
- * \section check-slp-poss Checking sleep possibility
- * - arm_net_check_enter_deep_sleep_possibility(), checks if there is any possibility that stack can enter a sleep cycle.
- * - arm_net_enter_sleep(), a function to enter sleep cycle.
- * - arm_net_wakeup_and_timer_synch(), restarts the stack and synchronize the timeer
+ * \section check-slp-poss Checking sleep possibility.
+ * - arm_net_check_enter_deep_sleep_possibility(), Checks whether the stack can enter a sleep cycle.
+ * - arm_net_enter_sleep(), A function to enter sleep cycle.
+ * - arm_net_wakeup_and_timer_synch(), Restarts the stack and synchronizes the timer.
  */
 
 /**
- *\brief Check sleep possibility
+ *\brief Check sleep possibility.
  * \return Time in milliseconds for sleep.
- * \return 0,  no possibility to enter deep sleep.
+ * \return 0,  No possibility to enter deep sleep.
  */
 uint32_t arm_net_check_enter_deep_sleep_possibility(void);
 
 /**
- * \brief Set Stack to sleep.
+ * \brief Set stack to sleep.
  *
  * \return 0 Stack stopped.
- * \return -1 Not supported action at moment
+ * \return -1 Not supported action at moment.
  *
  */
 
@@ -46,13 +46,13 @@ int arm_net_enter_sleep(void);
 /**
  * \brief Restart stack after sleep.
  *
- *  Stack enable and synch timers after sleep
+ *  Stack enable and synch timers after sleep.
  *
- *  \param sleeped_time_in_ms time total sleep time in milliseconds what stack need to synch with
+ *  \param sleeped_time_in_ms Total sleep time in milliseconds. The stack needs to synch with this.
  *
- * \return 0 Stack Restarted.
- * \return 1 Stack can continue sleep for sleeped_time_in_ms define time
- * \return -1 Stack already active
+ * \return 0 Stack restarted.
+ * \return 1 Stack can continue sleep for the time defined in sleeped_time_in_ms.
+ * \return -1 Stack already active.
  *
  */
 int arm_net_wakeup_and_timer_synch(uint32_t sleeped_time_in_ms);

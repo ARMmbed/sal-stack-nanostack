@@ -17,23 +17,23 @@
 #include "ns_types.h"
 
 /*
- * API to modify Operating System routing table
+ * API to modify the operating system routing table
  * and neighbor cache.
  * Required on Linux. Not needed on embedded systems.
  */
 
+enum add_or_remove {ADD = 1, REMOVE = 0};
+
 #ifndef __linux__
-/* Use DUMMY functions on not Linux platforms */
-#define whiteboard_os_modify(x,y) ((void) 0)
+/* Use DUMMY functions on non-Linux platforms. */
+#define whiteboard_os_modify(x,y) ((void)(x),(void)(y))
 
 #else /* LINUX */
 
-enum add_or_remove {ADD = 1, REMOVE = 0};
-
-/** Modify operating system whiteboard.
- * Add or remove entries to OS routing table
- * \param IPv6 address
- * \add to add or remove address.
+/** Modify the operating system whiteboard.
+ * Add entries to or remove from the OS routing table.
+ * \param address, IPv6 address.
+ * \param add_or_remove, Add or remove address.
  */
 void whiteboard_os_modify(const uint8_t address[static 16], enum add_or_remove mode);
 

@@ -13,17 +13,17 @@
  */
 /**
  * \file br_mle_lib.h
- * \brief Border Router MLE (Mesh Link Establishment) API when wireless interface is running.
+ * \brief Border Router MLE (Mesh Link Establishment) API (wireless interface running).
  *
- * - arm_mle_prepare_update(), Update MLE link parameter(Channel, PAN-ID, allow-join) at Run time
- * - arm_mle_update_beacon_payload(), Update Beacon payload optional data part
- * - arm_mle_link_request_to_routers(), load MLE entry from NVM
+ * - arm_mle_prepare_update(), Update MLE link parameter (Channel, PAN-ID, allow-join) at run time.
+ * - arm_mle_update_beacon_payload(), Update Beacon payload optional data part.
+ * - arm_mle_link_request_to_routers(), Load MLE entry from NVM.
  *
- * MLE update process recommend minimum delay should be >5000 ms.
- * PAN-ID and Channel update cause problems to sleepy Host Node.
- * Those nodes never get Multicast packet from parent and loose parent.
+ * The recommended minimum delay for the MLE update process is >5000 ms.
+ * PAN-ID and Channel update cause problems to the sleepy host nodes.
+ * They never get the multicast packet from the parent and loose the parent.
  *
- * MLE link update messages will be delivered by trickle multicast forwarding using multicast address FF03::1.
+ * MLE link update messages are delivered by trickle multicast forwarding using multicast address FF03::1.
  *
  */
 #ifndef _BR_MLE_LIB_H
@@ -35,45 +35,45 @@
 extern "C" {
 #endif
 
-/* Supported MLE Link layer Parameters changes at Run time*/
-#define MLE_CHANNEL_UPDATE_TYPE 0       /* Update new link layer channel */
-#define MLE_PANID_UPDATE_TYPE 1         /* Update new link layer PAN-ID */
-#define MLE_ALLOW_JOIN_UPDATE_TYPE 2    /* Update Allow Join Bit at Beacon payload */
+/* Supported MLE Link layer Parameters changes at run time*/
+#define MLE_CHANNEL_UPDATE_TYPE 0       /* Update new link layer channel. */
+#define MLE_PANID_UPDATE_TYPE 1         /* Update new link layer PAN ID. */
+#define MLE_ALLOW_JOIN_UPDATE_TYPE 2    /* Update Allow Join Bit at beacon payload. */
 
 /**
- * \brief Update MLE link parameter at Run time
+ * \brief Update MLE link parameter at run time
  *
- * \param nwk_id Network interface ID
- * \param type MLE_CHANNEL_UPDATE_TYPE, MLE_PANID_UPDATE_TYPE or MLE_ALLOW_JOIN_UPDATE_TYPE
- * \param time Interval to Update in milliseconds need to 5000 or bigger.
- * \param value indicate channel, pan-id or boolean value for allow join
+ * \param nwk_id Network interface ID.
+ * \param type MLE_CHANNEL_UPDATE_TYPE, MLE_PANID_UPDATE_TYPE or MLE_ALLOW_JOIN_UPDATE_TYPE.
+ * \param time Update interval needs to be 5000 milliseconds or more.
+ * \param value Indicate channel, PAN ID or boolean value for allow join.
  *
- * \return 0    Update process OK
- * \return -1   Old update process still active
- * \return -2   Unsupported Update Type
- * \return -3   Un supported value (channel not between 11-26 or pan id was 0xffff or 0xfffe)
- * \return -4 Stack at idle state
+ * \return 0    Update process OK.
+ * \return -1   Old update process still active.
+ * \return -2   Unsupported update type.
+ * \return -3   Unsupported value (channel not supported or PAN ID is 0xffff or 0xfffe).
+ * \return -4   Stack in idle state.
  *
  * List Possible values for specific types:
- * - MLE_CHANNEL_UPDATE_TYPE, supported values 11-26
- * - MLE_PAN_ID_UPDATE_TYPE ,supported value 0x0000 -0xfffd
- * - MLE_ALLOW_JOIN__UPDATE_TYPE ,16-bit Boolean 0=Disbaled and 1=Enabled
+ * - MLE_CHANNEL_UPDATE_TYPE, Supported values 11-26.
+ * - MLE_PAN_ID_UPDATE_TYPE, supported value 0x0000-0xfffd.
+ * - MLE_ALLOW_JOIN__UPDATE_TYPE, 16-bit boolean, 0=Disabled and 1=Enabled
  *
  *
  */
 extern int8_t arm_mle_prepare_update(int8_t nwk_id, uint8_t type, uint32_t time, uint16_t value);
 /**
- * \brief Update Beacon Payload optional field
+ * \brief Update beacon payload optional field
  *
- * \param nwk_id Network interface ID
- * \param optional_fields_data pointer to given Optional data
- * \param optional_fields_len length of optional data
- * \param delay Interval to Update in milliseconds need to 5000 or bigger.
+ * \param nwk_id Network interface ID.
+ * \param optional_fields_data Pointer to given optional data.
+ * \param optional_fields_len Length of optional data.
+ * \param delay Update interval needs to be 5000 milliseconds or more.
  *
- * \return 0    Update process OK
- * \return -1   Old update process still active or Memory allocation fail
- * \return -2   Unsupported Update Type
- * \return -4 Stack at idle state
+ * \return 0    Update process OK.
+ * \return -1   Old update process still active or memory allocation failure.
+ * \return -2   Unsupported update type.
+ * \return -4   Stack in idle state.
  *
  */
 extern int8_t arm_mle_update_beacon_payload(int8_t nwk_id, uint8_t *optional_fields_data, uint8_t optional_fields_len, uint32_t delay);
@@ -84,8 +84,8 @@ extern int8_t arm_mle_update_beacon_payload(int8_t nwk_id, uint8_t *optional_fie
  *
  * \param nwk_id Network interface ID
  *
- * \return 0    Update process OK
- * \return -1   Memory allocation fail for packet
+ * \return 0    Update process OK.
+ * \return -1   Memory allocation for the packet fails.
  *
  */
 extern int8_t arm_mle_link_request_to_routers(int8_t nwk_id);

@@ -21,18 +21,18 @@
  * \brief DHCP server connection interfaces
  *
  * \section dhcp-service DHCP Service Instance
- * - dhcp_service_init(), Initializes a DHCP service
- * - dhcp_service_delete(), Removes the DHCP service
+ * - dhcp_service_init(), Initializes a DHCP service.
+ * - dhcp_service_delete(), Removes the DHCP service.
  *
  * \section dhcp-msg DHCP Service Messages
- * - dhcp_service_send_req(), Sends out DHCP request messages
- * - dhcp_service_send_resp(), Sends out DHCP response messages
+ * - dhcp_service_send_req(), Sends out DHCP request messages.
+ * - dhcp_service_send_resp(), Sends out DHCP response messages.
  *
  * \section dhcp-tim DHCP Service Timers (retry timers)
- * - dhcp_service_send_req(), Sends out DHCP request messages
- * - dhcp_service_set_retry_timers(), sets the retransmission parameters
- * - dhcp_service_req_remove(), stops retrying and retransmissions
- * - dhcp_service_timer_tick(), indicates if a timeout occurred
+ * - dhcp_service_send_req(), Sends out DHCP request messages.
+ * - dhcp_service_set_retry_timers(), Sets the retransmission parameters.
+ * - dhcp_service_req_remove(), Stops retrying and retransmissions.
+ * - dhcp_service_timer_tick(), Indicates if a timeout occurred.
  *
  */
 
@@ -43,28 +43,28 @@
  * Return values for callbacks
  */
 
-/** If returned msg belongs to someone else */
+/** Message belongs to someone else. */
 #define RET_MSG_NOT_MINE 0
-/** If returned msg is handled */
+/** Message is handled. */
 #define RET_MSG_ACCEPTED 1
-/** If returned msg is not the final one and need to hold on a bit */
+/** Message is not the final one and needs to hold on a bit. */
 #define RET_MSG_WAIT_ANOTHER -1
-/** If returned msg is unexpected or corrupted */
+/** Message is unexpected or corrupted. */
 #define RET_MSG_CORRUPTED -2
 
 /**
  * \brief DHCP Service receive callback.
  *
- * When dhcp service receives dhcp message it will go through list of registered DHCP services instances
- * until some instance acknowledges that message belongs to it.
+ * When the DHCP service receives a DHCP message it will go through a list of registered DHCP services instances
+ * until some instance acknowledges that the message belongs to it.
  * @param instance_id Instance of registered server.
- * @param msg_tr_id Message transaction id.
- * @param msg_ptr Allocated message pointer should not deallocate unless returned RET_MSG_ACCEPTED then responsibility of client.
+ * @param msg_tr_id Message transaction ID.
+ * @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
  * @param msg_len Length of message.
  *
  * Return values
- * RET_MSG_ACCEPTED - Message is handled
- * RET_MSG_CORRUPTED - Message is corrupted
+ * RET_MSG_ACCEPTED - Message is handled.
+ * RET_MSG_CORRUPTED - Message is corrupted.
  * RET_MSG_NOT_MINE - Message belongs to someone else.
  */
 
@@ -73,16 +73,16 @@ typedef int (dhcp_service_receive_req_cb)(uint16_t instance_id, uint32_t msg_tr_
 /**
  * \brief DHCP Service Message Response callback.
  *
- * When dhcp service receives a response to a dhcp message, this callback receives it.
+ * When the DHCP service receives a response to a DHCP message, this callback receives it.
  *
- * @param instance_id Instance of registered server.
- * @param ptr pointer for client opbject.
- * @param msg_ptr Allocated message pointer should not deallocate unless returned RET_MSG_ACCEPTED then responsibility of client.
+ * @param instance_id Instance of a registered server.
+ * @param ptr Pointer for client object.
+ * @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
  * @param msg_len Length of message.
  *
  * Return values
  * RET_MSG_ACCEPTED - Message is handled
- * RET_MSG_WAIT_ANOTHER - this message was not last one for this transaction and new reply is waited.
+ * RET_MSG_WAIT_ANOTHER - This message was not the last one for this transaction and a new reply is expected.
  */
 
 typedef int (dhcp_service_receive_resp_cb)(uint16_t instance_id, void *ptr, uint8_t msg_name,  uint8_t *msg_ptr, uint16_t msg_len);
@@ -91,28 +91,28 @@ typedef int (dhcp_service_receive_resp_cb)(uint16_t instance_id, void *ptr, uint
 /**
  * \brief Initialize server instance.
  *
- * Creates and shares socket for other dhcp services.
+ * Creates and shares the socket for other DHCP services.
  *
- * \return instance id that is used to identify service.
+ * \return Instance ID that is used to identify the service.
  */
 
 uint16_t dhcp_service_init(int8_t interface_id, dhcp_service_receive_req_cb *receive_req_cb);
 
 /**
-* \brief Deletes server instance.
+* \brief Deletes a server instance.
 *
-* Removes all data related to this instance
+* Removes all data related to this instance.
 *
-* \param instance id of registered server.
+* \param instance ID of the registered server.
 */
 void dhcp_service_delete(uint16_t instance);
 
 /**
 * \brief Sends DHCP response message.
 *
-* @param msg_tr_id Message transaction id.
-* @param options Options for this request
-* @param msg_ptr Allocated message pointer should not deallocate unless returned RET_MSG_ACCEPTED then responsibility of client.
+* @param msg_tr_id Message transaction ID.
+* @param options Options for this request.
+* @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
 * @param msg_len Length of message.
 *
 * \return 0, if everything went fine.
@@ -127,14 +127,14 @@ int dhcp_service_send_resp(uint32_t msg_tr_id, uint8_t options, uint8_t *msg_ptr
  * Service takes care of retransmissions.
  *
  * @param instance_id Instance of registered server.
- * @param options Options for this request
- * @param ptr void pointer to client object
- * @param addr address of the server.
- * @param msg_ptr Allocated message pointer this pointer is the responsibility of service after this call.
+ * @param options Options for this request.
+ * @param ptr void Pointer to client object
+ * @param addr Address of the server.
+ * @param msg_ptr Allocated message pointer. This pointer is the responsibility of the service after this call.
  * @param msg_len Length of message.
  *
- * \return message transaction id of dhcp transaction
- * \return 0, if error happened.
+ * \return message Transaction ID of the DHCP transaction
+ * \return 0, if error occurred.
  */
 uint32_t dhcp_service_send_req(uint16_t instance_id, uint8_t options, void *ptr, const uint8_t addr[static 16], uint8_t *msg_ptr, uint16_t msg_len, dhcp_service_receive_resp_cb *receive_resp_cb);
 
@@ -143,10 +143,10 @@ uint32_t dhcp_service_send_req(uint16_t instance_id, uint8_t options, void *ptr,
  *
  * Sets the retransmission parameters for this transaction.
  *
- * @param msg_tr_id Message transaction id.
+ * @param msg_tr_id Message transaction ID.
  * @param timeout_init Initial timeout value.
  * @param timeout_max Maximum timeout value when initial timeout is doubled with every retry.
- * @param retrans_max Maximum retry count after which error is received.
+ * @param retrans_max Maximum retry count after which an error is received.
  *
  */
 void dhcp_service_set_retry_timers(uint32_t msg_tr_id, uint16_t timeout_init, uint16_t timeout_max, uint8_t retrans_max);
@@ -154,9 +154,9 @@ void dhcp_service_set_retry_timers(uint32_t msg_tr_id, uint16_t timeout_init, ui
 /**
  * \brief Stops transactions for a message (retransmissions).
  *
- * Clears off sending retransmissions for a particular message transaction by finding it via its message transaction id.
+ * Clears off sending retransmissions for a particular message transaction by finding it via its message transaction ID.
  *
- * @param msg_tr_id Message transaction id.
+ * @param msg_tr_id Message transaction ID.
  *
  */
 void dhcp_service_req_remove(uint32_t msg_tr_id);
@@ -168,7 +168,7 @@ void dhcp_service_req_remove(uint32_t msg_tr_id);
 /**
  * \brief Timer tick function for retransmissions.
  *
- * should be called in 100ms intervals if more time passes before call amount in 100ms units.
+ * Retransmission timer ticks should be increased with 100ms interval, if necessary. One tick is one millisecond.
  *
  */
 bool dhcp_service_timer_tick(uint16_t ticks);
