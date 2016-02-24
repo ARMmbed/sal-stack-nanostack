@@ -427,16 +427,16 @@ extern int8_t arm_nwk_interface_network_driver_set(int8_t interface_id, int8_t t
  * \brief Set configured network interface global address mode (border router bootstrap mode cannot set this).
  *
  * \param interface_id Network interface ID.
- * \param mode efine 6LoWPAN Global Address register mode:
+ * \param mode Define 6LoWPAN Global Address register mode:
  *      * NET_6LOWPAN_GP64_ADDRESS, Interface registers only GP64
  *      * NET_6LOWPAN_GP16_ADDRESS, Interface registers only GP16
  *      * NET_6LOWPAN_MULTI_GP_ADDRESS, Interface registers GP16 and GP64 addresses. GP16 is primary address and GP64 is secondary.
  *
- * \param short_address_base Short address base. If the application defines value 0-0xfffd, 6LoWPAN tries to register GP16 address 
+ * \param short_address_base Short address base. If the application defines value 0-0xfffd, 6LoWPAN tries to register GP16 address
  * using that address. 0xfffe and 0xffff generate random 16-bit short address.
  *
- * \param define_new_short_address_at_DAD This parameter is only checked when mode is not NET_6LOWPAN_GP64_ADDRESS and 
- * short_address_base is 0-0xfffd. Recommended value is 1. It enables automatic new address definition at 
+ * \param define_new_short_address_at_DAD This parameter is only checked when mode is not NET_6LOWPAN_GP64_ADDRESS and
+ * short_address_base is 0-0xfffd. Recommended value is 1. It enables automatic new address definition at
  * Duplicate Address Detection (DAD). Value 0 generates a DAD error for the interface bootstrap.
  * Border router device will not check that part.
  *
@@ -474,6 +474,17 @@ extern int8_t arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s
  */
 extern int8_t arm_nwk_6lowpan_link_scan_parameter_set(int8_t interface_id, uint8_t scan_time);
 
+/**
+ * \brief A function to set pan ID filter.
+ *
+ * \param interface_id Network interface ID
+ * \param pan_id_filter is the pan ID to be allowed value 0xffff clean filter.
+ *
+ * \return 0 Filter set OK
+ * \return -1 Unknown Network interface ID
+ * \return -2 Interface is active
+ *
+ */
 extern int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan(int8_t interface_id, uint16_t pan_id_filter);
 
 /**
@@ -738,7 +749,7 @@ extern int8_t arm_nwk_6lowpan_border_router_context_parameter_update(int8_t inte
  * \brief Delete allocated context by ID.
  *
  * \param interface_id Network interface ID.
- * \param c_id 4-bit context ID to be deleted.
+ * \param c_id 4-bit Context ID to be deleted.
  *
  * \return 0 Context delete OK.
  * \return -1 Delete process fails.
@@ -810,7 +821,7 @@ extern int8_t arm_net_address_list_get_next(int8_t interface_id, int *n, uint8_t
 /**
  * \brief A function to read network interface address count.
  * \param interface_id Network interface ID.
- * \param address_count Pointer to a structure where the address count is saved.
+ * \param address_count A pointer to the structure where the address count is saved.
  *
  * \return 0 On success, -1 on errors.
  */
@@ -821,7 +832,7 @@ extern int8_t arm_net_interface_address_list_size(int8_t interface_id, uint16_t 
  * \param interface_id Network interface ID.
  * \param address_buf_size Buffer size in bytes, minimum 16 bytes.
  * \param address_buffer A pointer to a structure where the addresses are saved one by one.
- * \param writed_address_count A pointer to a structure where the number of addresses saved is written.
+ * \param writed_address_count A pointer to the structure where the number of addresses saved is written.
  *
  * \return 0 on success, -1 on errors.
  */
@@ -883,7 +894,7 @@ extern int8_t arm_net_route_delete(const uint8_t *prefix, uint8_t prefix_len, co
 /**
  * \brief Border Router ND setup NVM update callback set
  *
- * \param passed_fptr Function pointer to ND NVM update process.
+ * \param passed_fptr A function pointer to the ND NVM update process.
  *
  * \return 0 ND NVM operation init OK.
  * \return -1 No memory for NVM buffer.

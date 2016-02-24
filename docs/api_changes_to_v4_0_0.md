@@ -1,6 +1,17 @@
 # About this document
 
-NanoStack API was changed due to the new feature implementation. This document describes how to fix occurred conflicts and issues.
+Since Nanostack version 3.0.x there has been number of API changes.
+
+1. Added MLE router and host lifetime configuration API
+2. Added MLE neighbor limits configuration API
+3. MLE token bucket configuration API
+4. Rename the `arm_nwk_6lowpan_link_scan_paramameter_set()` function to `arm_nwk_6lowpan_link_scan_parameter_set()`.
+5. Channel mask settings API changed.
+7. Added API for adding/deleting routes.
+8. The parameters of function `cca_start()` have changed.
+9. FHSS API added.
+
+This documentation should walk you through updating you current applications to use Nanostack 4.0.x APIs.
 
 ## The Network Layer Control APIs
 
@@ -8,14 +19,14 @@ NanoStack API was changed due to the new feature implementation. This document d
 
 **Problem:**
 
-MLE router and host lifetimes were not configurable.  
+MLE router and host lifetimes were not configurable.
 
 **Solution:**
 
 Added functions `arm_nwk_6lowpan_mle_router_lifetime_set()` and `arm_nwk_6lowpan_mle_host_lifetime_set()`
-that can be used to set the MLE neighbor lifetime. The router lifetime controls also the MLE advertisement period that 
+that can be used to set the MLE neighbor lifetime. The router lifetime controls also the MLE advertisement period that
 is the router lifetime in seconds divided by four. The usage of the MLE router and host lifetime configuration is
-optional. If the lifetimes are not set, the default router lifetime is 128 seconds and host lifetime 400 seconds. 
+optional. If the lifetimes are not set, the default router lifetime is 128 seconds and host lifetime 400 seconds.
 
 ### MLE neighbor limits configuration API
 
@@ -37,10 +48,10 @@ The sending rate for MLE messages was not configurable.
 
 **Solution:**
 
-Added function `arm_nwk_6lowpan_mle_token_bucket_settings_set()` that can be used to configure the MLE message 
+Added function `arm_nwk_6lowpan_mle_token_bucket_settings_set()` that can be used to configure the MLE message
 sending rate. With this function, you can set the token bucket size, rate and count. The token bucket size defines the
 bucket size. The token bucket rate defines the rate for adding new tokens. The count defines how many
-tokens at a time are added to the bucket. The minimum interval of the rate is 0.1 seconds (for example, if the rate is 3 and 
+tokens at a time are added to the bucket. The minimum interval of the rate is 0.1 seconds (for example, if the rate is 3 and
 the count is 4, then 4 new tokens are added to bucket every 0.3 seconds). The usage of MLE token bucket is optional. If the token bucket is not used, the MLE message sending rate is unlimited.
 
 ## Applications
@@ -63,15 +74,15 @@ Parameter `uint32_t channel_mask` is removed from `arm_nwk_6lowpan_link_scan_par
 
 - Remove parameter `channel_mask` from all `arm_nwk_6lowpan_link_scan_parameter_set()` function calls.
 - Add a new function call `arm_nwk_set_channel_list();` after `arm_nwk_6lowpan_link_scan_parameter_set()` function call.
-	
+
 		channel_list_s channel_list = {CHANNEL_PAGE_0, 0x07FFF800};
 		int main(void)
-		{    
+		{
 			.
 			.
 			.
 			net_init_core();
-			net_rf_id = arm_nwk_interface_init(NET_INTERFACE_RF_6LOWPAN, rf_phy_device_register_id, 
+			net_rf_id = arm_nwk_interface_init(NET_INTERFACE_RF_6LOWPAN, rf_phy_device_register_id,
 			"6LoWPAN_ROUTER");
 			int8_t retval = arm_nwk_6lowpan_link_scan_parameter_set(net_rf_id, 5);
 			if (retval) {
@@ -85,8 +96,8 @@ Parameter `uint32_t channel_mask` is removed from `arm_nwk_6lowpan_link_scan_par
 			.
 			.
 		}
-	
-Function `arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s* nwk_channel_list)` is defined in `net_interface.h`. Instead of using a 32-bit variable, the new API is using structure `channel_list_s` 
+
+Function `arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s* nwk_channel_list)` is defined in `net_interface.h`. Instead of using a 32-bit variable, the new API is using structure `channel_list_s`
 to define the scanned channel page and channels.
 
 Structure `channel_list_s` is defined in `net_interface.h`:
@@ -111,16 +122,16 @@ where enumeration `channel_page_e` from `arm_hal_phy.h` defines the supported ch
 		CHANNEL_PAGE_9 = 9,
 		CHANNEL_PAGE_10 = 10
 	} channel_page_e;
-	
+
 `channel_mask` is an array of 32-bit variables allowing up to 255 channels.
 
 The channel list can be defined using global a structure, for example:
 
 	// IEEE 802.15.4-2006 for 2.4GHz band (channels 11-26)
 	channel_list_s channel_list = {CHANNEL_PAGE_0, 0x07FFF800};
-	
+
 or
-	
+
 	// IEEE 802.15.4-2006 for Sub 1GHz band (channels 0-10)
 	channel_list_s channel_list = {CHANNEL_PAGE_2, 0x000007ff};
 
@@ -145,14 +156,14 @@ Structure `border_router_setup_s` content has changed because variable `channel`
         		uint32_t lifetime = 0xffffffff;
         		uint8_t t_flags = 0;
         		uint8_t prefix_len =0;
-        		arm_nwk_interface_configure_6lowpan_bootstrap_set(net_6lowpan_id, operating_mode, 
+        		arm_nwk_interface_configure_6lowpan_bootstrap_set(net_6lowpan_id, operating_mode,
 				operating_mode_extension);
     			arm_nwk_set_channel_list(net_6lowpan_id, &channel_list);
 			.
 			.
 			}
 		}
-	
+
 Function `arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s *nwk_channel_list)` is defined in `net_interface.h`.
 
 Structure `channel_list_s` is defined in `net_interface.h`:
@@ -177,16 +188,16 @@ where enumeration `channel_page_e` from `arm_hal_phy.h` defines the supported ch
 		CHANNEL_PAGE_9 = 9,
 		CHANNEL_PAGE_10 = 10
 	} channel_page_e;
-	
+
 `channel_mask` is an array of 32-bit variables allowing up to 255 channels.
 
 The channel can be defined using a global structure, for example:
 
 	// IEEE 802.15.4-2006 for 2.4GHz band channel 11
 	channel_list_s channel_list = {CHANNEL_PAGE_0, 0x00000800};
-	
+
 or
-	
+
 	// IEEE 802.15.4-2006 for Sub 1GHz band channel 0
 	channel_list_s channel_list = {CHANNEL_PAGE_2, 0x00000001};
 
@@ -222,7 +233,7 @@ Instead of the channel number, channel page and channel mask need to be delivere
 			.
 			.
         		case libNAP_SET_CONFIGURATION:
-            			length = libNAPBuildMessage(tx_buffer, libNAP_SET_HOST_NETWORK_CONFIGURE_CMD, 
+            			length = libNAPBuildMessage(tx_buffer, libNAP_SET_HOST_NETWORK_CONFIGURE_CMD,
 						&appNetworkSetup, 0, 0);
             			break;
 			.
@@ -240,10 +251,10 @@ In the new API, channel page and channel list are delivered instead of the chann
 
 **Solution:**
 
-- When the network driver application is parsing the `libNAP_SET_HOST_NETWORK_CONFIGURE_CMD` event received from the master device, it needs to read the channel page and channel mask from the received configuration 
+- When the network driver application is parsing the `libNAP_SET_HOST_NETWORK_CONFIGURE_CMD` event received from the master device, it needs to read the channel page and channel mask from the received configuration
 and use them with the `arm_nwk_interface_network_driver_set()` function call.
 
-		void app_nap_parser_ok(libNAP_command_types_e type, libnap_network_parameters_s *config, 
+		void app_nap_parser_ok(libNAP_command_types_e type, libnap_network_parameters_s *config,
 		uint8_t *data_ptr, uint16_t data_length)
 		{
 			channel_list_s channel_list;
@@ -257,12 +268,12 @@ and use them with the `arm_nwk_interface_network_driver_set()` function call.
 					.
 					channel_list.channel_page = (channel_page_e) config->channel_page;
 					memcpy(channel_list.channel_mask, config->channel_mask, sizeof(uint32_t) * 8);
-					arm_nwk_interface_configure_6lowpan_bootstrap_set(net_6lowpan_id, boot_mode, 
+					arm_nwk_interface_configure_6lowpan_bootstrap_set(net_6lowpan_id, boot_mode,
 					(net_6lowpan_mode_extension_e) 0);
-					if (arm_nwk_interface_network_driver_set(net_6lowpan_id, tun_driver_id, 
+					if (arm_nwk_interface_network_driver_set(net_6lowpan_id, tun_driver_id,
 					&channel_list, conf_ptr) == 0) {
 						host_state = libNAP_CONFIGURATION_READY;
-					}				
+					}
 					break;
 			}
 			.
@@ -270,6 +281,19 @@ and use them with the `arm_nwk_interface_network_driver_set()` function call.
 			.
 		}
 
+**Problem:**
+
+Nanostack has introduced a public API for adding/deleting routes. As a consequence, default route ::/0 (on-link) is no longer automatically added by nanostack for tunnel interfaces. Border router needs to set a default route manually by using the route add/delete interface.
+
+**Solution:**
+
+Function `int8_t arm_net_route_add(const uint8_t *prefix, uint8_t prefix_len, const uint8_t *next_hop, uint32_t lifetime, uint8_t metric, int8_t interface_id)` is defined in `net_interface.h`.
+
+For example, to add the same default route `::/0 (on-link)` which was earlier added by nanostack, add the following line to the border router application:
+
+		arm_net_route_add(NULL, 0, NULL, 0xffffffff, 128, interface_id);
+
+where value `0xffffffff` denotes to infinite route lifetime, and value `128` to the default metric value. `NULL` value for `prefix` and `next_hop` parameters means `::/0` prefix and on-link route, respectively. Note that a proper configuration should _always_ add a next-hop value (e.g. link-local address of the neighbouring router) to a default route.
 
 ## PHY drivers
 
@@ -277,7 +301,7 @@ and use them with the `arm_nwk_interface_network_driver_set()` function call.
 
 **Problem:**
 
-The content in structure `phy_device_driver_s` has changed. The structure `phy_device_channel_info_s` is replaced with `phy_device_channel_page_s` that contains information about supported channel pages, 
+The content in structure `phy_device_driver_s` has changed. The structure `phy_device_channel_info_s` is replaced with `phy_device_channel_page_s` that contains information about supported channel pages,
 channel masks, RF configurations etc.
 
 **Solution:**
@@ -292,9 +316,9 @@ channel masks, RF configurations etc.
 
 where
 
-		const phy_rf_channel_configuration_s phy_rf_conf = 
+		const phy_rf_channel_configuration_s phy_rf_conf =
 		{RF_FREQUENCY, RF_CHANNEL_SPACING, RF_DATARATE, RF_NUMBER_OF_CHANNELS, RF_MODULATION};
-	
+
 Fill the `phy_rf_conf` structure with:
 
 - Channel 0 center frequency (Hz)
@@ -330,7 +354,7 @@ If the PHY driver is supporting several configurations, they can be all defined:
 			{ CHANNEL_PAGE_2, &phy_sub1ghz},
 			{ CHANNEL_PAGE_0, NULL}
 		};
-	
+
 **Note**: `phy_device_channel_page_s` last entry MUST be `{CHANNEL_PAGE_0, NULL}`.
 
 - Add supported channel pages in the device driver structure:
@@ -351,7 +375,7 @@ If the PHY driver was using NanoStack internal CCA module, the API call needs to
 
 **Problem:**
 
-The parameters of function `cca_start()` have changed. The function call now needs to tell the driver id that was given by the NanoStack library when the driver was registered. 
+The parameters of function `cca_start()` have changed. The function call now needs to tell the driver id that was given by the NanoStack library when the driver was registered.
 Parameters `cca_check_fptr` and `cca_done_fptr` are also now using `channel_status_e` enumeration that is defined in `cca_api.h`.
 
 **Solution:**
@@ -368,8 +392,8 @@ where `rf_driver_id` is the return value from the `arm_net_phy_register()` funct
 
 - To fix the parameters `cca_check_fptr` and `cca_done_fptr`, replace the current definitions:
 
-		static int rf_check_cca(void); -> static channel_status_e rf_check_cca(void); 
-		static void rf_tx_start(int channel_status); 
+		static int rf_check_cca(void); -> static channel_status_e rf_check_cca(void);
+		static void rf_tx_start(int channel_status);
 		-> static void rf_tx_start(channel_status_e channel_status);
 
 - Fix also the corresponding channel status usage, for example:

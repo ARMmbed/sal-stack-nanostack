@@ -1,30 +1,37 @@
-site_name: ARM mbed 
+site_name: ARM mbed
 theme: 'readthedocs'
 use_directory_urls: false
 pages:
-- ['index.md','ARM mbed Networking Stack Documentation']
-- ['01_overview.md', 'ARM mbed 6LoWPAN Stack Overview', 'Stack Overview - Synopsis']
-- ['02_N_arch.md', 'ARM mbed 6LoWPAN Stack Overview', 'Stack architecture']
-- ['03_N_usage.md', 'ARM mbed 6LoWPAN Stack Overview', 'Application usage']
-- ['04_N_networking.md', 'ARM mbed 6LoWPAN Stack Overview','Networking topology and protocols']
-- ['thread_overview.md', 'ARM mbed Thread Stack Overview', 'Thread Stack']
-- ['thread_dev_typ.md', 'ARM mbed Thread Stack Overview', 'Device Types & Roles']
-- ['thread_sec.md', 'ARM mbed Thread Stack Overview', 'Thread Security Fundamentals']
-- ['thread_comm.md', 'ARM mbed Thread Stack Overview', 'Thread Commissioning (Join Process)']
-- ['05_reference.md','API Reference Manual', 'API Reference - Synopsis']
-- ['06_API_introduction.md', 'API Reference Manual', 'Introduction to APIs']
-- ['platform_API.md', 'API Reference Manual', 'Platform API']
-- ['driver_api.md', 'API Reference Manual', 'Device Driver API']
-- ['07_API_initialize.md', 'API Reference Manual', 'IPv6/6LoWPAN Stack Initialization']
-- ['08_API_events.md', 'API Reference Manual','Event-driven Scheduling Model & Eventing API']
-- ['09_API_network_def.md','API Reference Manual', 'Network Definition APIs']
-- ['12_API_network.md','API Reference Manual', 'Network Layer Control APIs']
-- ['10_API_timer.md','API Reference Manual', 'Library Timer API']
-- ['11_API_sockets.md','API Reference Manual', 'Socket API']
-- ['13_API_memory.md','API Reference Manual', 'Dynamic Memory API']
-- ['14_API_data.md','API Reference Manual', 'Data Structures, Types & Variables API']
-- ['15_API_debug.md','API Reference Manual', 'Network Debug Statistics API']
-- ['thread_APIs.md','API Reference Manual', 'Thread Stack APIs']
-- ['api_changes_to_v4_0_0.md', 'API Reference Manual', 'API update v.4.0.0']
-- ['16_API_porting.md','Porting a new platform to ARM mbed Networking Stack', 'Porting to the Stack']
-- ['configuring.md', 'Configuring the stack', 'Build time configuration']
+- ARM mbed Networking Stack Documentation: 'index.md'
+- 6LoWPAN Quick Start Guide:
+    - '6LoWPAN overview': 'quick_start_intro.md'
+    - 'Hardware': 'quick_start_hw.md'
+    - 'Run time configurations': 'quick_start_config.md'
+    - 'Build time configuration': 'quick_start_build.md'
+- ARM mbed 6LoWPAN Stack Overview:
+    - 'Stack Overview - Synopsis': '01_overview.md'
+    - 'Stack architecture': '02_N_arch.md'
+    - 'Application usage': '03_N_usage.md'
+    - 'Networking topology and protocols': '04_N_networking.md'
+- ARM mbed Thread Stack Overview:
+    - 'Thread Stack': 'thread_overview.md'
+    - 'Device Types & Roles': 'thread_dev_typ.md'
+    - 'Thread Security Fundamentals': 'thread_sec.md'
+    - 'Thread Commissioning (Join Process)': 'thread_comm.md'
+- API Reference Manual:
+    - 'API Reference - Synopsis': '05_reference.md'
+    - 'Introduction to APIs': '06_API_introduction.md'
+    - 'Platform API': 'platform_API.md'
+    - 'Device Driver API': 'driver_api.md'
+    - 'IPv6/6LoWPAN Stack Initialization': '07_API_initialize.md'
+    - 'Event-driven Scheduling Model & Eventing API': '08_API_events.md'
+    - 'Network Definition APIs': '09_API_network_def.md'
+    - 'Network Layer Control APIs': '12_API_network.md'
+    - 'Library Timer API': '10_API_timer.md'
+    - 'Socket API': '11_API_sockets.md'
+    - 'Dynamic Memory API': '13_API_memory.md'
+    - 'Data Structures, Types & Variables API': '14_API_data.md'
+    - 'Network Debug Statistics API': '15_API_debug.md'
+    - 'Thread Stack APIs': 'thread_APIs.md'
+    - 'API update v.4.0.0': 'api_changes_to_v4_0_0.md'
+    - 'Porting to the Stack': '16_API_porting.md'

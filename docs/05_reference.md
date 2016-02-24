@@ -4,7 +4,7 @@
 
 This manual describes the APIs regarding the ARM mbed Networking stack, for example, 6LoWPAN related APIs, Thread stack related APIs, General network related APIs, Socket APIs, Event OS APIs, Platform API, and Driver API. If you intend to use the stack with ARM mbed OS, please skip any references to the Event OS API because mbed OS uses its own scheduler known as MINAR. For more information on MINAR, see [MINAR Scheduler](https://github.com/ARMmbed/minar).
 
-As Thread runs on top of the 6LoWPAN stack, most of the networking stack functionality is shared. However, when building the stack you can cherry-pick the features, configurations or functionalities. In such case, please refer to [Build time configurations](configuring.md).
+As Thread runs on top of the 6LoWPAN stack, most of the networking stack functionality is shared. However, when building the stack you can cherry-pick the features, configurations or functionalities. In such case, please refer to [Build time configurations](quick_start_build.md).
 
 ## Intended audience
 
