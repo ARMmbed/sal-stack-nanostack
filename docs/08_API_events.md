@@ -192,12 +192,11 @@ Network interface events `ARM_LIB_NWK_INTERFACE_EVENT` are enabled after the int
 Event type|Description
 ----------|-----------
 `ARM_NWK_BOOTSTRAP_READY`|The interface configured bootstrap is ready.
-`ARM NWK_SCAN_FAIL`|The interface has not detected any valid network.
+`ARM_NWK_SCAN_FAIL`|The interface has not detected any valid network or previously connected network lost.
 `ARM_NWK_IP_ADDRESS_ALLOCATION_FAIL`|IP address allocation fails (ND, DHCPv4 or DHCPv6).
 `ARM_NWK_DUPLICATE_ADDRESS_DETECTED`|The user-specific GP16 was invalid.
 `ARM_NWK_AUHTENTICATION_START_FAIL`|An invalid authentication server was detected behind an access point.
 `ARM_NWK_AUHTENTICATION_FAIL`|Network authentication fails by handshake.
-`ARM_NWK_CONNECTION_DOWN`|No connection to access point or default router.
 `ARM_NWK_PARENT_POLL_FAIL`|Sleepy host poll fails three times.
 `ARM_NWK_PHY_CONNECTION_DOWN`|The interface PHY cable is off or the serial port interface does not respond anymore.
 

@@ -99,22 +99,22 @@ extern "C" {
 
 /** RPL ROOT parent flag */
 #define RPL_ROOT_PARENT             0
-/** RPL primary active primary_parent primary_parent_rank information is valid */
+/** RPL primary active primary_parent primary_parent_rank information is valid. */
 #define RPL_PRIMARY_PARENT_SET      1
-/** RPL secondary active secondary_parent secondary_parent_rank information is valid */
+/** RPL secondary active secondary_parent secondary_parent_rank information is valid. */
 #define RPL_SECONDARY_PARENT_SET    2
 
-/** RPL prefix update flags for A-flag AUTONOMOUS address generation */
+/** RPL prefix update flags for A-flag AUTONOMOUS address generation. */
 #define RPL_PREFIX_AUTONOMOUS_ADDRESS_FLAG 0x40
-/** RPL prefix update flags for R-Flag */
+/** RPL prefix update flags for R-Flag. */
 #define RPL_PREFIX_ROUTER_ADDRESS_FLAG 0x20
 
-/** Flag in RPL instance ID to indicate that it is a local instance */
+/** Flag in RPL instance ID to indicate that it is a local instance. */
 #define RPL_INSTANCE_LOCAL          0x80
 
 /*!
  * \struct rpl_dodag_info_t
- * \brief RPL Instance DODAG info structure for rpl_read_dodag_info. Consult RFC 6550 for more explanation and to make sure you know what you are doing.
+ * \brief RPL Instance DODAG info structure for rpl_read_dodag_info. Read RFC 6550 for more information and to make sure you know what you are doing.
  */
 typedef struct rpl_dodag_info_t {
     uint8_t dodag_id[16];           /**< RPL DODAG ID. */
@@ -122,13 +122,13 @@ typedef struct rpl_dodag_info_t {
     uint8_t flags;                  /**< RPL DODAG Flags: (MOP,Grounded, Router Pref) */
     uint8_t version_num;            /**< RPL DODAG version number. */
     uint8_t DTSN;                   /**< RPL DODAG DAO trigger version number. */
-    uint16_t curent_rank;           /**< RPL DODAG node current Rank */
-    uint8_t parent_flags;           /**< RPL DODAG parent Flags: RPL_ROOT_PARENT or RPL_PRIMARY_PARENT_SET, RPL_SECONDARY_PARENT_SET*/
-    uint8_t primary_parent[16];     /**< Primary Parent GP address if RPL_PRIMARY_PARENT_SET flag is active*/
-    uint16_t primary_parent_rank;   /**< Primary Parent Rank if RPL_PRIMARY_PARENT_SET flag is active*/
-    uint8_t secondary_parent[16];   /**< Secondary Parent GP address if RPL_SECONDARY_PARENT_SET flag is active*/
-    uint16_t secondary_parent_rank; /**< Secondary Parent rank if RPL_SECONDARY_PARENT_SET flag is active*/
-    uint16_t dag_min_hop_rank_inc;  /**< RPL DODAG conf DAG minimum rank increase */
+    uint16_t curent_rank;           /**< RPL DODAG node current Rank. */
+    uint8_t parent_flags;           /**< RPL DODAG parent Flags: RPL_ROOT_PARENT or RPL_PRIMARY_PARENT_SET, RPL_SECONDARY_PARENT_SET */
+    uint8_t primary_parent[16];     /**< Primary Parent GP address if RPL_PRIMARY_PARENT_SET flag is active. */
+    uint16_t primary_parent_rank;   /**< Primary Parent Rank if RPL_PRIMARY_PARENT_SET flag is active. */
+    uint8_t secondary_parent[16];   /**< Secondary Parent GP address if RPL_SECONDARY_PARENT_SET flag is active. */
+    uint16_t secondary_parent_rank; /**< Secondary Parent rank if RPL_SECONDARY_PARENT_SET flag is active. */
+    uint16_t dag_min_hop_rank_inc;  /**< RPL DODAG conf DAG minimum rank increase. */
 } rpl_dodag_info_t;
 
 /*!
@@ -151,13 +151,13 @@ typedef struct dodag_config_t {
 /**
   * \brief RPL DODAG root base allocate.
   *
-  * \param dodag_id A pointer to unique DODAGID. This must be node's GP address in ZigBeeIP network.
-  * \param config A pointer to DODAG configure structure.
+  * \param dodag_id A pointer to unique DODAGID. This must be the node's GP address in the ZigBeeIP network.
+  * \param config A pointer to the DODAG configure structure.
   * \param instace_id Instance ID for RPL DODAG.
   * \param flags Defines RPL MOP and DODAG pref. ZigBeeIP should use (BR_DODAG_MOP_NON_STORING | BR_DODAG_PREF_7).
   *
   * \return 0, Allocate OK.
-  * \return -1, Allocate fail (Node connected already to same instance or memory allocate fails).
+  * \return -1, Allocate fail (The node is already connected to the same instance or the memory allocate fails).
   * \return -2, DODAG configuration parameter failure.
   *
   */
@@ -282,7 +282,7 @@ extern uint8_t rpl_read_dodag_info(rpl_dodag_info_t *dodag_ptr, uint8_t instance
 /**
   * \brief RPL DODAG preference set.
   *
-  * \param interface_id Interface ID which RPL instance will update DODAG preference
+  * \param interface_id Interface ID in which the RPL instance updates the DODAG preference.
   * \param preference DODAG preference. 0 to 7. 0 is least preferred.
   *
   * \return 0, Update OK

@@ -160,7 +160,7 @@ The connection can be closed by calling function `socket_close( )`. The 6LoWPAN 
 
 ## Using UDP and ICMP sockets
 
-A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately after a successful call to `socket_open( )` when the `ARM_NWK_BOOTSTRAP_READY` event is received. Data can then be transmitted using the
+A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately after a successful call to `socket_open( )`. Data can then be transmitted using the
 `socket_sendto( )` function call. The same function call can also be used for an ICMP socket.
 
 ## Detailed Socket API usage

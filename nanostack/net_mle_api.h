@@ -29,7 +29,7 @@ extern "C" {
 /**
   * \brief Set default MLE neighbor lifetime for a router.
   *
-  * \param interface_id Interface id.
+  * \param interface_id Interface ID.
   * \lifetime Lifetime in seconds. 64 to 2560.
   *
   * \return 0, Lifetime update OK.
@@ -41,7 +41,7 @@ int8_t arm_nwk_6lowpan_mle_router_lifetime_set(int8_t interface_id, uint16_t lif
 /**
   * \brief Set default MLE neighbor lifetime for a host.
   *
-  * \param interface_id Interface id.
+  * \param interface_id Interface ID.
   * \param lifetime Lifetime in seconds. 64 to 2560.
   *
   * \return 0, Lifetime update OK.
@@ -51,29 +51,28 @@ int8_t arm_nwk_6lowpan_mle_router_lifetime_set(int8_t interface_id, uint16_t lif
 int8_t arm_nwk_6lowpan_mle_host_lifetime_set(int8_t interface_id, uint16_t lifetime);
 
 /**
-  * \brief Set MLE neighbor list limits
+  * \brief Set MLE neighbor list limits.
   *
-  * MLE neighbor limits configuration settings limit the number of neighbors
-  * added to MLE neighbor list.
+  * The MLE neighbor limits configuration settings limit the number of neighbors
+  * added to the MLE neighbor list.
   *
-  * If number of neighbors reaches lower threshold MLE starts to limit addition
-  * of new neighbors. This is made by starting to ignore multicast MLE messages
-  * from unknown neighbors (ignore probability is randomized). Value must be
-  * smaller than upper threshold and maximum value.
+  * If the number of neighbors reaches the lower threshold, MLE starts to limit addition
+  * of new neighbors. Multicast MLE messages from unknown neighbors are ignored (ignore probability is randomized). 
+  * The value must be smaller than the upper threshold and maximum value.
   *
-  * If number of neighbors reaches upper threshold MLE stops to add new neighbors
-  * based on multicast MLE messages. Only nodes that select this node for a
-  * parent during bootstrap will be accepted. Value must be smaller or same as
-  * maximum value.
+  * If the number of neighbors reaches the upper threshold, MLE stops adding new neighbors
+  * based on the multicast MLE messages. Only nodes that select this node for a
+  * parent during the bootstrap will be accepted. The value must be smaller than or the same as
+  * the maximum value.
   *
-  * If number of neighbors reaches maximum value no new neighbors are added.
+  * If the number of neighbors reaches the maximum value, no new neighbors are added.
   *
-  * If MLE neighbor list limits are not used all values must be set to 0.
+  * If the MLE neighbor list limits are not used, all values must be set to 0.
   *
-  * \param interface_id Interface id.
+  * \param interface_id Interface ID.
   * \param lower_threshold Lower threshold. 5 to 499. 0 limits not used.
   * \param upper_threshold. Upper threshold. 5 to 500. 0 limits not used.
-  * \param max. Maximum number of neighbors. 5 to 500. 0 limits not used.
+  * \param max Maximum number of neighbors. 5 to 500. 0 limits not used.
   *
   * \return 0, Limits update OK.
   * \return < 0, Limits update fail.
@@ -84,17 +83,16 @@ int8_t arm_nwk_6lowpan_mle_neighbor_limits_set(int8_t interface_id, uint16_t low
 /**
   * \brief Set MLE message token bucket settings
   *
-  * MLE message token bucket limits MLE message sending rate. Token bucket size
-  * controls the bucket size. Token bucket rate controls the rate in which
-  * new tokens are added. Count defines how many tokens are added to bucket at a
-  * time.
+  * The MLE message token bucket limits the MLE message sending rate. The token bucket size
+  * controls the bucket size. The token bucket rate controls the rate in which
+  * new tokens are added. The count defines how many tokens at a time are added to the bucket.
   *
-  * Rate is entered in multiplies of 0.1 second minimum interval (e.g. if rate is 3
+  * The rate is entered in multiplies of 0.1 second minimum interval (for example, if rate is 3
   * and count is 4 then 4 new tokens are added to bucket every 0.3 seconds).
   *
-  * If token bucket is not used all values must be set to 0.
+  * If the token bucket is not used, all values must be set to 0.
   *
-  * \param interface_id Interface id.
+  * \param interface_id Interface ID.
   * \param size Bucket size. 1 to 255. 0 token bucket not used.
   * \param rate Token rate. 1 to 255. 0 token bucket not used.
   * \param count Token count. 1 to 255. 0 token bucket not used.

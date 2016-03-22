@@ -62,7 +62,7 @@ typedef enum net_host_mode {
 /**
   * \brief Set new host state.
   *
-  * \param interface_id network interface to modify
+  * \param interface_id Network interface ID.
   * \param mode New host state.
   * \param poll_time Poll time in seconds, only handled when NET_HOST_SLOW_POLL_MODE is enabled.
   *
@@ -79,11 +79,11 @@ extern int8_t arm_nwk_host_mode_set(int8_t interface_id, net_host_mode_t mode, u
 /**
   * \brief Read current host state.
   *
-  * \param interface_id network interface to read
+  * \param interface_id Network interface ID.
   * \param mode A pointer to the location for saving the host state.
 
   * \return 0, State read update OK.
-  * \return -1, Net role is router or stack is idle.
+  * \return -1, The host role is router or the stack is idle.
   *
   */
 extern int8_t arm_nwk_host_mode_get(int8_t interface_id, net_host_mode_t *mode);

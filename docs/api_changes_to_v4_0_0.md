@@ -1,17 +1,21 @@
 # About this document
 
-Since Nanostack version 3.0.x there has been number of API changes.
+This document walks you through the API changes in the Nanostack version 4.0.x in detail and helps you to update your current applications to use the new and changed APIs.
 
-1. Added MLE router and host lifetime configuration API
-2. Added MLE neighbor limits configuration API
-3. MLE token bucket configuration API
-4. Rename the `arm_nwk_6lowpan_link_scan_paramameter_set()` function to `arm_nwk_6lowpan_link_scan_parameter_set()`.
-5. Channel mask settings API changed.
-7. Added API for adding/deleting routes.
-8. The parameters of function `cca_start()` have changed.
-9. FHSS API added.
+**New APIs:**
 
-This documentation should walk you through updating you current applications to use Nanostack 4.0.x APIs.
+- MLE router and host lifetime configuration API
+- MLE neighbor limits configuration API
+- MLE token bucket configuration API
+- API for adding/deleting routes
+- FHSS API
+
+**Other changes:**
+
+- Function `arm_nwk_6lowpan_link_scan_paramameter_set()` renamed to `arm_nwk_6lowpan_link_scan_parameter_set()` (due to misspelling)
+- Channel mask settings API changed
+- The parameters of function `cca_start()` changed
+
 
 ## The Network Layer Control APIs
 

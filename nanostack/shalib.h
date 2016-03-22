@@ -99,14 +99,16 @@ void SHALIB_init_sha256(void);                                  // Call this fir
  */
 void SHALIB_push_data_sha256(const uint8_t *data, uint16_t len);      // ... add data ...
 /**
- * \brief Finish SHA56 operation and get result to given buffer by given length.
+ * \brief Finish SHA-256 operation and get result to given buffer by given length.
+ *
+ * The first `len` words of the SHA-256 are output to buffer.
  *
  * \param buffer A pointer to result buffer.
  * \param len Length of 32-bit register to save to buffer (8= 256 bit and 4= 128-bit).
  */
 void SHALIB_finish_sha256(uint8_t *buffer, uint8_t len);        // ... get the sha256 digest.
 /**
- * \brief Calc SHA256 by 1 function call.
+ * \brief Calc SHA-256 by 1 function call.
  *
  * \param data_ptr A pointer to data.
  * \param data_len Length of data.
@@ -116,13 +118,13 @@ void SHALIB_SHA256_HASH(const uint8_t *data_ptr, uint16_t data_len, uint8_t *buf
 
 /* Shalib registers resume and save API */
 /**
- * \brief Resume old SHA56 registers.
+ * \brief Resume old SHA-256 registers.
  *
  * \param ptr A pointer to saved session.
  */
 void sha_resume_regs(const sha256_temp_t *ptr);
 /**
- * \brief Save SHA56 registers.
+ * \brief Save SHA-256 registers.
  *
  * \param ptr A pointer to buffer.
  */

@@ -13,41 +13,41 @@ When you need more detailed information, read the following:
 
 Typically, the 6LoWPAN network consists of one border router on multiple low-powered nodes. The nodes are connected to a cloud service for feeding in the sensor or control data.
 
-On the ARM 6LoWPAN network solution, the cloud endpoint is [mbed Device server](https://www.mbed.com/en/development/cloud/mbed-device-server/)
+On the ARM 6LoWPAN network solution, the cloud endpoint is [mbed Device Server](https://www.mbed.com/en/development/cloud/mbed-device-server/)
 and users interface with it through [mbed Device Connector](https://www.mbed.com/en/development/cloud/mbed-device-connector-service/).
 
 ## Different device types in a 6LoWPAN network
 
 In a 6LoWPAN network, devices can have different roles. The colours in the illustrations represent different device types and are used in the examples throughout the Quick Start Guide.
 
-### Border Router (6LBR)
+### Border router (6LBR)
 
-![Border Router](img/br.png)
+![Border router](img/br.png)
 
-A Border Router is the coordinator of the 6LoWPAN network. It handles the translations between the 6LoWPAN and IPv6 networks.
+A border router is the coordinator of the 6LoWPAN network. It handles the translations between the 6LoWPAN and IPv6 networks.
 ARM does not provide translation to IPv4 network due the limited address space. We recommend using IPv6 tunnels over
 IPv4 network when operating in such environment.
 
-The Border Router also authenticates the nodes joining the network and keeps track of the routing topology.
+The border router also authenticates the nodes joining the network and keeps track of the routing topology.
 
-### 6LoWPAN Router (6LR)
+### 6LoWPAN router (6LR)
 
-![6LoWPAN Router](img/6lr.png)
+![6LoWPAN router](img/6lr.png)
 
 A 6LoWPAN router is a node that can route packets. This role is required to form a topological or mesh network.
 This configuration does not allow nodes to sleep because they route packets to their siblings.
 
-### 6LoWPAN Host (6LH)
+### 6LoWPAN host (6LH)
 
 ![6LoWPAN Host](img/6lh.png)
 
-A 6LoWPAN Host is a type of node that does not route any packets. It has only one parent routing the packets.
+A 6LoWPAN host is a type of node that does not route any packets. It has only one parent routing the packets.
 
-### 6LoWPAN Sleepy Host
+### 6LoWPAN sleepy host
 
-A 6LoWPAN Sleepy Host is a 6LoWPAN Host that is periodically allowed to sleep and turn off its radio.
+A 6LoWPAN sleepy host is a 6LoWPAN host that is periodically allowed to sleep and turn off its radio.
 
-## Different types of 6LoWPAN Mesh networks
+## Different types of 6LoWPAN mesh networks
 
 6LoWPAN-based mesh networks cannot be described as a uniform standardized network type, such as WiFi. Depending on the
 business requirements and use cases the network may have different setups and requirements.
@@ -85,7 +85,7 @@ In the further chapters, we provide recommendations for three different network 
 
 ## ARM mbed Device Connector
 
-The ARM mbed Device Connector service lets you connect Internet of Things (IoT) devices to the cloud without having to build infrastructure, while providing security, simplicity and capacity required by developers to prove IoT applications at scale.
+The ARM mbed Device Connector service lets you connect Internet of Things (IoT) devices to the cloud without having to build the infrastructure, while providing security, simplicity and capacity required by developers to prove IoT applications at scale.
 
-For example how to use the Mesh network with mbed Device Connector,
-we provide example application [mbed-client-example-6lowpan](https://github.com/ARMmbed/mbed-client-example-6lowpan).
+To learn how to use the Mesh network with mbed Device Connector,
+see the example application [mbed-client-example-6lowpan](https://github.com/ARMmbed/mbed-client-example-6lowpan).

@@ -71,10 +71,10 @@ typedef enum br_rpl_nvm_update_process_t {
 
 /* NVM List API PART */
 /**
- * \brief Enable MLE, Whiteboard and Routing Table NVM functionality from stack
+ * \brief Enable MLE, Whiteboard and Routing Table NVM functionality from the stack.
  *
- * \param passed_fptr Function pointer to NVM update process.
- * \param nvm_static_buffer Pointer to application allocated static memory, minimum size is 33 bytes.
+ * \param passed_fptr A function pointer to NVM update process.
+ * \param nvm_static_buffer A pointer to application allocated static memory, minimum size is 33 bytes.
  *
  * \return 0 NVM operation init OK.
  * \return -1 Null pointer parameter.
@@ -85,27 +85,27 @@ typedef enum br_rpl_nvm_update_process_t {
  */
 extern int8_t br_list_nvm_callback_set(uint16_t (*passed_fptr)(br_nvm_update_process_t), uint8_t *nvm_static_buffer);
 /**
- * \brief Load MLE entry from NVM
+ * \brief Load MLE entry from NVM.
  *
- * \param nvm_data Pointer to MLE entry.
+ * \param nvm_data A pointer to the MLE entry.
  *
  * \return 0 NVM entry load OK.
  * \return -1 No memory for NVM entry.
  */
 extern int8_t mle_entry_store_from_nvm(const uint8_t *nvm_data);
 /**
-  * \brief Load Whiteboard entry from NVM
+  * \brief Load Whiteboard entry from NVM.
   *
-  * \param nvm_data Pointer to whiteboard entry.
+  * \param nvm_data A pointer to whiteboard entry.
   *
   * \return 0 NVM entry load OK.
   * \return -1 No memory for NVM entry.
   */
 extern int8_t WB_entry_store_from_nvm(const uint8_t *nvm_data);
 /**
-  * \brief Load Routing table entry from NVM
+  * \brief Load Routing table entry from NVM.
   *
-  * \param nvm_data Pointer to routing table entry.
+  * \param nvm_data A pointer to routing table entry.
   *
   * \return 0 NVM entry load OK.
   * \return -1 No memory for NVM entry.
@@ -114,10 +114,10 @@ extern int8_t route_entry_store_from_nvm(const uint8_t *nvm_data);
 
 /* NVM RPL API */
 /**
- * \brief Enable RPL Proxy NVM functionality (RPL Proxy Base, Routes, Prefix)
+ * \brief Enable RPL Proxy NVM functionality (RPL Proxy Base, Routes, Prefix).
  *
- * \param passed_fptr Function pointer to NVM update process.
- * \param nvm_static_buffer Pointer to application allocated static memory, minimum size is 33 bytes.
+ * \param passed_fptr A function pointer to the NVM update process.
+ * \param nvm_static_buffer A pointer to application allocated static memory, minimum size is 33 bytes.
  *
  * \return 0 NVM operation Init OK.
  * \return -1 Null pointer parameter.
@@ -129,9 +129,9 @@ extern int8_t route_entry_store_from_nvm(const uint8_t *nvm_data);
 extern int8_t rpl_nvm_callback_set(uint16_t (*passed_fptr)(br_rpl_nvm_update_process_t), uint8_t *nvm_static_buffer);
 
 /**
-   * \brief Restore RPL Proxy base from NVM
+   * \brief Restore RPL Proxy base from NVM.
    *
-   * \param nvm_data Pointer to RPL Proxy base.
+   * \param nvm_data A pointer to the RPL Proxy base.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.
@@ -139,18 +139,18 @@ extern int8_t rpl_nvm_callback_set(uint16_t (*passed_fptr)(br_rpl_nvm_update_pro
 extern int8_t rpl_nvm_base_reload(const uint8_t *nvm_data, int8_t interface_id);
 
 /**
-   * \brief Load prefix entry from NVM
+   * \brief Load prefix entry from NVM.
    *
-   * \param nvm_data Pointer to RPL Prefix entry.
+   * \param nvm_data A pointer to the RPL Prefix entry.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.
    */
 extern int8_t rpl_prefix_store_from_nvm(const uint8_t *nvm_data, uint8_t instance_id);
 /**
-   * \brief Load Route entry from NVM
+   * \brief Load Route entry from NVM.
    *
-   * \param nvm_data Pointer to RPL Route entry.
+   * \param nvm_data A pointer to the RPL Route entry.
    *
    * \return 0 NVM load OK.
    * \return -1 No memory for NVM entry.

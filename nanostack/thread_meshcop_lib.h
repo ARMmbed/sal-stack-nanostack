@@ -47,7 +47,7 @@
 #define MESHCOP_TLV_COMMISSIONER_SESSION_ID                11
 #define MESHCOP_TLV_SECURITY_POLICY                        12
 #define MESHCOP_TLV_GET                                    13
-#define MESHCOP_TLV_COMMISSIONING_TIME_STAMP               14
+#define MESHCOP_TLV_ACTIVE_TIME_STAMP                      14
 #define MESHCOP_TLV_STATE                                  16
 
 /**

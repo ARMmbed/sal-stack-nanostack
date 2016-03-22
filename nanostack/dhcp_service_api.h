@@ -57,15 +57,15 @@
  *
  * When the DHCP service receives a DHCP message it will go through a list of registered DHCP services instances
  * until some instance acknowledges that the message belongs to it.
- * @param instance_id Instance of registered server.
- * @param msg_tr_id Message transaction ID.
- * @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
- * @param msg_len Length of message.
+ * \param instance_id An instance of registered server.
+ * \param msg_tr_id The message transaction ID.
+ * \param msg_ptr An allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
+ * \param msg_len The length of the message.
  *
  * Return values
- * RET_MSG_ACCEPTED - Message is handled.
- * RET_MSG_CORRUPTED - Message is corrupted.
- * RET_MSG_NOT_MINE - Message belongs to someone else.
+ * \return RET_MSG_ACCEPTED - Message is handled.
+ * \return RET_MSG_CORRUPTED - Message is corrupted.
+ * \return RET_MSG_NOT_MINE - Message belongs to someone else.
  */
 
 typedef int (dhcp_service_receive_req_cb)(uint16_t instance_id, uint32_t msg_tr_id, uint8_t msg_name, uint8_t *msg_ptr, uint16_t msg_len);
@@ -75,21 +75,21 @@ typedef int (dhcp_service_receive_req_cb)(uint16_t instance_id, uint32_t msg_tr_
  *
  * When the DHCP service receives a response to a DHCP message, this callback receives it.
  *
- * @param instance_id Instance of a registered server.
- * @param ptr Pointer for client object.
- * @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
- * @param msg_len Length of message.
+ * \param instance_id An instance of a registered server.
+ * \param ptr A pointer for the client object.
+ * \param msg_ptr An allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
+ * \param msg_len The length of the message.
  *
  * Return values
- * RET_MSG_ACCEPTED - Message is handled
- * RET_MSG_WAIT_ANOTHER - This message was not the last one for this transaction and a new reply is expected.
+ * \return RET_MSG_ACCEPTED - Message is handled
+ * \return RET_MSG_WAIT_ANOTHER - This message was not the last one for this transaction and a new reply is expected.
  */
 
 typedef int (dhcp_service_receive_resp_cb)(uint16_t instance_id, void *ptr, uint8_t msg_name,  uint8_t *msg_ptr, uint16_t msg_len);
 
 
 /**
- * \brief Initialize server instance.
+ * \brief Initialize the server instance.
  *
  * Creates and shares the socket for other DHCP services.
  *
@@ -103,17 +103,17 @@ uint16_t dhcp_service_init(int8_t interface_id, dhcp_service_receive_req_cb *rec
 *
 * Removes all data related to this instance.
 *
-* \param instance ID of the registered server.
+* \param instance The instance ID of the registered server.
 */
 void dhcp_service_delete(uint16_t instance);
 
 /**
-* \brief Sends DHCP response message.
+* \brief Sends a DHCP response message.
 *
-* @param msg_tr_id Message transaction ID.
-* @param options Options for this request.
-* @param msg_ptr Allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
-* @param msg_len Length of message.
+* \param msg_tr_id The message transaction ID.
+* \param options Options for this request.
+* \param msg_ptr An allocated message pointer. Should not deallocate unless RET_MSG_ACCEPTED returned (then responsibility of client).
+* \param msg_len The length of the message.
 *
 * \return 0, if everything went fine.
 * \return -1, if error occurred.
@@ -122,31 +122,31 @@ int dhcp_service_send_resp(uint32_t msg_tr_id, uint8_t options, uint8_t *msg_ptr
 
 
 /**
- * \ Sends DHCP request message.
+ * \brief Sends DHCP request message.
  *
  * Service takes care of retransmissions.
  *
- * @param instance_id Instance of registered server.
- * @param options Options for this request.
- * @param ptr void Pointer to client object
- * @param addr Address of the server.
- * @param msg_ptr Allocated message pointer. This pointer is the responsibility of the service after this call.
- * @param msg_len Length of message.
+ * \param instance_id The instance ID of the registered server.
+ * \param options Options for this request.
+ * \param ptr A void pointer to the client object.
+ * \param addr The address of the server.
+ * \param msg_ptr An allocated message pointer. This pointer is the responsibility of the service after this call.
+ * \param msg_len The length of the message.
  *
- * \return message Transaction ID of the DHCP transaction
+ * \return Transaction ID of the DHCP transaction
  * \return 0, if error occurred.
  */
 uint32_t dhcp_service_send_req(uint16_t instance_id, uint8_t options, void *ptr, const uint8_t addr[static 16], uint8_t *msg_ptr, uint16_t msg_len, dhcp_service_receive_resp_cb *receive_resp_cb);
 
 /**
- * \brief Setting retransmission parameters
+ * \brief Setting retransmission parameters.
  *
  * Sets the retransmission parameters for this transaction.
  *
- * @param msg_tr_id Message transaction ID.
- * @param timeout_init Initial timeout value.
- * @param timeout_max Maximum timeout value when initial timeout is doubled with every retry.
- * @param retrans_max Maximum retry count after which an error is received.
+ * \param msg_tr_id The message transaction ID.
+ * \param timeout_init An initial timeout value.
+ * \param timeout_max The maximum timeout value when initial timeout is doubled with every retry.
+ * \param retrans_max The maximum number of retries after which an error is received.
  *
  */
 void dhcp_service_set_retry_timers(uint32_t msg_tr_id, uint16_t timeout_init, uint16_t timeout_max, uint8_t retrans_max);
@@ -156,7 +156,7 @@ void dhcp_service_set_retry_timers(uint32_t msg_tr_id, uint16_t timeout_init, ui
  *
  * Clears off sending retransmissions for a particular message transaction by finding it via its message transaction ID.
  *
- * @param msg_tr_id Message transaction ID.
+ * \param msg_tr_id The message transaction ID.
  *
  */
 void dhcp_service_req_remove(uint32_t msg_tr_id);

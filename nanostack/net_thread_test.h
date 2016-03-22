@@ -59,7 +59,7 @@ int_fast8_t arm_nwk_6lowpan_thread_test_add_neighbour(
     const uint8_t *route_data);
 
 /**
- * Api to set reed advertisement interval
+ * \brief API to set reed advertisement interval
  * \param interface_id Interface to modify
  * \param advertisement_interval Interval between advertisements to be set
  * \param jitter_interval Maximum value of random jitter interval to be added to advertisement_interval
@@ -98,7 +98,7 @@ void arm_nwk_6lowpan_thread_test_print_routing_database(int8_t interface_id);
 
 
 /**
- * Thread Leader max router Id limit set
+ * \brief Thread Leader max router ID limit set
  *
  * This function should use just for test purpose Thread define this by default to 32
  *
@@ -113,7 +113,7 @@ int thread_test_max_accepted_router_id_limit_set(
     uint8_t maxRouterLimit);
 
 /**
-  * \brief Set Thread network id timeout
+  * \brief Set Thread network ID timeout
   *
   * \param interface_id Interface to modify
   * \param network_id_timeout network timeout as seconds
@@ -126,7 +126,7 @@ int thread_test_max_accepted_router_id_limit_set(
 int8_t thread_routing_set_network_id_timeout(int8_t interface_id, uint16_t network_id_timeout);
 
 /**
-  * \brief Get Thread network id timeout
+  * \brief Get Thread network ID timeout
   *
   * \param interface_id Interface to modify
   * \param network_id_timeout pointer, where current network id timeout will be saved as seconds
@@ -139,7 +139,7 @@ int8_t thread_routing_set_network_id_timeout(int8_t interface_id, uint16_t netwo
 int8_t thread_routing_get_network_id_timeout(int8_t interface_id, uint16_t *network_id_timeout);
 
 /**
- * Print thread network data
+ * \brief Print Thread network data
  *
  * \param interface_id Network Interface
  *
@@ -150,7 +150,7 @@ int8_t thread_routing_get_network_id_timeout(int8_t interface_id, uint16_t *netw
 int thread_test_print_network_data(int8_t interface_id);
 
 /**
- * Thread Leader Context ID re use timeout set
+ * \brief Thread Leader Context ID reuse timeout set
  *
  * This function should be used to change default 48 hours to shorter one
  *
@@ -165,7 +165,7 @@ int thread_test_set_context_id_reuse_timeout(
     uint32_t timeout);
 
 /**
- * Leader of thread network can kick Router out from Network.
+ * \brief Leader of Thread network can kick Router out from Network.
  *
  * \param interface_id Network Interface
  * \param routerId Routter id of router that is kicked
@@ -176,7 +176,7 @@ int thread_test_set_context_id_reuse_timeout(
 int thread_test_remove_router_by_id(int8_t interface_id, uint8_t routerId);
 
 /**
- * Set Thread Security Material. Terms are defined in Thread security specification
+ * \brief Set Thread Security Material. Terms are defined in Thread security specification
  *
  * \param interface_id Network Interface
  * \param enableSecurity Boolean for enable security or disable
@@ -187,33 +187,33 @@ int thread_test_remove_router_by_id(int8_t interface_id, uint8_t routerId);
  * \return 0, ADD OK
  * \return <0 Add Not OK
  */
-int thread_test_security_material_set(int8_t nwk_interface_id, bool enableSecurity, uint8_t *thrMasterKey, uint32_t thrKeySequenceCounter, uint32_t thrKeyRotation);
+int thread_test_security_material_set(int8_t interface_id, bool enableSecurity, uint8_t *thrMasterKey, uint32_t thrKeySequenceCounter, uint32_t thrKeyRotation);
 
 /**
- * Increment Thread key sequence counter
+ * \brief Increment Thread key sequence counter
  *
- * \param nwk_interface_id Network Interface
+ * \param interface_id Network Interface
  *
  * \return 0, OK
  * \return <0 Error
  */
-int thread_test_increment_key_sequence_counter(int8_t nwk_interface_id);
+int thread_test_increment_key_sequence_counter(int8_t interface_id);
 
 /**
- * Set new Thread key sequency counter
+ * \brief Set new Thread key sequence counter
  *
  * Call define new key and next key same time
  *
- * \param nwk_interface_id Network Interface
+ * \param interface_id Network Interface
  * \param thrKeySequenceCounter this need to be bigger than current sequence
  *
  * \return 0, OK
  * \return <0 Error
  */
-int thread_test_key_sequence_counter_update(int8_t nwk_interface_id, uint32_t thrKeySequenceCounter);
+int thread_test_key_sequence_counter_update(int8_t interface_id, uint32_t thrKeySequenceCounter);
 
 /**
- * Thread router select threshold values set
+ * \brief Thread router select threshold values set
  *
  * \param interface_id Network Interface
  * \param upgradeThreshold Set REED up grade to router threshold
@@ -228,48 +228,48 @@ int thread_test_router_select_threshold_values_set(
     uint8_t downgradeThreshold);
 
 /**
- * Send panid query message to destination
+ * \brief Send PAN ID query message to destination
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_panid_query_send(int8_t nwk_interface_id, uint8_t *address_ptr, uint16_t session_id, uint16_t panid, uint8_t channel_page, uint8_t *mask_ptr);
+int thread_test_panid_query_send(int8_t interface_id, uint8_t *address_ptr, uint16_t session_id, uint16_t panid, uint8_t channel_page, uint8_t *mask_ptr);
 
 /**
- * Send energy scan message to destination
+ * \brief Send energy scan message to destination
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_energy_scan_send(int8_t nwk_interface_id, uint8_t *address_ptr, uint16_t session_id, uint8_t channel_page, uint8_t *mask_ptr, uint16_t period, uint8_t count, uint16_t duration);
+int thread_test_energy_scan_send(int8_t interface_id, uint8_t *address_ptr, uint16_t session_id, uint8_t channel_page, uint8_t *mask_ptr, uint16_t period, uint8_t count, uint16_t duration);
 
 /**
- * Send Announcement message
+ * \brief Send announcement message
  *
  * \param interface_id Network Interface
- * \param channel high uint16 is channel page lower part is the channel number on that page
+ * \param channel high uint16 is the channel page, lower part is the channel number on that page
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_announce_ntf_send(int8_t nwk_interface_id, uint8_t *address_ptr, uint32_t channel, uint16_t panid, uint64_t timestamp);
+int thread_test_announce_ntf_send(int8_t interface_id, uint8_t *address_ptr, uint32_t channel, uint16_t panid, uint64_t timestamp);
 
 /**
- * Send energy scan message to destination
+ * \brief Send energy scan message to destination
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_announce_begin_send(int8_t nwk_interface_id, uint8_t *address_ptr, uint16_t session_id, uint8_t channel_page, uint8_t *mask_ptr, uint16_t period, uint8_t count);
+int thread_test_announce_begin_send(int8_t interface_id, uint8_t *address_ptr, uint16_t session_id, uint8_t channel_page, uint8_t *mask_ptr, uint16_t period, uint8_t count);
 
 /**
- * Get partition info
+ * \brief Get partition info
  *
  * \param interface_id Network Interface
  * \param partition_id Current partition id can be NULL if not needed.
@@ -281,30 +281,30 @@ int thread_test_announce_begin_send(int8_t nwk_interface_id, uint8_t *address_pt
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_partition_info_get(int8_t nwk_interface_id, uint32_t *partition_id, uint8_t *weighting, uint8_t *data_version, uint8_t *stable_data_version, uint8_t *leader_id);
+int thread_test_partition_info_get(int8_t interface_id, uint32_t *partition_id, uint8_t *weighting, uint8_t *data_version, uint8_t *stable_data_version, uint8_t *leader_id);
 
 /**
- * Set next partition id when we next time partition. This is used to control specific behaviour in tests.
+ * \brief Set next partition ID when we next time partition. This is used to control specific behaviour in tests.
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int thread_test_partition_info_set(int8_t nwk_interface_id, uint32_t partition_id);
+int thread_test_partition_info_set(int8_t interface_id, uint32_t partition_id);
 
 /**
- * Get child count
+ * \brief Get child count
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int8_t thread_test_child_count_get(int8_t nwk_interface_id);
+int8_t thread_test_child_count_get(int8_t interface_id);
 
 /**
- * Get child information
+ * \brief Get child information
  *
  * get information for index child. if found returns 0 with correct information.
  *
@@ -313,18 +313,33 @@ int8_t thread_test_child_count_get(int8_t nwk_interface_id);
  * \return 0, OK
  * \return <0 Fail no child with this index found
  */
-int8_t thread_test_child_info_get(int8_t nwk_interface_id, uint8_t index, uint16_t *short_addr, bool *sleepy, uint8_t *mac64, uint8_t *margin);
+int8_t thread_test_child_info_get(int8_t interface_id, uint8_t index, uint16_t *short_addr, bool *sleepy, uint8_t *mac64, uint8_t *margin);
 
 /**
- * Get neighbour information
+ * \brief Get neighbour information
  *
  * \param interface_id Network Interface
  *
  * \return 0, Set OK
  * \return <0 Set Fail
  */
-int8_t thread_test_neighbour_info_get(int8_t nwk_interface_id, uint8_t index, uint16_t *short_addr, uint8_t *mac64, uint8_t *margin);
+int8_t thread_test_neighbour_info_get(int8_t interface_id, uint8_t index, uint16_t *short_addr, uint8_t *mac64, uint8_t *margin);
 
+typedef int (response_cb)(int8_t interface_id, uint8_t *response_ptr, uint16_t response_len);
+
+/**
+ * \brief Send diagnostic command
+ *
+ * \param interface_id      Network Interface
+ * \param address_ptr       Address to which the command is sent
+ * \param uri_ptr           Uri for the command
+ * \param request_length    The length of the request
+ * \param request_ptr       Pointer to the beginning of the request contents
+ * \param resp_cb           Pointer to callback function that is called after the reply for the command is obtained
+ * \return 0,               Command send OK
+ * \return <0               Command send Fail
+ */
+int thread_test_diagnostic_command_send(int8_t interface_id, uint8_t *address_ptr,const char *uri_ptr, uint8_t request_length, uint8_t *request_ptr, response_cb *resp_cb);
 #ifdef __cplusplus
 }
 #endif

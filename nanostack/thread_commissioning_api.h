@@ -38,7 +38,7 @@ typedef enum {
     COMMISSIONING_STATE_NO_NETWORK
 } commissioning_state_e;
 
-/** Commissioning petition response callback.
+/** \brief Commissioning petition response callback.
  *
  * \param interface_id Network interface ID. The request comes from this ID.
  * \param state State of the commissioning.
@@ -48,21 +48,21 @@ typedef enum {
 typedef int (thread_commissioning_status_cb)(int8_t interface_id, uint16_t commissioner_session_id, commissioning_state_e state);
 
 
-/** Register the commissioner interface.
+/** \brief Register the commissioner interface.
  *
  * If the network interface is up, the commissioner functionality is started within the Thread network.
  * If there is no interface, the network needs to be scanned first. When the network is found you can add an insecure commissioner,
  * attach to it and start using a different communication method with the border router.
  *
- * \param interface_id Interface id where the request was made.
- * \param PSKc Pre shared key between commissioner and Thread network
- * \param PSKc_len Length of a PSKc
+ * \param interface_id Interface ID where the request was made.
+ * \param PSKc Pre-shared key between the commissioner and the Thread network.
+ * \param PSKc_len The length of the PSKc.
  *
  * \return 0 success, other values failure.
  */
 int thread_commissioning_register(int8_t interface_id, uint8_t PSKc[16]);
 
-/** Unregister the commissioner interface.
+/** \brief Unregister the commissioner interface.
  *
  * This cleans up all the commissioner data from the device and disconnects it from the Thread network if an insecure commissioner was used.
  *
@@ -72,7 +72,7 @@ int thread_commissioning_register(int8_t interface_id, uint8_t PSKc[16]);
  */
 int thread_commissioning_unregister(int8_t interface_id);
 
-/** Start the commissioning petition.
+/** \brief Start the commissioning petition.
  *
  * If the commissioner is insecure, you need to scan the networks and select the Thread network where you want to be a commissioner.
  *
@@ -85,7 +85,7 @@ int thread_commissioning_unregister(int8_t interface_id);
  */
 int thread_commissioning_petition_start(int8_t interface_id, char *commissioner_id_ptr, thread_commissioning_status_cb *status_cb_ptr);
 
-/** Send petition keep alive.
+/** \brief Send petition keep alive.
  *
  * This function must be called in 40 second intervals. TODO rethink if this should be automatic
  *
@@ -96,7 +96,7 @@ int thread_commissioning_petition_start(int8_t interface_id, char *commissioner_
  */
 int thread_commissioning_petition_keep_alive(int8_t interface_id, commissioning_state_e state);
 
-/** Callback received when a new device is completing the joining process.
+/** \brief Callback received when a new device is completing the joining process.
  *
  * The message may include the following meshcop TLV fields:
  * * State TLV
@@ -109,16 +109,16 @@ int thread_commissioning_petition_keep_alive(int8_t interface_id, commissioning_
  * * Provisioning URL TLV
  *
  * \param interface_id Network interface ID. The request comes from this ID.
- * \param EUI64 client identifier.
+ * \param EUI64 The client identifier.
  * \param message_ptr A message including the meshcop TLV set. This message can be parsed using thread_meshcop_lib.h.
- * \param message_len Length of message.
+ * \param message_len The length of the message.
  *
  * \return 0 Device accepted.
  * \return Any other value, device rejected.
  */
 typedef int (thread_commissioning_joiner_finalisation_cb)(int8_t interface_id, uint8_t EUI64[8], uint8_t *message_ptr, uint16_t message_len);
 
-/** Add a device to commission to the Thread network.
+/** \brief Add a device to commission to the Thread network.
  *
  *
  * \param interface_id Network interface ID. The request comes from this ID.
@@ -126,13 +126,13 @@ typedef int (thread_commissioning_joiner_finalisation_cb)(int8_t interface_id, u
  * \param EUI64 A pointer to EUI64 buffer.
  * \param PSKd_ptr A pointer to PSKd buffer.
  * \param PSKd_len PSKd string length, current validity check is 1-32 bytes.
- * \param cb_ptr A callback function to indicae the result of the operation. Can be NULL if no result code needed.
+ * \param cb_ptr A callback function indicating the result of the operation. Can be NULL if no result code needed.
  *
  * \return 0 success, other values failure
  */
 int thread_commissioning_device_add(int8_t interface_id, bool short_eui64, uint8_t EUI64[8], uint8_t *PSKd_ptr, uint8_t PSKd_len, thread_commissioning_joiner_finalisation_cb *joining_device_cb_ptr);
 
-/** Delete a device to commission to the Thread network.
+/** \brief Delete a device to commission to the Thread network.
  *
  *
  * \param interface_id Network interface ID. The request comes from this ID.
@@ -142,9 +142,9 @@ int thread_commissioning_device_add(int8_t interface_id, bool short_eui64, uint8
  */
 int thread_commissioning_device_delete(int8_t interface_id, uint8_t EUI64[8]);
 
-/** Get next added device details.
+/** \brief Get next added device details.
  *
- * \param ptr, A pointer for internal looping. First, use NULL pointer, after that use return pointer.
+ * \param ptr A pointer for internal looping. First, use NULL pointer, after that use return pointer.
  * \param interface_id Network interface ID. The request comes from this ID.
  * \param short_eui64 A boolean value indicating that short EUI version is used for bloom filter generation. Can be NULL when no result wanted.
  * \param EUI64 A pointer to EUI64 buffer. Can be NULL when no result wanted.
@@ -177,7 +177,7 @@ typedef struct thread_commissioning_link_configuration {
     uint8_t rfChannel; /**< Current RF channel. */
 } thread_commissioning_link_configuration_s;
 
-/** Native commissioner network scan result callback.
+/** \brief Native commissioner network scan result callback.
  *
  * This callback is called when networks that allow native commissioner to join are found.
  * Pointers are valid during this call.
@@ -187,7 +187,7 @@ typedef struct thread_commissioning_link_configuration {
  */
 typedef void thread_commissioning_native_select_cb(int8_t interface_id, uint8_t count, thread_commissioning_link_configuration_s *link_ptr );
 
-/** Native commissioner network scan start.
+/** \brief Native commissioner network scan start.
  *
  * Starts the network scan mode to find networks where the device can become a native commissioner.
  * This stops the normal Thread joining process and informs the application of available networks.
@@ -198,7 +198,7 @@ typedef void thread_commissioning_native_select_cb(int8_t interface_id, uint8_t 
  */
 int thread_commissioning_native_commissioner_start(int8_t interface_id, thread_commissioning_native_select_cb *cb_ptr);
 
-/** Native commissioner network scan stop.
+/** \brief Native commissioner network scan stop.
  *
  * Stops the network scan mode and continues the normal joining process.
  *
@@ -208,7 +208,7 @@ int thread_commissioning_native_commissioner_start(int8_t interface_id, thread_c
  */
 int thread_commissioning_native_commissioner_stop(int8_t interface_id);
 
-/** Native commissioner connect.
+/** \brief Native commissioner connect.
  *
  * Connects to a specific Thread network to become an active native commissioner.
  *
@@ -227,7 +227,7 @@ int thread_commissioning_native_commissioner_stop(int8_t interface_id);
 int thread_commissioning_native_commissioner_connect(int8_t interface_id, thread_commissioning_link_configuration_s *link_ptr);
 
 /**
- * Get the address of the native commissioner parent and the commissioning port for the connection.
+ *\brief Get the address of the native commissioner parent and the commissioning port for the connection.
  *
  * \param interface_id Network interface ID.
  * \param address_ptr A pointer to address buffer (16 bytes) for the commission messages.
@@ -240,11 +240,11 @@ int thread_commissioning_native_commissioner_connect(int8_t interface_id, thread
 int thread_commissioning_native_commissioner_get_connection_info(int8_t interface_id, uint8_t *address_ptr, uint16_t *port);
 
 /**
- * Get the management instance ID from the commissioner interface.
+ * \brief Get the management instance ID from the commissioner interface.
  *
  * \param interface_id Network interface ID.
  *
- * \return > 0, instance ID.
+ * \return > 0 Instance ID.
  * \return <= 0 fail.
  */
 int8_t thread_commissioning_get_management_id(int8_t interface_id);

@@ -246,7 +246,7 @@ To enable the FHSS mode use the `arm_fhss_enable` function:
 ```
 int8_t arm_fhss_enable
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	fhss_platform_functions_s *fhss_platform_functions,
 	const fhss_configuration_s *fhss_configuration
 )
@@ -254,7 +254,7 @@ int8_t arm_fhss_enable
 Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>fhss_platform_functions</code></dt>
@@ -351,13 +351,13 @@ To disable the FHSS mode, use `arm_fhss_disable` function:
 ```
 int8_t arm_fhss_disable
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 )
 ```
 Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>Return value</code></dt>
@@ -372,14 +372,14 @@ When you have enabled FHSS, you can provide some platform-specific tuning parame
 ```
 int8_t arm_fhss_set_tuning_params
 (
-	int8_t nwk_interface_id,
+	int8_t interface_id,
 	const fhss_platform_tuning_params_s *fhss_tuning_params
 )
 ```
 Where:
 
 <dl>
-<dt><code>nwk_interface_id</code></dt>
+<dt><code>interface_id</code></dt>
 <dd>The network interface ID.</dd>
 
 <dt><code>fhss_tuning_params</code></dt>
@@ -817,7 +817,7 @@ Where:
 <dd><code>NET_SEC_MODE_PANA_LINK_SECURITY</code>, link layer keys are defined by the PANA authentication server.</dd>
 
 <dt><code>sec_level</code></dt>
-<dd>Supported values are 1 to 7. This parameter is only checked when the mode is <code>NET_SEC_MODE_NO_SECURITY</code>.</dd>
+<dd>Supported values are 1 to 7. This parameter is only checked when the mode is <code>NET_SEC_MODE_PSK_LINK_SECURITY</code>.</dd>
 
 <dt><code>psk_key_info</code></dt>
 <dd>A pointer to PSK key material: key and key ID. This parameter is only checked when the mode is <code>NET_SEC_MODE_PSK_LINK_SECURITY</code>.</dd>
@@ -2153,14 +2153,14 @@ To read the 6LoWPAN ND border router address and NWK prefix, use the following f
 int8_t arm_nwk_nd_address_read
 (
 	int8_t 			interface_id,
-	network_layer_address_s *nd_params
+	network_layer_address_s *nd_addr_info
 )
 ```
 
 Where:
 
 <dl>
-<dt><code>nd_params</code></dt>
+<dt><code>nd_addr_info</code></dt>
 <dd>A pointer to the structure where the 6LoWPAN ND border router address is written to.</dd>
 
 <dt><code>Return value</code></dt>

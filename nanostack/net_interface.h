@@ -475,14 +475,14 @@ extern int8_t arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s
 extern int8_t arm_nwk_6lowpan_link_scan_parameter_set(int8_t interface_id, uint8_t scan_time);
 
 /**
- * \brief A function to set pan ID filter.
+ * \brief A function to set the PAN ID filter.
  *
- * \param interface_id Network interface ID
- * \param pan_id_filter is the pan ID to be allowed value 0xffff clean filter.
+ * \param interface_id Network interface ID.
+ * \param pan_id_filter The PAN ID to be allowed value 0xffff clean filter.
  *
- * \return 0 Filter set OK
- * \return -1 Unknown Network interface ID
- * \return -2 Interface is active
+ * \return 0 Filter set OK.
+ * \return -1 Unknown Network interface ID.
+ * \return -2 Interface is active.
  *
  */
 extern int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan(int8_t interface_id, uint16_t pan_id_filter);
@@ -603,7 +603,7 @@ extern int8_t arm_nwk_link_layer_security_mode(int8_t interface_id, net_6lowpan_
   * \brief Initialize and configure interface PANA network client.
   *
   * \param interface_id Network interface ID.
-  * \param cipher_mode Define TLS 1.2 Cipher mode PSK, ECC or both.
+  * \param cipher_mode Defines TLS 1.2 Cipher mode PSK, ECC or both.
   * \param psk_key_id PSK KEY id for PSK Setup
   *
   * \return 0 on success.
@@ -616,7 +616,7 @@ extern int8_t arm_pana_client_library_init(int8_t interface_id, net_tls_cipher_e
   * \brief Initialize and Configure interface PANA network server.
   *
   * \param interface_id Network interface ID.
-  * \param cipher_mode Define TLS 1.2 Cipher mode PSK, ECC or both.
+  * \param cipher_mode Defines TLS 1.2 Cipher mode PSK, ECC or both.
   * \param key_material A pointer to 128-bit key material or NULL when the PANA server generates the random key.
   * \param time_period_before_activate_key Guard period after a succesful key delivery phase before the key will be activated by server.
   *
@@ -707,7 +707,7 @@ extern int8_t arm_nwk_interface_down(int8_t interface_id);
 /**
  * \brief Define border router MAC and 6LoWPAN ND setup for selected interface.
  *
- * \param interface_id Network interface ID
+ * \param interface_id Network interface ID.
  * \param border_router_setup_ptr Pointer to MAC and 6LoWPAN ND setup.
  *
  */
@@ -790,12 +790,12 @@ int8_t arm_nwk_mac_address_read(int8_t interface_id, link_layer_address_s *mac_p
 /**
  * \brief A function to read 6LoWPAN ND border router address and NWK prefix.
  * \param interface_id Network interface ID.
- * \param nd_params Pointer to the structure where the address is written.
+ * \param nd_addr_info Pointer to the structure where the address is written.
  * \return 0 On success.
  * \return Negative value if network interface is not known or if the interface
  *          is not in active or ready state.
  */
-int8_t arm_nwk_nd_address_read(int8_t interface_id, network_layer_address_s *nd_params);
+int8_t arm_nwk_nd_address_read(int8_t interface_id, network_layer_address_s *nd_addr_info);
 
 
 /**

@@ -48,7 +48,7 @@
 #define MAC_FILTER_API_H_
 
 /**
- * Start MAC level filter
+ * \brief Start MAC level filter.
  * This function can be called again if default values are modified.
  *
  *
@@ -65,7 +65,7 @@
 int_fast8_t mac_filter_start(int8_t interface_id, int16_t lqi_m, int16_t lqi_add, int16_t dbm_m, int16_t dbm_add);
 
 /**
- * Stop MAC level filter
+ * \brief Stop MAC level filter.
  *
  * Stops the filtering module and clears the default settings and all the filterings made.
  *
@@ -85,7 +85,7 @@ void mac_filter_stop(int8_t interface_id);
 #define MAC_FILTER_FIXED(lqi,dbm) 0, lqi, 0, dbm
 
 /**
- * Delete all filters.
+ * \brief Delete all filters.
  *
  * Leaves the default link configuration.
  *
@@ -97,31 +97,31 @@ void mac_filter_stop(int8_t interface_id);
 int_fast8_t mac_filter_clear(int8_t interface_id);
 
 /**
- * Map extended address to short address.
+ * \brief Map the extended address to the short address.
  *
- * \param interface_id Network Interface
- * \param mac64 extended address
- * \param[out] mac16 Return the short address
+ * \param interface_id Network Interface.
+ * \param mac64 Extended address.
+ * \param [out]mac16 Return the short address.
  *
- * \return 0, address resolved
- * \return <0 No mapping found
+ * \return 0, address resolved.
+ * \return <0 No mapping found.
  */
 typedef int_fast8_t (mac_filter_map_extented_to_short_cb)(int8_t interface_id, uint8_t mac64[8], uint16_t *mac16);
 
 /**
- * Map short address to extended address.
+ * \brief Map short address to extended address.
  *
  * \param interface_id Network interface ID.
  * \param mac64[out] Return buffer for the extended address.
  * \param mac16 Short address.
  *
- * return 0, Address resolved.
- * return <0 No mapping found.
+ * return 0, address resolved.
+ * return <0 no mapping found.
  */
 typedef int_fast8_t (mac_filter_map_short_to_extended_cb)(int8_t interface_id, uint8_t mac64[8], uint16_t mac16);
 
 /**
- * Register address mapping functions.
+ * \brief Register address mapping functions.
  *
  * This function should be added for layer in stack that keeps up the list of address mapping functions.
  * If filters are enabled these functions are called if no match from filters was found.
@@ -138,7 +138,7 @@ typedef int_fast8_t (mac_filter_map_short_to_extended_cb)(int8_t interface_id, u
 int_fast8_t mac_filter_set_address_mapping(int8_t interface_id, mac_filter_map_short_to_extended_cb *long_cb, mac_filter_map_extented_to_short_cb *short_cb);
 
 /**
- * Delete filter for device
+ * \brief Delete filter for device
  *
  * \param interface_id Network interface ID.
  * \param mac16 Short address.
@@ -149,7 +149,7 @@ int_fast8_t mac_filter_set_address_mapping(int8_t interface_id, mac_filter_map_s
 int_fast8_t mac_filter_delete_short(int8_t interface_id, uint16_t mac16);
 
 /**
- * Delete filter for device
+ * \brief Delete filter for device.
  *
  * \param interface_id Network interface ID.
  * \param mac64 Long address.
@@ -160,7 +160,7 @@ int_fast8_t mac_filter_delete_short(int8_t interface_id, uint16_t mac16);
 int_fast8_t mac_filter_delete_long(int8_t interface_id, uint8_t mac64[8]);
 
 /**
- * Add MAC short address filter
+ * \brief Add MAC short address filter.
  *
  * \param interface_id Network interface ID.
  * \param mac16 Short address.
@@ -175,7 +175,7 @@ int_fast8_t mac_filter_delete_long(int8_t interface_id, uint8_t mac64[8]);
 int_fast8_t mac_filter_add_short(int8_t interface_id, uint16_t mac16, int16_t lqi_m, int16_t lqi_add, int16_t dbm_m, int16_t dbm_add);
 
 /**
- * Add MAC long address filter
+ * \brief Add MAC long address filter.
  *
  * \param interface_id Network interface ID.
  * \param mac64 Long address.

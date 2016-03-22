@@ -19,7 +19,7 @@
 
 /**
  * \file net_pana_parameters_api.h
- * \brief API to setup or change PANA library parameters.
+ * \brief An API for setting up or changing PANA library parameters.
  *
  * \section set-pana-param Setting up PANA parameters.
  *  -  net_pana_parameter_set(), A function to set up PANA library parameters.
@@ -47,7 +47,7 @@ typedef struct pana_lib_parameters_s {
 } pana_lib_parameters_s;
 
 /**
- * \brief Function to set PANA library parameters.
+ * \brief A function to set PANA library parameters.
  *
  * Note: This function should be called after net_init_core() and definitely
  * before creating any 6LoWPAN interface.
@@ -67,7 +67,7 @@ extern int8_t net_pana_parameter_set(const pana_lib_parameters_s *parameter_ptr)
 
 
 /**
- * \brief Function to read existing PANA library parameters.
+ * \brief A function to read existing PANA library parameters.
  *
  * \param parameter_ptr An output pointer for PANA parameters.
  *

@@ -233,18 +233,18 @@ extern int8_t socket_listen(int8_t socket);
 /**
  * \brief A function to connect to remote peer (TCP).
  *
- * \param socket socket id
- * \param address Address of a remote peer.
+ * \param socket The socket ID.
+ * \param address The address of a remote peer.
  * \param randomly_take_src_number 1 enables find next free random port number for the current one.
  *
  * \return 0 on success.
- * \return -1 in case of invalid socket ID or parameter.
+ * \return -1 in case of an invalid socket ID or parameter.
  * \return -2 if memory allocation fails.
- * \return -3 if socket is in listening state.
- * \return -4 if socket is already connected.
+ * \return -3 if the socket is in listening state.
+ * \return -4 if the socket is already connected.
  * \return -5 connect is not supported on this type of socket.
- * \return -6 if TCP session state is wrong.
- * \return -7 if source address selection fails.
+ * \return -6 if the TCP session state is wrong.
+ * \return -7 if the source address selection fails.
  */
 extern int8_t socket_connect(int8_t socket, ns_address_t *address, uint8_t randomly_take_src_number);
 
@@ -258,28 +258,28 @@ extern int8_t socket_connect(int8_t socket, ns_address_t *address, uint8_t rando
  * \param address Address structure containing the port and address to bind.
  *
  * \return 0 on success.
- * \return -1 if given address is NULL.
- * \return -2 if port is already bound to another socket.
- * \return -4 if socket is already bound.
+ * \return -1 if the given address is NULL.
+ * \return -2 if the port is already bound to another socket.
+ * \return -4 if the socket is already bound.
  * \return -5 bind is not supported on this type of socket
  */
 extern int8_t socket_bind(int8_t socket, const ns_address_t *address);
 
 /**
- * \brief Bind a local address to socket based on destination address and
- *  address selection preferences.
+ * \brief Bind a local address to a socket based on the destination address and
+ *  the address selection preferences.
  *  Binding happens to the same address that socket_connect() would bind to.
  *  Reference: RFC5014 IPv6 Socket API for Source Address Selection.
  *
- * \param socket Socket ID
- * \param dst_address Destination address to which the socket wants to communicate.
+ * \param socket The socket ID.
+ * \param dst_address The destination address to which the socket wants to communicate.
  *
  * \return 0 on success.
- * \return -1 if given address is NULL or socket ID is invalid.
- * \return -2 if memory allocation failed.
- * \return -3 if socket is already bound to address.
- * \return -4 if interface cannot be found.
- * \return -5 if source address selection fails.
+ * \return -1 if the given address is NULL or socket ID is invalid.
+ * \return -2 if the memory allocation failed.
+ * \return -3 if the socket is already bound to address.
+ * \return -4 if the interface cannot be found.
+ * \return -5 if the source address selection fails.
  * \return -6 bind2addrsel is not supported on this type of socket.
  */
 extern int8_t socket_bind2addrsel(int8_t socket, const ns_address_t *dst_address);
@@ -287,11 +287,11 @@ extern int8_t socket_bind2addrsel(int8_t socket, const ns_address_t *dst_address
 /**
  * \brief A function to close a connection.
  *
- * \param socket ID of the socket to be closed.
- * \param address Address of the destination client. When using as a client, a null pointer shall be passed.
+ * \param socket The ID of the socket to be closed.
+ * \param address The address of the destination client. When using as a client, a null pointer shall be passed.
  *
  * \return 0 on success.
- * \return -1 if a given socket ID is not found, if the socket type is wrong or tcp_close() returns a failure.
+ * \return -1 if the given socket ID is not found, if the socket type is wrong or tcp_close() returns a failure.
  * \return -2 if no active TCP session was found.
  * \return -3 if the referred socket ID port is declared as a zero.
  *
@@ -305,7 +305,7 @@ extern int8_t socket_close(int8_t socket, ns_address_t *address);
  * Note: The socket connection must be ready before using this function.
  * The stack uses automatically the address of the remote connected host as the destination address for the packet.
  *
- * \param socket Socket ID.
+ * \param socket The socket ID.
  * \param buffer A pointer to data.
  * \param length Data length.
  *
@@ -326,12 +326,12 @@ extern int8_t socket_send(int8_t socket, uint8_t *buffer, uint16_t length);
  * from a socket callback when handling event SOCKET_DATA. If the received data does not fit
  * in the buffer provided the excess data bytes are discarded.
  *
- * \param socket Socket ID.
+ * \param socket The socket ID.
  * \param src_addr A pointer to a structure where the sender's address is stored.
  * \param buffer A pointer to an array where the read data is written to.
  * \param length The maximum length of the allocated buffer.
  *
- * \return greater than 0, indicates the length of the data copied to buffer.
+ * \return greater than 0 indicates the length of the data copied to buffer.
  * \return 0 if no data is available to read.
  * \return -1 invalid input parameters.
  */
@@ -342,12 +342,12 @@ extern int16_t socket_read(int8_t socket, ns_address_t *src_addr, uint8_t *buffe
  *
  * Used by the application to send data.
  *
- * \param socket Socket ID.
+ * \param socket The socket ID.
  * \param address A pointer to the destination address information.
  * \param buffer A pointer to data to be sent.
  * \param length Length of the data to be sent.
  * \return 0 on success.
- * \return -1 invalid socket ID.
+ * \return -1 Invalid socket ID.
  * \return -2 Socket memory allocation fail.
  * \return -3 TCP state not established.
  * \return -4 Socket TX process busy.
@@ -359,7 +359,7 @@ extern int8_t socket_sendto(int8_t socket, ns_address_t *address, uint8_t *buffe
  * \brief A function to read session info for TCP event.
  *
  *
- * \param socket Socket ID.
+ * \param socket The socket ID.
  * \param address A pointer to the address structure where the session address information is read to.
  *
  * \return 0 on success.
@@ -424,9 +424,9 @@ extern int8_t socket_read_session_address(int8_t socket, ns_address_t *address);
  * Used to specify miscellaneous options for a socket. Supported levels and
  * names defined above.
  *
- * \param socket Socket ID.
- * \param level Protocol level.
- * \param opt_name Option name (interpretation depends on level). See \ref OPTNAMES_IPV6.
+ * \param socket The socket ID.
+ * \param level The protocol level.
+ * \param opt_name The option name (interpretation depends on level). See \ref OPTNAMES_IPV6.
  * \param opt_value A pointer to value for the specified option.
  * \param opt_len Size of the data pointed to by the value.
  *
@@ -445,9 +445,9 @@ extern int8_t socket_setsockopt(int8_t socket, uint8_t level, uint8_t opt_name, 
  * is silently truncated; otherwise opt_len is modified to indicate the actual
  * length.
  *
- * \param socket Socket ID.
- * \param level Protocol level.
- * \param opt_name Option name (interpretation depends on level). See \ref OPTNAMES_IPV6.
+ * \param socket The socket ID.
+ * \param level The protocol level.
+ * \param opt_name The option name (interpretation depends on level). See \ref OPTNAMES_IPV6.
  * \param opt_value A pointer to output buffer.
  * \param opt_len A pointer to length of output buffer; updated on exit.
  *

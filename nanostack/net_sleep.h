@@ -38,7 +38,7 @@ uint32_t arm_net_check_enter_deep_sleep_possibility(void);
  * \brief Set stack to sleep.
  *
  * \return 0 Stack stopped.
- * \return -1 Not supported action at moment.
+ * \return -1 Not supported action at the moment.
  *
  */
 
@@ -48,7 +48,7 @@ int arm_net_enter_sleep(void);
  *
  *  Stack enable and synch timers after sleep.
  *
- *  \param sleeped_time_in_ms Total sleep time in milliseconds. The stack needs to synch with this.
+ *  \param sleeped_time_in_ms The total sleep time in milliseconds. The stack needs to synch with this.
  *
  * \return 0 Stack restarted.
  * \return 1 Stack can continue sleep for the time defined in sleeped_time_in_ms.

@@ -22,7 +22,7 @@ extern "C" {
 
 /**
   * \file net_address_extension.h
-  * \brief API for setting up Link layer short address manually
+  * \brief API for setting up link layer short address manually.
   *
   * \section set-addr Setting short address
   *  - net_ext_set_short_address_from_app(), Sets up a user-specified short address and enables or disables DAD.

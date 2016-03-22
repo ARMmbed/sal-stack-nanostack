@@ -76,7 +76,7 @@ typedef enum pana_client_nvm_update_process_t {
 
 /* NVM API PART */
 /**
- * \brief PANA server NVM functionality initialization
+ * \brief PANA server NVM functionality initialization.
  *
  * \param passed_fptr A function pointer to NVM update process.
  * \param nvm_static_buffer A pointer to application allocated static memory, minimum size 115 bytes.
@@ -93,7 +93,7 @@ extern int8_t pana_server_nvm_callback_set(uint16_t (*passed_fptr)(pana_nvm_upda
 /**
  * \brief PANA server base restore from NVM.
  *
- * \param nvm_data A pointer to crypted PANA server base data.
+ * \param nvm_data A pointer to encrypted PANA server base data.
  *
  * \return 0, Restore OK.
  * \return -1, Memory allocation fail.
@@ -103,7 +103,7 @@ extern int8_t pana_server_restore_from_nvm(uint8_t *nvm_data, int8_t interface_i
 /**
  * \brief PANA client session load from NVM API.
  *
- * \param nvm_data A pointer to crypted PANA client session.
+ * \param nvm_data A pointer to encrypted PANA client session.
  *
  * \return 0, Restore OK.
  * \return -1, Memory allocation fail.
@@ -154,7 +154,7 @@ extern int8_t net_read_persistent_data(uint8_t *data_buffer, int8_t interface_id
 extern int8_t net_nvm_data_load(uint8_t *data_buffer, int8_t interface_id);
 
 /**
- * \brief Load PANA client session data to stack for re-use.
+ * \brief Load PANA client session data to the stack for re-use.
  *
  * \param data_buffer A pointer to data with encrypted PANA session 70 bytes.
  * \param session_address A pointer to a session-specific address. Give the address if you want to re-use the session with specific parent, otherwise give NULL.
@@ -170,7 +170,7 @@ extern int8_t net_pana_client_session_nvm_data_load(uint8_t *data_buffer, uint8_
 /**
  * \brief Clean node persistent data and all PANA client sessions from the stack.
  *
- * Function disables the network ID filter, sets EUID-16 to 0xffff and removes PANA client sessions. It is only for client purposes.
+ * This function disables the network ID filter, sets EUID-16 to 0xffff and removes PANA client sessions. It is only for client purposes.
  *
  *
  * \return 0, Clean OK.

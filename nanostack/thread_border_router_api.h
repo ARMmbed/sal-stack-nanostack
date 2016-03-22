@@ -43,7 +43,7 @@ typedef struct thread_border_router_info_t {
 } thread_border_router_info_t;
 
 /**
- * Create local service that is provided to the Thread network.
+ * \brief Create local service that is provided to the Thread network.
  * If a prefix exists it is updated. For example, when removing SLAAC (Stateless Address Autoconfiguration) you should modify the prefix
  * first to remove the creation of new addresses and after a while, remove the prefix.
  *
@@ -53,7 +53,6 @@ typedef struct thread_border_router_info_t {
  * \param interface_id Network interface ID.
  * \param prefix_ptr Pointer prefix.
  * \param prefix_len Length of prefix.
- * \param stable This data is stable and expected to be available at least 48h.
  * \param prefix_info_ptr Prefix service structure configuring the published service.
  *
  * \return 0, Set OK.
@@ -62,7 +61,7 @@ typedef struct thread_border_router_info_t {
 int thread_border_router_prefix_add(int8_t interface_id, uint8_t *prefix_ptr, uint8_t prefix_len, thread_border_router_info_t *prefix_info_ptr);
 
 /**
- * Delete local service.
+ * \brief Delete local service.
  *
  * \param interface_id Network interface ID.
  * \param prefix_ptr Pointer prefix.
@@ -74,7 +73,7 @@ int thread_border_router_prefix_add(int8_t interface_id, uint8_t *prefix_ptr, ui
 int thread_border_router_prefix_delete(int8_t interface_id, uint8_t *prefix_ptr, uint8_t prefix_len);
 
 /**
- * Add a new route to the Thread network. Other devices can use the route.
+ * \brief Add a new route to the Thread network. Other devices can use the route.
  * For example, 0::0/0 means that this device provides the default route.
  * For example, 2001::0/64 means that this device provides a more specific route.
  *
@@ -92,7 +91,7 @@ int thread_border_router_prefix_delete(int8_t interface_id, uint8_t *prefix_ptr,
 int thread_border_router_route_add(int8_t interface_id, uint8_t *prefix_ptr, uint8_t prefix_len, bool stable, int8_t prf);
 
 /**
- * Delete locally served route.
+ * \brief Delete locally served route.
  *
  * \param interface_id Network interface ID.
  * \param prefix_ptr Pointer prefix.
@@ -104,7 +103,7 @@ int thread_border_router_route_add(int8_t interface_id, uint8_t *prefix_ptr, uin
 int thread_border_router_route_delete(int8_t interface_id, uint8_t *prefix_ptr, uint8_t prefix_len);
 
 /**
- * Add local service.
+ * \brief Add local service.
  *
  * \param interface_id Network interface ID.
  * \param service_ptr Pointer to service data.
@@ -120,7 +119,7 @@ int thread_border_router_route_delete(int8_t interface_id, uint8_t *prefix_ptr, 
 int thread_border_router_service_add(int8_t interface_id, uint8_t *service_ptr, uint8_t service_len, bool thread_enteprise, uint8_t sid, uint32_t enterprise_number);
 
 /**
- * Delete local service.
+ * \brief Delete local service.
  *
  * \param interface_id Network interface ID.
  * \param service_ptr Pointer to service data.
@@ -132,7 +131,7 @@ int thread_border_router_service_add(int8_t interface_id, uint8_t *service_ptr, 
 int thread_border_router_service_delete(int8_t interface_id, uint8_t *service_ptr, uint8_t service_len);
 
 /**
- * Publish local services to Thread network.
+ * \brief Publish local services to Thread network.
  *
  * If local services are deleted before calling this, all services are deregistered from the network.
  *
@@ -144,7 +143,7 @@ int thread_border_router_service_delete(int8_t interface_id, uint8_t *service_pt
 int thread_border_router_publish(int8_t interface_id);
 
 /**
- * Clear the local service list.
+ * \brief Clear the local service list.
  *
  * \param interface_id Network interface ID.
  *
