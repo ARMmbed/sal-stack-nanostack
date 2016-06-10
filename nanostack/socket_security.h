@@ -12,6 +12,11 @@
  *
  */
 
+/**
+ * \file socket_security.h
+ * \brief Obsoleted, empty file.
+ */
+
 #ifndef SOCKET_SECURITY_H_
 #define SOCKET_SECURITY_H_
 

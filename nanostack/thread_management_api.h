@@ -106,6 +106,7 @@ int thread_management_set_security_policy(int8_t instance_id, uint8_t options, u
  * filter indicates whether to use 0 == EUI-64 or 1 == bottom 24 bits of EUI-64.
  *
  * \param instance_id The ID of the management session.
+ * \param session_id The commissioning session id that needs to be added
  * \param steering_data_ptr A pointer to new steering data.
  * \param steering_data_len The length of the new steering data.
  * \param cb_ptr A callback function indicating the result of the operation. Can be NULL if no result code needed.
@@ -113,7 +114,7 @@ int thread_management_set_security_policy(int8_t instance_id, uint8_t options, u
  * \return 0 Success.
  * \return <0 Fail.
  */
-int thread_management_set_steering_data(int8_t instance_id, uint8_t *steering_data_ptr, uint8_t steering_data_len, management_set_response_cb *cb_ptr);
+int thread_management_set_steering_data(int8_t instance_id, uint16_t session_id, uint8_t *steering_data_ptr, uint8_t steering_data_len, management_set_response_cb *cb_ptr);
 
 /** \brief Set the Thread commissioning data timestamp
  *

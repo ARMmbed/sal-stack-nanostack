@@ -12,7 +12,7 @@
  *
  */
 
-/*
+/**
  * \file thread_border_router_api.h
  * \brief Thread border router application interface.
  *

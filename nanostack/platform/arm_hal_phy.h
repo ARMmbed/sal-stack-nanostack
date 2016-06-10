@@ -12,6 +12,11 @@
  *
  */
 
+/**
+ * \file arm_hal_phy.h
+ * \brief PHY device driver API.
+ */
+
 #ifndef ARM_HAL_PHY_H_
 #define ARM_HAL_PHY_H_
 
@@ -46,7 +51,6 @@ typedef enum {
     PHY_EXTENSION_READ_CHANNEL_ENERGY, /**< RF interface ED scan energy read. */
     PHY_EXTENSION_READ_LINK_STATUS, /**< Net library could read link status. */
     PHY_EXTENSION_CONVERT_SIGNAL_INFO, /**< Convert signal info. */
-    PHY_EXTENSION_SET_CCA_MODE, /** Set the CCA mode to be used for cca_start(), used by FHSS. Value given must be CCA_RANDOM_IN_RANGE or CCA_FHSS. */
 } phy_extension_type_e;
 
 typedef enum {
@@ -60,9 +64,8 @@ typedef enum phy_link_type_e {
     PHY_LINK_ETHERNET_TYPE,         /**< Standard IEEE 802 Ethernet. */
     PHY_LINK_15_4_2_4GHZ_TYPE,      /**< Standard 802.15.4 2.4GHz radio. */
     PHY_LINK_15_4_SUBGHZ_TYPE,      /**< Standard 802.15.4 subGHz radio 868 /915MHz. */
-    PHY_LINK_SW_RADIO_TYPE,         /**< Proprietary radio frequency controlled by SW. */
-    PHY_LINK_PLC_TYPE,              /**< PLC PHY link. */
     PHY_LINK_TUN,                   /**< Tunnel interface for Linux TUN, RF network driver over serial bus or just basic application to application data flow. */
+    PHY_LINK_SLIP,                  /**< Generic SLIP driver which just forward SLIP payload */
 } phy_link_type_e;
 
 typedef enum data_protocol_e {
@@ -119,7 +122,6 @@ typedef enum
     CHANNEL_PAGE_10 = 10
 } channel_page_e;
 
-
 typedef struct phy_rf_channel_configuration_s
 {
     uint32_t channel_0_center_frequency;
@@ -135,13 +137,60 @@ typedef struct phy_device_channel_page_s
     const phy_rf_channel_configuration_s *rf_channel_configuration;
 } phy_device_channel_page_s;
 
+typedef struct virtual_data_req_s {
+    uint16_t parameter_length;
+    uint8_t *parameters;
+    uint16_t msduLength;
+    const uint8_t *msdu;
+} virtual_data_req_t;
+
+/**
+ * @brief arm_net_phy_rx RX callback set by upper layer. Called when data is received
+ * @param data_ptr Data received
+ * @param data_len Length of the data received
+ * @param link_quality Link quality
+ * @param dbm Power ratio in decibels
+ * @param driver_id ID of driver which received data
+ * @return 0 if success, error otherwise
+ */
+typedef int8_t arm_net_phy_rx_fn(const uint8_t *data_ptr, uint16_t data_len, uint8_t link_quality, int8_t dbm, int8_t driver_id);
+
+/**
+ * @brief arm_net_phy_tx_done TX done callback set by upper layer. Called when tx sent by upper layer has been handled
+ * @param driver_id Id of the driver which handled TX request
+ * @param tx_handle Handle of the TX
+ * @param status Status code of the TX handling result
+ * @param cca_retry Number of CCA retries done during handling
+ * @param tx_retry Number of TX retries done during handling
+ * @return 0 if success, error otherwise
+ */
+typedef int8_t arm_net_phy_tx_done_fn(int8_t driver_id, uint8_t tx_handle, phy_link_tx_status_e status, uint8_t cca_retry, uint8_t tx_retry);
+
+/**
+ * @brief arm_net_virtual_rx RX callback set by user of serial MAC. Called when virtual RF has received data.
+ * @param data_ptr Data received
+ * @param data_len Length of the data received
+ * @param driver_id ID of driver which received data
+ * @return 0 if success, error otherwise
+ */
+typedef int8_t arm_net_virtual_rx_fn(const uint8_t *data_ptr, uint16_t data_len,int8_t driver_id);
+
+/**
+ * @brief arm_net_virtual_tx TX callback set by serial MAC. Used to send data.
+ * @param data_req Data to be sent
+ * @param driver_id Id of the driver to be used.
+ * @return 0 if success, error otherwise
+ */
+typedef int8_t arm_net_virtual_tx_fn(const virtual_data_req_t *data_req,int8_t driver_id);
+
+
 typedef struct phy_device_driver_s
 {
     phy_link_type_e link_type;                                      /**< Define driver types. */
     driver_data_request_e data_request_layer;                       /**< Define interface data OUT protocol. */
-    uint8_t *PHY_MAC ;                                              /**< Pointer to 64-bit or 48-bit MAC address. */
-    char *driver_description;                                       /**< Short driver platform description. Needs to end with zero. */
+    uint8_t *PHY_MAC;                                               /**< Pointer to 64-bit or 48-bit MAC address. */
     uint16_t phy_MTU;                                               /**< Define MAX PHY layer MTU size. */
+    char *driver_description;                                       /**< Short driver platform description. Needs to end with zero. */
     uint8_t phy_tail_length;                                        /**< Define PHY driver needed TAIL Length. */
     uint8_t phy_header_length;                                      /**< Define PHY driver needed header length before PDU. */
     int8_t (*state_control)(phy_interface_state_e, uint8_t);        /**< Function pointer for control PHY driver state. */
@@ -149,6 +198,14 @@ typedef struct phy_device_driver_s
     int8_t (*address_write)(phy_address_type_e , uint8_t *);        /**< Function pointer for PHY driver address write. */
     int8_t (*extension)(phy_extension_type_e, uint8_t *);           /**< Function pointer for PHY driver extension control. */
     const phy_device_channel_page_s *phy_channel_pages;
+
+    //Upper layer callbacks, set with arm_net_phy_init();
+    arm_net_phy_rx_fn *phy_rx_cb;
+    arm_net_phy_tx_done_fn *phy_tx_done_cb;
+    //Virtual upper data rx
+    arm_net_virtual_rx_fn *arm_net_virtual_rx_cb;
+    arm_net_virtual_tx_fn *arm_net_virtual_tx_cb;
+    uint16_t tunnel_type; /**< Tun driver type. */
 } phy_device_driver_s;
 
 
@@ -164,35 +221,57 @@ typedef struct phy_device_driver_s
  */
 extern int8_t arm_net_phy_register(phy_device_driver_s *phy_driver);
 
-/**
- * \brief This function is API for DATA RX to stack.
- *
- * \param data_type Defines received DATA type.
- * \param data_ptr A pointer to data.
- * \param data_len Data length.
- * \param link_quality Radio link quality.
- * \param dbm Received signal strength.
- * \param interface_id The interface ID where the packet is coming from.
- * \return >= 0 Data RX OK.
- * \return < 0 Data push fail.
- *
- */
-extern int8_t arm_net_phy_rx(data_protocol_e data_type, const uint8_t *data_ptr, uint16_t data_len, uint8_t link_quality, int8_t dbm, int8_t interface_id);
 
 /**
- * \brief This function is an API for indicating that the device driver write operation is done.
+ * \brief Set driver mac64 address.
  *
- * \param interface_id Device driver ID.
- * \param tx_handle Unique handle for a packet.
- * \param status Define TX process status.
- * \param cca_retry Number of CCA attempts for this TX process.
- * \param tx_retry Number of TX retries for this packet.
+ * \param MAC A pointer to new mac64 address which is copied to old one.
+ * \param  id driver id
  *
- * \return >= 0 Process OK.
- * \return < 0 Process handler fail.
+ * \return >= 0 SET OK.
+ * \return < 0 Means register fail.
  *
  */
-extern int8_t arm_net_phy_tx_done(int8_t driver_id, uint8_t tx_handle, phy_link_tx_status_e status, uint8_t cca_retry, uint8_t tx_retry);
+extern int8_t arm_net_phy_mac64_set(uint8_t *MAC, int8_t id);
+
+/**
+ * \brief Get driver mac64 address.
+ *
+ * \param  id driver id
+ *
+ * \return > 0 Return pointer to MAC.
+ * \return NULL.
+ *
+ */
+extern uint8_t *arm_net_phy_mac64_get(int8_t id);
+
+/**
+ * \brief Get driver link type.
+ *
+ * \param  id driver id
+ *
+ * \return driver link type.
+ *
+ */
+extern int arm_net_phy_rf_type(int8_t id);
+
+/**
+ * \brief Get driver link type MTU size.
+ *
+ * \param  id driver id
+ *
+ * \return size of MTU.
+ *
+ */
+extern uint16_t arm_net_phy_mtu_size(int8_t id);
+
+/**
+ * \brief Un register driver from storage.
+ *
+ * \param  id driver id
+ *
+ */
+extern void arm_net_phy_unregister(int8_t driver_id);
 
 #ifdef __cplusplus
 }

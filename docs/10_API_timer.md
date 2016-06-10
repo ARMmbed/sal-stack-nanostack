@@ -4,9 +4,7 @@ This chapter describes the timer functionality.
 
 If an application requires a timer, it can allocate one with the `eventOS_event_timer_request( )` function. Further to a successful allocation, the system timer event occurs.
 
-**Note**
-
-The library supports dynamic timer count at the application layer. The stack can multiplex a single timer for multiple purposes.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: The library supports dynamic timer count at the application layer. The stack can multiplex a single timer for multiple purposes.</span>
 
 ## API Headers
 
@@ -18,7 +16,7 @@ To use Library Timer API, include the following header in your application:
 
 ## Allocate timer
 
-To allocate timer events, use the following function call:
+To allocate timer events:
 
 ```
 int8_t eventOS_event_timer_request
@@ -30,23 +28,15 @@ int8_t eventOS_event_timer_request
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`snmessage`|The timer ID defined by the application.
+`event_type`|The event type to be sent to a tasklet when the timer expires. Usually `ARM_LIB_SYSTEM_TIMER_EVENT`.
+`tasklet_id`|The tasklet ID of the event receiver.
+`time`|The requested period in milliseconds. Resolution is 10ms.
 
 <dl>
-<dt><code>snmessage</code></dt>
-<dd>The timer ID defined by the application.</dd>
-
-<dt><code>event_type</code></dt>
-<dd>The event type to be sent to a tasklet when the timer expires. Usually <code>ARM_LIB_SYSTEM_TIMER_EVENT</code>.</dd>
-
-<dt><code>tasklet_id</code></dt>
-<dd>The tasklet ID of the event receiver.</dd>
-
-<dt><code>time</code></dt>
-<dd>The requested period in milliseconds.</dd>
-<dd><b>Note:</b> Resolution is 10ms.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 If timer allocation was successful.</dd>
 <dd>-1 If timer allocation failed.</dd>
 </dl>
@@ -55,7 +45,7 @@ Further to the allocated time period, the event OS library will transmit an even
 
 ## Release timer
 
-To cancel allocated timer events, use the following function call:
+To cancel allocated timer events:
 
 ```
 int8_t eventOS_event_timer_cancel
@@ -65,16 +55,13 @@ int8_t eventOS_event_timer_cancel
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`snmessage`|The timer ID of the event to be cancelled.
+`tasklet_id`|The tasklet ID of the event receiver.
 
 <dl>
-<dt><code>snmessage</code></dt>
-<dd>The timer ID of the event to be cancelled.</dd>
-
-<dt><code>tasklet_id</code></dt>
-<dd>The tasklet ID of the event receiver.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 If timer release was successful.</dd>
 <dd>-1 If timer release failed, timer ID is invalid or the timer is already released.</dd>
 </dl>

@@ -12,7 +12,7 @@
  *
  */
 
-/*
+/**
  * \file thread_dhcpv6_server.h
  * \brief Thread specific DHCP server.
  *

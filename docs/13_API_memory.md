@@ -38,15 +38,10 @@ void ns_dyn_mem_init
 )
 ```
 
-where:
-
-<dl>
-<dt><code>heap_ptr</code></dt>
-<dd>A pointer to data memory block that is reserved for the 6LoWPAN stack.</dd>
-
-<dt><code>heap_size</code></dt>
-<dd>The size of the 6LoWPAN stack dynamic memory.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`heap_ptr`|A pointer to data memory block that is reserved for the 6LoWPAN stack.
+`heap_size`|The size of the 6LoWPAN stack dynamic memory.
 
 ### Dynamic memory temporary allocation
 
@@ -59,13 +54,12 @@ void *ns_dyn_mem_temporary_alloc
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`alloc_size`|Size of the allocation.
 
 <dl>
-<dt><code>alloc_size</code></dt>
-<dd>Size of the allocation.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Allocation fail.</dd>
 <dd>>0 Pointer to allocated memory.</dd>
 </dl>
@@ -81,13 +75,12 @@ void *ns_dyn_mem_alloc
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`alloc_size`|Size of the allocation.
 
 <dl>
-<dt><code>alloc_size</code></dt>
-<dd>Size of the allocation.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Allocation fail.</dd>
 <dd>>0 Pointer to allocated memory.</dd>
 </dl>
@@ -103,11 +96,9 @@ void ns_dyn_mem_free
 )
 ```
 
-where:
-<dl>
-<dt><code>heap_ptr</code></dt>
-<dd>A pointer to the start of the allocated memory.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`heap_ptr`|A pointer to the start of the allocated memory.
 
 ## Failure callback and reporting 
 
@@ -124,13 +115,9 @@ void ns_dyn_mem_heap_fail_callback
 )
 ```
 
-where:
-
-<dl>
-<dt><code>passed_fptr</code></dt>
-<dd>A pointer to the callback function of the 6LoWPAN stack memory failure on application.</dd>
-</dl>
-
+Parameter|Description
+---------|-----------
+`passed_fptr`|A pointer to the callback function of the 6LoWPAN stack memory failure on application.
 
 ### Dynamic memory failure report events
 

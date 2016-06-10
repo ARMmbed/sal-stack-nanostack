@@ -12,6 +12,11 @@
  *
  */
 
+/**
+ * \file arm_hal_aes.h
+ * \brief AES Platform API
+ */
+
 #ifndef ARM_HAL_AES_H_
 #define ARM_HAL_AES_H_
 

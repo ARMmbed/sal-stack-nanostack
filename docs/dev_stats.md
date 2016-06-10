@@ -1,6 +1,8 @@
-# dev_stat_internal_init
+# Device statistics
 
-To start collecting device statistics within the device statistics structure, use the following function call:
+## dev_stat_internal_init
+
+To start collecting device statistics within the device statistics structure:
 
 ```
 int8_t dev_stat_internal_init
@@ -9,13 +11,12 @@ int8_t dev_stat_internal_init
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`info_ptr`|A pointer to the device statistics structure on application.
 
 <dl>
-<dt><code>info_ptr</code></dt>
-<dd>A pointer to the device statistics structure on application.</dd>
-
-<dt><code>return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 
 <dd>-1 Fail.</dd>
@@ -33,10 +34,8 @@ int16_t dev_stat_get_longest_heap_sector
 )
 ```
 
-where:
-
 <dl>
-<dt><code>return value</code></dt>
+<dt>Return value</dt>
 <dd>The size of the longest free sector.</dd>
 </dl>
 
@@ -52,9 +51,7 @@ uint32_t dev_stat_get_runtime_seconds
 )
 ```
 
-where:
-
 <dl>
-<dt><code>return value</code></dt>
+<dt>Return value</dt>
 <dd>The runtime since last reset.</dd>
 </dl> 

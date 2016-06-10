@@ -128,6 +128,36 @@ int thread_management_node_init(
  */
 link_configuration_s *thread_management_configuration_get(int8_t interface_id);
 
+/** Store Thread network link configuration settings to NVM.
+ *
+ * Storing is asynchronous operation and this method makes a request to store link
+ * configuration settings. Operation will be completed in the background.
+ * Once settings has been stored the Thread network will be restarted with new
+ * configuration settings.
+ *
+ * /param interface Id of network interface. -1 if interface_id is not available.
+ * /param link_config Pointer to a structure containing link configuration parameters
+ *
+ * /return 0 if store request has been delivered successfully to lower layer.
+ * /return -1 if storing failed (request not delivered to lower layer)
+ * /return -2 if store request delivered to lower layer but given interface_id was not valid.
+ */
+int thread_management_link_configuration_store(int8_t interface_id, link_configuration_s *link_config);
+
+/** Delete Thread network link configuration settings.
+ *
+ * Deletion is asynchronous operation and this method makes a request to delete link
+ * configuration settings. Operation will be completed in the background.
+ * Once settings has been deleted the Thread network will be restarted with default settings.
+ *
+ * /param interface Id of network interface. -1 can be used if interface_id is not available.
+ *
+ * /return 0 if delete request has been delivered successfully to lower layer.
+ * /return -1 if delete failed (request not delivered to lower layer)
+ * /return -2 if delete request delivered to lower layer but given interface_id was not valid.
+ */
+int thread_management_link_configuration_delete(int8_t interface_id);
+
 /**
  * Get Thread device settings.
  *
@@ -176,6 +206,28 @@ int8_t thread_management_set_link_timeout(int8_t interface_id, uint32_t link_tim
  * \return <0 Get Fail
  */
 int8_t thread_management_get_link_timeout(int8_t interface_id, uint32_t *link_timeout);
+
+/**
+ * Set Thread request full network data.
+ *
+ * \param interface_id Network interface ID.
+ * \param full_nwk_data Whether or not to request full network data.
+ *
+ * \return 0, Set OK.
+ * \return <0 Set Fail.
+ */
+int8_t thread_management_set_request_full_nwk_data(int8_t interface_id, bool full_nwk_data);
+
+/**
+ * Get Thread request full network data.
+ *
+ * \param interface_id Network interface ID.
+ * \link_timeout[out] A pointer to the location for writing the flag value.
+ *
+ * \return 0, Get OK.
+ * \return <0 Get Fail.
+ */
+int8_t thread_management_get_request_full_nwk_data(int8_t interface_id, bool *full_nwk_data);
 
 /**
  * Additional Thread device settings. Changing these can cause non-compliance with Thread.

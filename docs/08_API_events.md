@@ -11,7 +11,7 @@ This chapter describes the event-driven scheduling model. It contains the follow
 
 ## API Headers
 
-In order to use the eventing API, include the following headers to your application:
+To use the eventing API, include the following headers to your application:
 
 ```
 #include eventOS_event.h
@@ -32,12 +32,10 @@ The following is a prototype of a tasklet:
 void tasklet (arm_event_s *)
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`arm_event_s`|A pointer to the event structure that contains the event information.
 
-<dl>
-<dt><code>arm_event_s</code></dt>
-<dd>is a pointer to the event structure that contains the event information.</dd>
-</dl>
 
 The most important event information is the event type. There are four main types of events that a tasklet may receive. _Table 3-2_ lists the event types.
 
@@ -81,7 +79,7 @@ With a dynamic tasklet, you can easily generate a small tasklet for an applicati
 
 ### Register a tasklet
 
-To register a tasklet handler, use the following function call:
+To register a tasklet handler:
 
 ```
 int8_t eventOS_event_handler_create
@@ -90,23 +88,21 @@ int8_t eventOS_event_handler_create
 	uint8_t init_event_type
 )
 ```
-where:
+
+Parameter|Description
+---------|-----------
+`tasklet_func_ptr`|A function pointer to a tasklet event handler.
+`init_event_type`|An event type to be created when a tasklet handler is created. Usually, `ARM_LIB_TASKLET_INIT_EVENT`.
 
 <dl>
-<dt><code>tasklet_func_ptr</code></dt>
-<dd>A function pointer to a tasklet event handler.</dd>
-
-<dt><code>init_event_type</code></dt>
-<dd>An event type to be created when a tasklet handler is created. Usually, <code>ARM_LIB_TASKLET_INIT_EVENT</code>.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 Tasklet ID.</dd>
 <dd><0 Tasklet allocation fails.</dd>
 </dl>
 
 ## Event structure
 
-Event structure is used to transfer information between the stack and tasklet or between tasklets. This structure is received by the tasklet when the event arrives. The tasklet uses this structure to find all information about the received event. The event structure comprises the following variables:
+Event structure is used to transfer information between the stack and tasklet or between tasklets. This structure is received by the tasklet when the event arrives. The tasklet uses this structure to find all information about the received event. The event structure comprises the following members:
 
 ```
 typedef struct arm_event_s
@@ -121,25 +117,15 @@ typedef struct arm_event_s
 } arm_event_s;
 ```
 
-where:
-
-<dl>
-<dt><code>receiver</code></dt>
-<dd>Event tasklet handler ID.</dd>
-<dt><code>sender</code></dt>
-<dd>Event tasklet sender ID. Zero means the sender is the stack.</dd>
-<dt><code>event_type</code></dt>
-<dd>Represents the <code>typecast arm_library_event_type_e.</code></dd>
-<dt><code>event_id</code></dt>
-<dd>Timer ID, NWK interface ID or an application-specific ID.</dd>
-<dt><code>data_ptr</code></dt>
-<dd>Application's ability to share a data pointer tasklet with a tasklet.</dd>
-<dt><code>priority</code></dt>
-<dd>Task priority.</dd>
-<dt><code>event_data</code></dt>
-<dd>Extra event data. Used in network events.</dd>
-</dl>
-
+Member|Description
+------|-----------
+`receiver`|Event tasklet handler ID.
+`sender`|Event tasklet sender ID. Zero means the sender is the stack.
+`event_type`|Represents the `typecast arm_library_event_type_e`.
+`event_id`|Timer ID, NWK interface ID or an application-specific ID.
+`data_ptr`|Application's ability to share a data pointer tasklet with a tasklet.
+`priority`|Task priority.
+`event_data`|Extra event data. Used in network events.
 
 ### Reference events
 
@@ -174,7 +160,7 @@ Name|Value
 
 ## Events sent by the stack
 
-This section describes all the events that the stack sends.
+This section describes all the events sent by the stack.
 
 ### Tasklet initialization event
 
@@ -249,7 +235,7 @@ Name|Value
 
 ### Event send API
 
-To send an event, use the following function call:
+To send an event:
 
 ```
 int8_t eventOS_event_send
@@ -258,11 +244,12 @@ int8_t eventOS_event_send
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`event`|A pointer to an event to be sent.
+
 <dl>
-<dt><code>event</code></dt>
-<dd>A pointer to an event to be sent.</dd>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Process OK.</dd>
 <dd>-1 Memory allocation failed.</dd>
 </dl>

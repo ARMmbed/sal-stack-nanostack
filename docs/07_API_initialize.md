@@ -57,7 +57,9 @@ To effectively use the 6LoWPAN stack, you must run at least one tasklet. Some AP
 
 To configure a network interface, follow these instructions:
 
-1. To create an interface, call the function `arm_nwk_interface_init()`.
+1. To create an interface, call the function:
+	* 802.15.4 `arm_nwk_interface_lowpan_init()`.
+	* Ethernet or other `arm_nwk_interface_ethernet_init()`.
 2. To define the 6LoWPAN bootstrap, call the function `arm_nwk_interface_configure_6lowpan_bootstrap_set()`.
 3. To configure the 6LoWPAN link layer security, call the function `arm_nwk_6lowpan_link_layer_security_mode()`.
 4. (Optional) To configure the 6LoWPAN address mode, call the function  `arm_nwk_6lowpan_gp_address_mode()`.

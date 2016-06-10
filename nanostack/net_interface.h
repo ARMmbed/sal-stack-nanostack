@@ -22,6 +22,9 @@
 extern "C" {
 #endif
 
+struct mac_api_s;
+struct eth_mac_api_s;
+
 /**
  * \file net_interface.h
  * \brief  Network API
@@ -97,18 +100,6 @@ typedef enum arm_library_event_type_e {
 #define SOCKET_TX_DONE                      9 << 4
 /** Out of memory failure. */
 #define SOCKET_NO_RAM                       10 << 4
-
-/*!
- * \enum net_interface_type_e
- * \brief Interface type definition.
- */
-/** Network Interfaces. */
-typedef enum {
-    NET_INTERFACE_ETHERNET,     /**< IPv4 or IPv6. */
-    NET_INTERFACE_WIFI,         /**< WIFI RF interface, currently unsupported. */
-    NET_INTERFACE_RF_6LOWPAN,   /**< RF 6LoWPAN interface. */
-    NET_INTERFACE_VIRTUAL,  /**< IPv6 over any serial interface, */
-} net_interface_type_e;
 
 /*!
  * \enum net_security_t
@@ -355,22 +346,32 @@ typedef struct {
   */
 extern int8_t net_init_core(void);
 
-
-
 /**
  * \brief Create network interface base to IDLE state.
- * \param type Generates network interface type.
- * \param phy_driver_id Unique PHY device driver ID. PHY driver needs to be allocated first.
+ * \param api Generates interface with ethernet MAC.
  * \param interface_name_ptr String pointer to interface name. Need to end to '\0' character.
  *        Max length 32 characters including NULL at end. Note: the given name is not copied,
  *        so it must remain valid as long as the interface is.
  *
  * \return >=0 Interface ID (0-127). Application needs to save this information.
- * \return -1 Unsupported interface type.
- * \return -2 Driver is already associated to other interface.
+ * \return -1 api was NULL.
+ * \return -2 Ethernet is not supported at this build.
  * \return -3 No memory for the interface.
  */
-extern int8_t arm_nwk_interface_init(net_interface_type_e type, uint8_t phy_driver_id, const char *interface_name_ptr);
+extern int8_t arm_nwk_interface_ethernet_init(struct eth_mac_api_s *api, const char *interface_name_ptr);
+
+/**
+ * \brief Create network interface base to IDLE state.
+ * \param api Generates interface with 802.15.4 MAC.
+ * \param interface_name_ptr String pointer to interface name. Need to end to '\0' character.
+ *        Max length 32 characters including NULL at end. Note: the given name is not copied,
+ *        so it must remain valid as long as the interface is.
+ *
+ * \return >=0 Interface ID (0-127). Application needs to save this information.
+ * \return -1 api was NULL.
+ * \return -3 No memory for the interface.
+ */
+extern int8_t arm_nwk_interface_lowpan_init(struct mac_api_s *api, char *interface_name_ptr);
 
 /**
  * \brief Set IPv6 interface setup.
@@ -411,7 +412,6 @@ extern int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set(int8_t interface
  * \brief Set network interface link layer parameters.
  *
  * \param interface_id Network interface ID
- * \param tun_driver_id Driver ID for PHY data IN & OUT.
  * \param nwk_channel_list Defines network channel page and channel.
  * \param link_setup Link layer parameters for NET_6LOWPAN_NETWORK_DRIVER defines NetworkID, PAN-ID Short Address.
  *
@@ -421,7 +421,7 @@ extern int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set(int8_t interface
  * \return -3 No memory for 6LoWPAN stack.
  * \return -4 Null pointer parameter.
  */
-extern int8_t arm_nwk_interface_network_driver_set(int8_t interface_id, int8_t tun_driver_id, const channel_list_s *nwk_channel_list, network_driver_setup_s *link_setup);
+extern int8_t arm_nwk_interface_network_driver_set(int8_t interface_id, const channel_list_s *nwk_channel_list, network_driver_setup_s *link_setup);
 
 /**
  * \brief Set configured network interface global address mode (border router bootstrap mode cannot set this).
@@ -456,7 +456,6 @@ extern int8_t arm_nwk_6lowpan_gp_address_mode(int8_t interface_id, net_6lowpan_g
  * \return >=0 Channel configuration OK.
  * \return -1 Unknown network interface ID.
  * \return -2 Empty channel list, no channels enabled.
- * \return -3 If channel list is not supported by PHY driver.
  * \return -4 If network interface is already active and cannot be re-configured.
  */
 extern int8_t arm_nwk_set_channel_list(int8_t interface_id, const channel_list_s *nwk_channel_list);
@@ -828,6 +827,24 @@ extern int8_t arm_net_address_list_get_next(int8_t interface_id, int *n, uint8_t
 extern int8_t arm_net_interface_address_list_size(int8_t interface_id, uint16_t *address_count);
 
 /**
+ * \brief A function to set interface metric.
+ * \param interface_id Network interface ID.
+ * \param metric Used to rank otherwise-equivalent routes. Lower is preferred and default is 0. The metric value is added to metric provided by the arm_net_route_add() function.
+ *
+ * \return 0 On success, -1 on errors.
+ */
+extern int8_t arm_net_interface_set_metric(int8_t interface_id, uint16_t metric);
+
+/**
+ * \brief A function to read the interface metric value on an interface.
+ * \param interface_id Network interface ID.
+ * \param metric A pointer to the variable where the interface metric value is saved.
+ *
+ * \return 0 On success, -1 on errors.
+ */
+extern int8_t arm_net_interface_get_metric(int8_t interface_id, uint16_t *metric);
+
+/**
  * \brief A function to read the network interface.
  * \param interface_id Network interface ID.
  * \param address_buf_size Buffer size in bytes, minimum 16 bytes.
@@ -891,15 +908,6 @@ extern int8_t arm_net_route_delete(const uint8_t *prefix, uint8_t prefix_len, co
 #define ND_PROXY_PREFIX_NVM_UPDATE          3
 /** ND ABRO version update. */
 #define ND_PROXY_ABRO_VERSION_NVM_UPDATE    4
-/**
- * \brief Border Router ND setup NVM update callback set
- *
- * \param passed_fptr A function pointer to the ND NVM update process.
- *
- * \return 0 ND NVM operation init OK.
- * \return -1 No memory for NVM buffer.
- */
-extern int8_t border_router_nd_nvm_callback_set(void (*passed_fptr)(uint8_t , uint8_t *));
 /**
  * \brief Load context from NVM at ZigBeeIP interface configure state.
  *

@@ -16,6 +16,7 @@ pages:
 - ['thread_sec.md', 'ARM mbed Thread Stack Overview', 'Thread Security Fundamentals']
 - ['thread_comm.md', 'ARM mbed Thread Stack Overview', 'Thread Commissioning (Join Process)']
 - ['05_reference.md','API Reference Manual', 'API Reference - Synopsis']
+- ['api_changes_to_v4_0_0.md', 'API Reference Manual', 'API update v.4.0.0']
 - ['06_API_introduction.md', 'API Reference Manual', 'Introduction to APIs']
 - ['platform_API.md', 'API Reference Manual', 'Platform API']
 - ['driver_api.md', 'API Reference Manual', 'Device Driver API']
@@ -29,5 +30,4 @@ pages:
 - ['14_API_data.md','API Reference Manual', 'Data Structures, Types & Variables API']
 - ['15_API_debug.md','API Reference Manual', 'Network Debug Statistics API']
 - ['thread_APIs.md','API Reference Manual', 'Thread Stack APIs']
-- ['api_changes_to_v4_0_0.md', 'API Reference Manual', 'API update v.4.0.0']
 - ['16_API_porting.md','Porting a new platform to ARM mbed Networking Stack', 'Porting to the Stack']

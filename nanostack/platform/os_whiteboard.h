@@ -16,9 +16,10 @@
 
 #include "ns_types.h"
 
-/*
- * API to modify the operating system routing table
- * and neighbor cache.
+/**
+ * \file os_whiteboard.h
+ * \brief Platform API to modify the operating system routing table.
+ * API to modify the operating system routing table and neighbor cache.
  * Required on Linux. Not needed on embedded systems.
  */
 

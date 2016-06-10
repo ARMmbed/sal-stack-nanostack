@@ -145,20 +145,9 @@ extern "C" {
 #define SOCKET_ICMP     32
 /** Raw IPv6 socket type (socket_open identifier is IPv6 protocol number) */
 #define SOCKET_RAW      2
-/** Local Sockets for Tun interface functionality to APP-APP trough any BUS */
+/** REMOVED Feature in this release socket open return error Local Sockets for Tun interface functionality to APP-APP trough any BUS */
 #define SOCKET_LOCAL    1
 ///@}
-
-/**
- * \brief A function to open a raw ICMP socket.
- *
- * \param passed_fptr A pointer to socket callback function.
- *
- * \return Positive Socket opened.
- * \return -1 No free sockets.
- * \return -2 Port reserved.
- */
-extern int8_t socket_raw_open(void (*passed_fptr)(void *));
 
 /** ICMP socket instruction
  *

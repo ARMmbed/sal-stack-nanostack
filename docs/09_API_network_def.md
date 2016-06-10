@@ -60,25 +60,20 @@ int8_t arm_pana_client_library_init
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`cipher_mode`|The TLS 1.2 cipher mode; PSK, ECC or both.
+`psk_key_id`|The PSK key ID for the PSK setup.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>cipher_mode</code></dt>
-<dd>Defines the TLS 1.2 cipher mode PSK, ECC or both.</dd>
-
-<dt><code>psk_key_id</code></dt>
-<dd>PSK key ID for the PSK setup.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Unknown network ID or PANA is not supported in this stack.</dd>
 <dd>-2 Interface active.</dd>
 </dl>
 
-To pull the PANA client key manually for testing purposes, use the following function:
+To pull the PANA client key manually for testing purposes:
 
 ```
 int8_t arm_pana_client_key_pull
@@ -87,13 +82,12 @@ int8_t arm_pana_client_key_pull
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Unknown network ID.</dd>
 </dl>
@@ -111,7 +105,7 @@ Function|Description
 `arm_pana_activate_new_key()`|Triggers new key material quicker after key delivery phase. Only for testing purposes.
 `arm_network_key_get()`|Reads PANA server key material. Only for testing purposes.
 
-To initialize and configure the PANA network server interface, use the following function:
+To initialize and configure the PANA network server interface:
 
 ```
 int8_t arm_pana_server_library_init
@@ -123,22 +117,15 @@ int8_t arm_pana_server_library_init
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`cipher_mode`|The TLS 1.2 cipher mode; PSK, ECC or both.
+`key_material`|A pointer to 128-bit key material or `NULL` when the PANA server generates the random key.
+`time_period_before_activate_key`|The guard period in seconds after a successful key delivery phase before the key is activated by the server.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>cipher_mode</code></dt>
-<dd>Defines the TLS 1.2 cipher mode PSK, ECC or both.</dd>
-
-<dt><code>key_material</code></dt>
-<dd>A pointer to 128-bit key material or <code>NULL</code> when the PANA server generates the random key.</dd>
-
-<dt><code>time_period_before_activate_key</code></dt>
-<dd>Guard period in seconds after a successful key delivery phase before the key is activated by the server.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Unknown network ID.</dd>
 <dd>-2 Interface active.</dd>
@@ -154,16 +141,13 @@ int8_t arm_pana_server_key_update
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`network_key_material`|A pointer to new 128-bit key material or a NULL pointer to a randomly generated key.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>network_key_material</code></dt>
-<dd>A pointer to new 128-bit key material or a NULL pointer to a randomly generated key.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Key update process is OK.</dd>
 <dd>-1 PANA server is not yet initialized.</dd>
 <dd>-2 Old key update is still active.</dd>
@@ -179,21 +163,20 @@ int8_t arm_pana_activate_new_key
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Key activate process is OK.</dd>
 <dd>-1 No pending key update.</dd>
 <dd>-2 PANA server is not initialized or the PANA server API is disabled by this stack.</dd>
 </dl>
 
-To read the security key material of the PANA server, use the following function:
+To read the security key material of the PANA server:
 
-`previous_active_network_key` is information and only valid when `current_active_key_index` is bigger than 1.
+`previous_active_network_key` is only valid when `current_active_key_index` is bigger than 1.
 
 ```
 int8_t arm_network_key_get
@@ -202,18 +185,17 @@ int8_t arm_network_key_get
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`key`|A pointer for storing key material information.
 
 <dl>
-<dt><code>key</code></dt>
-<dd>A pointer for storing key material information.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Key read is OK.</dd>
 <dd>-1 PANA server key material is not available.</dd>
 </dl>
 
-This structure defines the network keys used by the `net_network_key_get` function and comprises the following variables:
+This structure defines the network keys used by the `net_network_key_get` function and comprises the following members:
 
 ```
 typedef struct ns_keys_t
@@ -225,21 +207,12 @@ typedef struct ns_keys_t
 } ns_keys_t;
 ```
 
-where:
-
-<dl>
-<dt><code>previous_active_network_key</code></dt>
-<dd>Contains the previous key. The key is still valid for reception.</dd>
-
-<dt><code>previous_active_key_index</code></dt>
-<dd>Contains the key index for the previous key.</dd>
-
-<dt><code>current_active_network_key</code></dt>
-<dd>Contains the current key.</dd>
-
-<dt><code>current_active_key_index</code></dt>
-<dd>Contains the index for the current key.</dd>
-</dl>
+Member|Description
+------|-----------
+`previous_active_network_key`|Contains the previous key. The key is still valid for reception.
+`previous_active_key_index`|Contains the key index for the previous key.
+`current_active_network_key`|Contains the current key.
+`current_active_key_index`|Contains the index for the current key.
 
 ### Resume API
 
@@ -263,21 +236,18 @@ int8_t pana_client_nvm_callback_set
 );
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`passed_fptr`|A pointer to the callback function.
+`nvm_static_buffer`|A pointer to the allocated buffer. The required size is 86 bytes.
 
 <dl>
-<dt><code>passed_fptr</code></dt>
-<dd>A pointer to the callback function.</dd>
-
-<dt><code>nvm_static_buffer</code></dt>
-<dd>A pointer to the allocated buffer. The required size is 86 bytes.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Initialization is OK.</dd>
 <dd>-1 Failure.</dd>
 </dl>
 
-The callback function is called whenever the stack acquires new keys. The parameter passed to the callback contains information about which parts of the keys are updated. This enumeration defines the parameter types:
+The callback function is called whenever the stack acquires new keys. The parameter passed to the callback tells which parts of the keys are updated. This enumeration defines the parameter types:
 
 ```
 typedef enum pana_client_nvm_update_process_t
@@ -287,15 +257,10 @@ typedef enum pana_client_nvm_update_process_t
 }pana_client_nvm_update_process_t;
 ```
 
-where:
-
-<dl>
-<dt><code>PANA_CLIENT_SESSION_UPDATE</code></dt>
-<dd>Full update of PANA session information.</dd>
-
-<dt><code>PANA_CLIENT_SESSION_SEQ_UPDATE</code></dt>
-<dd>An update of the REQ and RES sequence number of a PANA key pull or push operation.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`PANA_CLIENT_SESSION_UPDATE`|Full update of PANA session information.
+`PANA_CLIENT_SESSION_SEQ_UPDATE`|An update of the REQ and RES sequence number of a PANA key pull or push operation.
 
 When a callback takes place with the parameter `PANA_CLIENT_SESSION_UPDATE`, the first 16 bytes in the data buffer are PANA session address and the following 70 bytes PANA session keys. The session address is associated with the node's parent address, so that is most probably required only on star topology networks. On the mesh network, the parent address can change, so storing the session address is unnecessary.
 
@@ -315,7 +280,7 @@ void pana_resume_callback(pana_client_nvm_update_process_t event)
 }
 ```
 
-To resume the PANA session, use the following function:
+To resume the PANA session:
 
 ```
 int8_t net_pana_client_session_nvm_data_load
@@ -326,18 +291,11 @@ int8_t net_pana_client_session_nvm_data_load
 );
 ```
 
-where:
-
-<dl>
-<dt><code>data_buffer</code></dt>
-<dd>A pointer to the PANA session keys.</dd>
-
-<dt><code>session_address</code></dt>
-<dd>A pointer to the PANA session address, or NULL if no session address information is stored.</dd>
-
-<dt><code>interface_id</code></dt>
-<dd>The interface ID for a 6LoWPAN interface.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`data_buffer`|A pointer to the PANA session keys.
+`session_address`|A pointer to the PANA session address, or NULL if no session address information is stored.
+`interface_id`|The interface ID for a 6LoWPAN interface.
 
 When you give a `NULL` pointer to `session_address`, the function only restores the PANA keys and can then associate with any parent from the same network. This functionality is required on the mesh topology.
 
@@ -349,19 +307,6 @@ typedef enum {
     NET_PANA_MULTI_SESSION,        
 } net_pana_session_mode_e;
 ```
-
-where:
-
-<dl>
-<dt><code>data_buffer</code></dt>
-<dd>A pointer to the PANA session keys.</dd>
-
-<dt><code>session_address</code></dt>
-<dd>A pointer to the PANA session address, or NULL if no session address information is stored.</dd>
-
-<dt><code>interface_id</code></dt>
-<dd>The interface ID for a 6LoWPAN interface.</dd>
-</dl>
 
 #### Server side API
 
@@ -379,16 +324,13 @@ int8_t pana_server_nvm_callback_set
 );
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`passed_fptr`|A pointer to the callback function.
+`nvm_static_buffer`|A pointer to the buffer used to store the PANA keys.
 
 <dl>
-<dt><code>passed_fptr</code></dt>
-<dd>A pointer to the callback function.</dd>
-
-<dt><code>nvm_static_buffer</code></dt>
-<dd>A pointer to the buffer used to store the PANA keys.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Error.</dd>
 </dl>
@@ -405,21 +347,12 @@ typedef enum pana_nvm_update_process_t
 }pana_nvm_update_process_t;
 ```
 
-where:
-
-<dl>
-<dt><code>PANA_SERVER_MATERIAL_UPDATE</code></dt>
-<dd>An update of the PANA server security material.</dd>
-
-<dt><code>PANA_SERVER_CLIENT_SESSION_UPDATE</code></dt>
-<dd>An update of the PANA client session.</dd>
-
-<dt><code>PANA_SERVER_CLIENT_SESSION_SEQ_UPDATE</code></dt>
-<dd>A sequence number update of the PANA client session.</dd>
-
-<dt><code>PANA_SERVER_CLIENT_SESSION_REMOVE_UPDATE</code></dt>
-<dd>Removes the PANA client session.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`PANA_SERVER_MATERIAL_UPDATE`|An update of the PANA server security material.
+`PANA_SERVER_CLIENT_SESSION_UPDATE`|An update of the PANA client session.
+`PANA_SERVER_CLIENT_SESSION_SEQ_UPDATE`|A sequence number update of the PANA client session.
+`PANA_SERVER_CLIENT_SESSION_REMOVE_UPDATE`|Removes the PANA client session.
 
 The buffer that is used to transfer data from the PANA process to the storage can contain server keys or client session data. When the server keys are stored, the buffer size is 90 bytes. On the client sessions, it depends on the event that the buffer contains.
 
@@ -436,7 +369,7 @@ Not all segments are valid by each call. The parameter that is passed to the cal
 
 **Table 3-12 Callback parameters**
 
-Callback parameter|Buffer content
+|Callback parameter|Buffer content|
 |------------------|-------------|
 |`PANA_SERVER_MATERIAL_UPDATE`|Buffer contains server key material. The size is defined by the symbol<br> `PANA_SERVER_MATERIAL_BUF_SIZE`.|
 |`PANA_SERVER_CLIENT_SESSION_UPDATE`|Add a new PANA session or update the previously stored one. All three segments are valid.<br> An offset number is used to determine which session this is. The offset number for new sessions is zero.<br> The callback should return the offset number for the sessions; this information is not used by the stack but is provided back on the following update.|
@@ -473,9 +406,7 @@ uint16_t app_nvm_pana_update(pana_nvm_update_process_t update_type )
        }
 }
 ```
-**Note**
-
-The previous example assumes that the user provides the functions `store_server_key()`, `store_new_session()`, `update_session()`, `update_session_data()` and `remove_session()`.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note:** The previous example assumes that the user provides the functions `store_server_key()`, `store_new_session()`, `update_session()`, `update_session_data()` and `remove_session()`.</span>
 
 When the server starts, it uses the following API to restore the previous server keys:
 
@@ -487,16 +418,13 @@ int8_t pana_server_restore_from_nvm
 );
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`nvm_data`|Full buffer content given to the callback previously.
+`interface_id`|The 6LoWPAN interface ID.
 
 <dl>
-<dt><code>nvm_data</code></dt>
-<dd>Full buffer content given to the callback previously.</dd>
-
-<dt><code>interface_id</code></dt>
-<dd>The 6LoWPAN interface ID.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Failure.</dd>
 </dl>
@@ -510,13 +438,12 @@ int8_t pana_server_nvm_client_session_load
 );
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`nvm_pointer`|A pointer to the full PANA session record containing all three defined fields.
 
 <dl>
-<dt><code>nvm_pointer</code></dt>
-<dd>A pointer to the full PANA session record containing all three defined fields.</dd>
-
-<dt><code>Return value:</code></dt>
+<dt>Return value:</dt>
 <dd>0 Success.</dd>
 <dd>-1 Failure.</dd>
 </dl>
@@ -527,7 +454,7 @@ This section introduces general security type definitions.
 
 ### Certificate structure
 
-The certificate structure comprises the following variables:
+The certificate structure comprises the following members:
 
 ```
 typedef struct arm_certificate_chain_entry_s
@@ -539,22 +466,12 @@ typedef struct arm_certificate_chain_entry_s
 } arm_certificate_chain_entry_t;
 ```
 
-where:
-
-<dl>
-<dt><code>chain_length</code></dt>
-<dd>Defines the length of the certificate chain.</dd>
-
-<dt><code>cert_chain</code></dt>
-<dd>Defines the pointers to the certificates in chain.</dd>
-
-<dt><code>cert_len</code></dt>
-<dd>Defines the certificate lengths.</dd>
-
-<dt><code>key_chain</code></dt>
-<dd>Defines the private keys.</dd>
-</dl>
-
+Member|Description
+------|-----------
+`chain_length`|Defines the length of the certificate chain.
+`cert_chain`|Defines the pointers to the certificates in chain.
+`cert_len`|Defines the certificate lengths.
+`key_chain`|Defines the private keys.
 
 ### TLS cipher mode structure
 
@@ -569,22 +486,15 @@ typedef enum net_tls_cipher_e
 } net_tls_cipher_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_TLS_PSK_CIPHER</code></dt>
-<dd>Means that network authentication only supports PSK.</dd>
-
-<dt><code>NET_TLS_ECC_CIPHER</code></dt>
-<dd>Means that network authentication only supports ECC.</dd>
-
-<dt><code>NET_TLS_PSK_AND_ECC_CIPHER</code></dt>
-<dd>Means that network authentication supports both PSK and ECC.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NET_TLS_PSK_CIPHER`|Means that network authentication only supports PSK.
+`NET_TLS_ECC_CIPHER`|Means that network authentication only supports ECC.
+`NET_TLS_PSK_AND_ECC_CIPHER`|Means that network authentication supports both PSK and ECC.
 
 ### TLS PSK info structure
 
-The TLS PSK info structure comprises the following variables:
+The TLS PSK info structure comprises the following members:
 
 ```
 typedef struct net_tls_psk_info_s
@@ -594,15 +504,10 @@ typedef struct net_tls_psk_info_s
 } net_tls_psk_info_s;
 ```
 
-where:
-
-<dl>
-<dt><code>key_id</code></dt>
-<dd>Means that a PSK key ID can be 0x01-0xFFFF. The storage size is intentionally 32 bits.</dd>
-
-<dt><code>key</code></dt>
-<dd>Defines a 128-bit PSK key.</dd>
-</dl>
+Member|Description
+------|-----------
+`key_id`|Means that a PSK key ID can be `0x01-0xFFFF`. The storage size is intentionally 32 bits.
+`key`|Defines a 128-bit PSK key.
 
 The 6LoWPAN stack supports two different chain certificate users:
 
@@ -626,17 +531,10 @@ typedef enum net_ipv6_mode_e
 } net_ipv6_mode_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_IPV6_BOOTSTRAP_STATIC</code></dt>
-<dd>Means that the application defines the IPv6 prefix.</dd>
-</dl>
-
-<dl>
-<dt><code> NET_IPV6_BOOTSTRAP_AUTONOMOUS</code></dt>
-<dd>Means that the network defines the IPv6 prefix.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NET_IPV6_BOOTSTRAP_STATIC`|Means that the application defines the IPv6 prefix.
+`NET_IPV6_BOOTSTRAP_AUTONOMOUS`|Means that the network defines the IPv6 prefix.
 
 ## RF 6LoWPAN interface configure definition
 
@@ -659,27 +557,14 @@ typedef enum net_6lowpan_mode_e
 } net_6lowpan_mode_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_6LOWPAN_BORDER_ROUTER</code></dt>
-<dd>Is a root device for 6LoWPAN ND.</dd>
-
-<dt><code>NET_6LOWPAN_ROUTER</code></dt>
-<dd>Is a router device.</dd>
-
-<dt><code>NET_6LOWPAN_HOST</code></dt>
-<dd>Is a host device. This is the default setting.</dd>
-
-<dt><code>NET_6LOWPAN_SLEEPY_HOST</code></dt>
-<dd>Is a sleepy host device.</dd>
-
-<dt><code>NET_6LOWPAN_NETWORK_DRIVER</code></dt>
-<dd>6Lowpan radio host device only, no bootstrap.</dd>
-
-<dt><code>NET_6LOWPAN_SNIFFER</code></dt>
-<dd>Radio sniffer only, no bootstrap.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NET_6LOWPAN_BORDER_ROUTER`|Is a root device for 6LoWPAN ND.
+`NET_6LOWPAN_ROUTER`|Is a router device.
+`NET_6LOWPAN_HOST`|Is a host device. This is the default setting.
+`NET_6LOWPAN_SLEEPY_HOST`|Is a sleepy host device.
+`NET_6LOWPAN_NETWORK_DRIVER`|6LoWPAN radio host device only, no bootstrap.
+`NET_6LOWPAN_SNIFFER`|Radio sniffer only, no bootstrap.
 
 The `NET_6LOWPAN_SLEEPY_HOST` mode support requires MLE protocol support.
 
@@ -696,22 +581,12 @@ typedef enum {
 } net_6lowpan_mode_extension_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_6LOWPAN_ND_WITHOUT_MLE</code></dt>
-<dd>Starts the 6lowpan-ND bootstrap without MLE (Mesh link establishment protocol).</dd>
-
-<dt><code>NET_6LOWPAN_ND_WITH_MLE</code></dt>
-<dd>Starts 6lowpan-ND with MLE support.</dd>
-
-<dt><code>NET_6LOWPAN_THREAD</code></dt>
-<dd>Starts Thread with MLE.</dd>
-
-<dt><code>NET_6LOWPAN_ZIGBEE_IP</code></dt>
-<dd>Starts 6lowpan ZigBee-IP.</dd>
-
-</dl>
+Parameter|Description
+---------|-----------
+`NET_6LOWPAN_ND_WITHOUT_MLE`|Starts the 6LoWPAN-ND bootstrap without MLE (Mesh link establishment protocol).
+`NET_6LOWPAN_ND_WITH_MLE`|Starts 6LoWPAN-ND with MLE support.
+`NET_6LOWPAN_THREAD`|Starts Thread with MLE.
+`NET_6LOWPAN_ZIGBEE_IP`|Starts 6LoWPAN ZigBee-IP.
 
 ### typedef struct network_driver_setup_s
 
@@ -728,29 +603,14 @@ typedef struct {
 } network_driver_setup_s;
 ```
 
-where:
-
-<dl>
-
-<dt><code>mac_panid</code></dt>
-<dd>Link layer PAN id. Accepted values are <code><0xFFFE</code>.</dd>
-
-<dt><code>mac_short_adr</code></dt>
-<dd>Defines IEEE 802.15.4 Short MAC address. If value is <code><0xFFFE</code>, it indicates that GP16 addresses are active.</dd>
-
-<dt><code>beacon_protocol_id</code></dt>
-<dd>Beacon protocol ID. ZigBee reserves the value `2`. 6LoWPAN does not define any value for this, you can use any non-reserved value.</dd>
-
-<dt><code>network_id</code></dt>
-<dd>A 16-byte long network ID. Used in the beacon payload.</dd>
-
-<dt><code>beacon_payload_tlv_length</code></dt>
-<dd>Length of optional steering parameters.</dd>
-
-<dt><code>beacon_payload_tlv_ptr</code></dt>
-<dd>A pointer to the optional steering parameters.</dd>
-
-</dl>
+Member|Description
+------|-----------
+`mac_panid`|Link layer PAN ID. Accepted values are `<0xFFFE`.
+`mac_short_adr`|Defines the IEEE 802.15.4 Short MAC address. If the value is `<0xFFFE`, it indicates that GP16 addresses are active.
+`beacon_protocol_id`|Beacon protocol ID. ZigBee reserves the value 2. 6LoWPAN does not define any value for this, you can use any non-reserved value.
+`network_id`|A 16-byte long network ID. Used in the beacon payload.
+`beacon_payload_tlv_length`|The length of optional steering parameters.
+`beacon_payload_tlv_ptr`|A pointer to the optional steering parameters.
 
 ### typedef enum net_6lowpan_gp_address_mode_e
 
@@ -765,18 +625,11 @@ typedef enum net_6lowpan_gp_address_mode_e
 } net_6lowpan_gp_address_mode_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_6LOWPAN_GP64_ADDRESS</code></dt>
-<dd>Means that the interface will only register a GP64 address. This is the default setting.</dd>
-
-<dt><code>NET_6LOWPAN_GP16_ADDRESS</code></dt>
-<dd>Means that the interface will only register a GP16 address.</dd>
-
-<dt><code>NET_6LOWPAN_MULTI_GP_ADDRESS</code></dt>
-<dd>Means that the interface will register both GP16 and GP64 addresses.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NET_6LOWPAN_GP64_ADDRESS`|Means that the interface will only register a GP64 address. This is the default setting.
+`NET_6LOWPAN_GP16_ADDRESS`|Means that the interface will only register a GP16 address.
+`NET_6LOWPAN_MULTI_GP_ADDRESS`|Means that the interface will register both GP16 and GP64 addresses.
 
 The default address mode is `NET_6LOWPAN_GP64_ADDRESS`.
 
@@ -793,24 +646,17 @@ typedef enum net_6lowpan_link_layer_sec_mode_e
 } net_6lowpan_link_layer_sec_mode_e;
 ```
 
-where:
-
-<dl>
-<dt><code>NET_SEC_MODE_NO_LINK_SECURITY</code></dt>
-<dd>Means that the security is disabled at a link layer. This is the default setting.</dd>
-
-<dt><code>NET_SEC_MODE_PSK_LINK_SECURITY</code></dt>
-<dd>Means that a PSK key defines the link security.</dd>
-
-<dt><code>NET_SEC_MODE_PANA_LINK_SECURITY</code></dt>
-<dd>Means that PANA network authentication defines the link key. The client must call <code>arm_pana_client_library_init()</code> and the border router application <code>arm_pana_server_library_init()</code> to initialize the PANA protocol. The PANA Network API could be disabled by some of the stack packets and it is also possible that it only supports client mode.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NET_SEC_MODE_NO_LINK_SECURITY`|Means that the security is disabled at a link layer. This is the default setting.
+`NET_SEC_MODE_PSK_LINK_SECURITY`|Means that a PSK key defines the link security.
+`NET_SEC_MODE_PANA_LINK_SECURITY`|Means that PANA network authentication defines the link key. The client must call `arm_pana_client_library_init()` and the border router application `arm_pana_server_library_init()` to initialize the PANA protocol. The PANA Network API could be disabled by some of the stack packets and it is also possible that it only supports client mode.
 
 The default setting is `NET_SEC_MODE_NO_SECURITY`.
 
 ### typedef struct net_link_layer_psk_security_info_s
 
-This structure defines the PSK security information and comprises the following variables:
+This structure defines the PSK security information and comprises the following members:
 
 ```
 typedef struct net_link_layer_psk_security_info_s
@@ -820,20 +666,14 @@ typedef struct net_link_layer_psk_security_info_s
 } net_link_layer_psk_security_info_s;
 ```
 
-where:
-
-<dl>
-<dt><code>key_id</code></dt>
-<dd>PSK key ID of a link layer. Can be <code>0x01-0xFF</code>.</dd>
-
-<dt><code>security_key</code></dt>
-<dd>Defines the 128-bit PSK key of a link layer.</dd>
-</dl>
-
+Member|Description
+------|-----------
+`key_id`|PSK key ID of a link layer. Can be `0x01-0xFF`.
+`security_key`|Defines the 128-bit PSK key of a link layer.
 
 ### typedef struct border_router_setup_s
 
-This structure defines the information required to set up a 6LoWPAN border router and comprises the following variables:
+This structure defines the information required to set up a 6LoWPAN border router and comprises the following members:
 
 ```
 typedef struct border_router_setup_s
@@ -849,72 +689,24 @@ typedef struct border_router_setup_s
 } border_router_setup_t;
 ```
 
-where:
-
-<dl>
-<dt><code>channel</code></dt>
-<dd>Defines the channel used in 802.15.4 radio. Supported values are from 1 to 26.</dd>
-
-<dt><code>mac_panid</code></dt>
-<dd>Link layer PAN id. Accepted values are <code><0xFFFE</code>.</dd>
-
-<dt><code>mac_short_adr</code></dt>
-<dd>Defines IEEE 802.15.4 Short MAC address. If value is <code><0xFFFE</code>, it indicates that GP16 addresses are active.</dd>
-
-<dt><code>beacon_protocol_id</code></dt>
-<dd>Beacon protocol ID. ZigBee reserves the values from `0` to `2`. 6LoWPAN does not define any value for this, you can use any non-reserved value.</dd>
-
-<dt><code>network_id</code></dt>
-<dd>A 16-byte long network ID. Used in the beacon payload.</dd>
-
-<dt><code>lowpan_nd_prefix</code></dt>
-<dd>Defines the ND default prefix, ABRO, DODAG ID, and GP address.</dd>
-
-<dt><code>ra_life_time</code></dt>
-<dd>Defines the ND router lifetime in seconds. ARM recommends value 180+.</dd>
-
-<dt><code>abro_version_num</code></dt>
-<dd>Defines the ND ABRO version number (0 when starting a new ND setup).</dd>
-</dl>
+Member|Description
+------|-----------
+`channel`|Defines the channel used in 802.15.4 radio. Supported values are from 1 to 26.
+`mac_panid`|Link layer PAN ID. Accepted values are `<0xFFFE`.
+`mac_short_adr`|Defines IEEE 802.15.4 Short MAC address. If value is `<0xFFFE`, it indicates that GP16 addresses are active.
+`beacon_protocol_id`|Beacon protocol ID. ZigBee reserves the values from `0` to `2`. 6LoWPAN does not define any value for this, you can use any non-reserved value.
+`network_id`|A 16-byte long network ID. Used in the beacon payload.
+`lowpan_nd_prefix`|Defines the ND default prefix, ABRO, DODAG ID, and GP address.
+`ra_life_time`|Defines the ND router lifetime in seconds. ARM recommends value 180+.
+`abro_version_num`|Defines the ND ABRO version number (0 when starting a new ND setup).
 
 ## General network type definitions
 
 This section defines general network layer types defined by the Network API. 
 
-
-### typedef enum net_interface_type_e
-
-This enumeration defines the information required to set up a network interface and comprises the following variables:
-
-```
-typedef enum {
-    NET_INTERFACE_ETHERNET,    
-    NET_INTERFACE_WIFI,        
-    NET_INTERFACE_RF_6LOWPAN,   
-    NET_INTERFACE_VIRTUAL,  
-} net_interface_type_e;
-
-```
-
-where:
-
-<dl>
-<dt><code>NET_INTERFACE_ETHERNET</code></dt>
-<dd>Defines an Ethernet interface which can be either IPv4 or IPv6.</dd>
-
-<dt><code>NET_INTERFACE_WIFI</code></dt>
-<dd>Defines a WLAN RF interface.</dd>
-
-<dt><code>NET_INTERFACE_RF_6LOWPAN</code></dt>
-<dd>Defines a 6lowpan RF interface</dd>
-
-<dt><code>NET_INTERFACE_VIRTUAL</code></dt>
-<dd>IPv6 interface over any defined serial interface.</dd>
-</dl>
-
 ### typedef enum net_security_t
 
-This enumeration defines the information required to set up an id that represents a network interface and comprises the following variables:
+This enumeration defines the information required to set up an id that represents a network interface and comprises the following parameters:
 
 ```
 typedef enum net_security_t {
@@ -930,31 +722,14 @@ typedef enum net_security_t {
 
 ```
 
-where:
-
-<dl>
-<dt><code>NW_NO_SECURITY </code></dt>
-<dd>Disables network level security.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_MIC32 </code></dt>
-<dd>Enables 32-bit Message Integrity Code (MIC) verification without encoding.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_MIC64 </code></dt>
-<dd>Enables 64-bit MIC verification without encoding.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_MIC128</code></dt>
-<dd>Enables 128-bit Message Integrity Code (MIC) verification without encoding.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_ENC </code></dt>
-<dd>Enables AES encoding without MIC.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_ENC_MIC32 </code></dt>
-<dd>Enables AES encoding with 32-bit MIC.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_ENC_MIC64 </code></dt>
-<dd>Enables AES encoding with 64-bit MIC.</dd>
-
-<dt><code>NW_SECURITY_LEVEL_ENC_MIC128 </code></dt>
-<dd>Enables AES encoding with 128-bit MIC.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`NW_NO_SECURITY`|Disables network level security.
+`NW_SECURITY_LEVEL_MIC32`|Enables 32-bit Message Integrity Code (MIC) verification without encoding.
+`NW_SECURITY_LEVEL_MIC64`|Enables 64-bit MIC verification without encoding.
+`NW_SECURITY_LEVEL_MIC128`|Enables 128-bit Message Integrity Code (MIC) verification without encoding.
+`NW_SECURITY_LEVEL_ENC`|Enables AES encoding without MIC.
+`NW_SECURITY_LEVEL_ENC_MIC32`|Enables AES encoding with 32-bit MIC.
+`NW_SECURITY_LEVEL_ENC_MIC64`|Enables AES encoding with 64-bit MIC.
+`NW_SECURITY_LEVEL_ENC_MIC128`|Enables AES encoding with 128-bit MIC.
 

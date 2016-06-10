@@ -15,7 +15,7 @@ An overview of the function definitions and the Network statistics structure (`n
 
 ##Initializing protocol stats collection
 
-To initialize collection of network statistics in the network (NWK) statistics structure, use the following function call:
+To initialize collection of network statistics in the network (NWK) statistics structure:
 
 ```
 void protocol_stats_init
@@ -26,7 +26,7 @@ void protocol_stats_init
 
 ## Start stats collection
 
-To start collecting network statistics in the Network (NWK) statistics structure, use the following function call:
+To start collecting network statistics in the Network (NWK) statistics structure:
 
 ```
 void protocol_stats_start
@@ -35,17 +35,13 @@ void protocol_stats_start
 )
 ```
 
-where:
-
-<dl>
-<dt><code>stats_ptr</code></dt>
-<dd>A pointer to the statistics structure on application.</dd>
-</dl>
-
+Parameter|Description
+---------|-----------
+`stats_ptr`|A pointer to the statistics structure on application.
 
 ## Stop stats collection
 
-To stop collecting network statistics in NWK statistics structure, use the following function call:
+To stop collecting network statistics in NWK statistics structure:
 
 ```
 void protocol_stats_stop
@@ -56,7 +52,7 @@ void protocol_stats_stop
 
 ## Reset stats
 
-To reset network statistics to clean slate state, that is, all the statistics counters are set to zero, use se the following function call:
+To reset network statistics to clean slate state, that is, all the statistics counters are set to zero:
 
 ```
 void protocol_stats_reset
@@ -71,138 +67,70 @@ Various types of network stats can be collected using the structure `typedef str
 
 ### General MAC related stats
 
-<dl>
-<dt><code>mac_tx_buffer_overflow</code></dt>
-<dd>Provides a count MAC TX queue overflow.</dd>
-
-<dt><code>mac_rx_count</code></dt>
-<dd>Number of received MAC packets.</dd>
-
-<dt><code>mac_tx_count</code></dt>
-<dd>Number of transmitted MAC packets.</dd>
-
-<dt><code>mac_rx_drop</code></dt>
-<dd>Number of dropped MAC packets.</dd>
-</dl>
+Member|Description
+------|-----------
+`mac_tx_buffer_overflow`|Provides a count MAC TX queue overflow.
+`mac_rx_count`|Number of received MAC packets.
+`mac_tx_count`|Number of transmitted MAC packets.
+`mac_rx_drop`|Number of dropped MAC packets.
 
 ### MAC payload flow
 
-<dl>
-<dt><code>mac_tx_bytes</code></dt>
-<dd>Number of bytes transmitted.</dd>
-
-<dt><code>mac_rx_bytes</code></dt>
-<dd>Number of bytes received.</dd>
-
-<dt><code>mac_tx_failed</code></dt>
-<dd>Number of times a transmission failed.</dd>
-
-<dt><code>mac_tx_retry</code></dt>
-<dd>Number of times retries were made.</dd>
-
-<dt><code>mac_tx_cca_cnt</code></dt>
-<dd>Number of times clear channel assessment was made.</dd>
-
-<dt><code>mac_tx_failed_cca</code></dt>
-<dd>Number of failed CCA attempts.</dd>
-
-<dt><code>mac_security_drop</code></dt>
-<dd>Number of security packets dropped.</dd>
-</dl>
+Member|Description
+------|-----------
+`mac_tx_bytes`|Number of bytes transmitted.
+`mac_rx_bytes`|Number of bytes received.
+`mac_tx_failed`|Number of times a transmission failed.
+`mac_tx_retry`|Number of times retries were made.
+`mac_tx_cca_cnt`|Number of times clear channel assessment was made.
+`mac_tx_failed_cca`|Number of failed CCA attempts.
+`mac_security_drop`|Number of security packets dropped.
 
 ### 6LoWPAN related statistics
 
-<dl>
-<dt><code>ip_rx_count</code></dt>
-<dd>Number of IP packets received.</dd>
-
-<dt><code>ip_tx_count</code></dt>
-<dd>Number of IP packets transmitted.</dd>
-
-<dt><code>ip_rx_drop</code></dt>
-<dd>Number of IP packets dropped.</dd>
-
-<dt><code>ip_cksum_error</code></dt>
-<dd>IP checksum error count.</dd>
-</dl>
+Member|Description
+------|-----------
+`ip_rx_count`|Number of IP packets received.
+`ip_tx_count`|Number of IP packets transmitted.
+`ip_rx_drop`|Number of IP packets dropped.
+`ip_cksum_error`|IP checksum error count.
 
 ### IP payload flow
 
-<dl>
-<dt><code>ip_tx_bytes</code></dt>
-<dd>Number of bytes transmitted as IP packets.</dd>
-
-<dt><code>ip_rx_bytes</code></dt>
-<dd>Number of bytes received as IP packets.</dd>
-
-<dt><code>ip_routed_up</code></dt>
-<dd>Number of bytes routed as IP packets.</dd>
-</dl>
-
-<dt><code>ip_no_route</code></dt>
-<dd>Number of times an IP route was not found.</dd>
-</dl>
+Member|Description
+------|-----------
+`ip_tx_bytes`|Number of bytes transmitted as IP packets.
+`ip_rx_bytes`|Number of bytes received as IP packets.
+`ip_routed_up`|Number of bytes routed as IP packets.
+`ip_no_route`|Number of times an IP route was not found.
 
 ### Fragmentation statistics
 
-<dl>
-<dt><code>frag_rx_errors</code></dt>
-<dd>Fragmentation errors in reception.</dd>
-
-<dt><code>frag_tx_errors</code></dt>
-<dd>Fragmentation errors in transmission.</dd>
-</dl>
+Member|Description
+------|-----------
+`frag_rx_errors`|Fragmentation errors in reception.
+`frag_tx_errors`|Fragmentation errors in transmission.
 
 ### RPL statistics
 
-<dl>
-<dt><code>rpl_route_routecost_better_change</code></dt>
-<dd>Number of times an RPL parent was changed.</dd>
-
-<dt><code>ip_routeloop_detect</code></dt>
-<dd>Number of times an RPL IP loop creation was detected.</dd>
-
-<dt><code>rpl_memory_overflow</code></dt>
-<dd>Total of allocations failed due RPL memory overflow.</dd>
-
-<dt><code>rpl_parent_tx_fail</code></dt>
-<dd>Number of times transmission to a DODAG parent failed.</dd>
-
-<dt><code>rpl_unknown_instance</code></dt>
-<dd>Number of times a packet was received with an unknown RPL Instance ID</dd>
-
-<dt><code>rpl_local_repair</code></dt>
-<dd>Number of times local repair was initiated.</dd>
-
-<dt><code>rpl_global_repair</code></dt>
-<dd>Number of times global repair was initiated.</dd>
-
-<dt><code>rpl_malformed_message</code></dt>
-<dd>Number of malformed RPL messages received.</dd>
-
-<dt><code>rpl_time_no_next_hop</code></dt>
-<dd>Number of seconds spent with no RPL next hop.</dd>
-
-<dt><code>rpl_total_memory</code></dt>
-<dd>Total memory currently allocated by RPL.</dd>
-</dl>
+Member|Description
+------|-----------
+`rpl_route_routecost_better_change`|Number of times an RPL parent was changed.
+`ip_routeloop_detect`|Number of times an RPL IP loop creation was detected.
+`rpl_memory_overflow`|Total of allocations failed due RPL memory overflow.
+`rpl_parent_tx_fail`|Number of times transmission to a DODAG parent failed.
+`rpl_unknown_instance`|Number of times a packet was received with an unknown RPL Instance ID.
+`rpl_local_repair`|Number of times local repair was initiated.
+`rpl_global_repair`|Number of times global repair was initiated.
+`rpl_malformed_message`|Number of malformed RPL messages received.
+`rpl_time_no_next_hop`|Number of seconds spent with no RPL next hop.
+`rpl_total_memory`|Total memory currently allocated by RPL.
 
 ### Various buffers
 
-<dl>
-<dt><code>buf_alloc</code></dt>
-<dd>A count of buffer allocation.</dd>
-
-<dt><code>buf_headroom_realloc</code></dt>
-<dd>A buffer headroom allocation count.</dd>
-
-<dt><code>buf_headroom_shuffle</code></dt>
-<dd>A buffer headroom shuffling count.</dd>
-
-<dt><code>buf_headroom_fail</code></dt>
-<dd>A buffer headroom failure count.</dd>
-</dl>
-
-
-
-
+Member|Description
+------|-----------
+`buf_alloc`|A count of buffer allocation.
+`buf_headroom_realloc`|A buffer headroom allocation count.
+`buf_headroom_shuffle`|A buffer headroom shuffling count.
+`buf_headroom_fail`|A buffer headroom failure count.

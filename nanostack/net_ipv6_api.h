@@ -12,6 +12,11 @@
  *
  */
 
+/**
+ * \file net_ipv6_api.h
+ * \brief IPv6 configuration API.
+ */
+
 #ifndef NET_IPV6_API_H_
 #define NET_IPV6_API_H_
 

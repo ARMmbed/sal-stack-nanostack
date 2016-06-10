@@ -19,6 +19,7 @@ extern "C" {
 
 #include "ns_types.h"
 #include "net_interface.h" /* needed for channel_list_s */
+#include "mlme.h"
 
 /**
  * \file net_nwk_scan.h
@@ -80,17 +81,11 @@ typedef struct nwk_pan_alternative_parent_t {
  * \brief Linked network response list.
  */
 typedef struct nwk_pan_descriptor_t {
-    uint8_t CoordAddrMode;                              /**< Parent address mode NET_PARET_SHORT_16_BIT or NET_PARET_LONG_64_BIT. */
-    uint16_t CoordPANId;                                /**< Network PAN-ID. */
-    uint8_t CoordAddress[8];                            /**< Parent address based on CoordAddrMode. */
-    uint8_t LogicalChannel;                             /**< Network channel. */
-    uint8_t ChannelPage;                                /**< Channel Page 0 at 2.4Ghz. */
-    uint8_t SuperframeSpec[2];                          /**< Network superframe setup. */
-    uint8_t LinkQuality;                                /**< LQI to parent. */
-    uint8_t *beacon_payload;                            /**< Beacon payload pointer. */
-    uint8_t beacon_length;                              /**< Beacon payload length. */
-    nwk_pan_alternative_parent_t *alternative_parent;   /**< Alternative parent information pointer. */
-    struct nwk_pan_descriptor_t *next;                   /**< Link to next network result. */
+    mlme_pan_descriptor_t *pan_descriptor;              /**< Pan Description */
+    uint8_t *beacon_payload;                            /**< Beacon Payload pointer */
+    uint8_t beacon_length;                              /**< Beacon Payload length */
+    nwk_pan_alternative_parent_t alternative_parent;   /**< Alternative Parent information pointer */
+    struct nwk_pan_descriptor_t *next;                   /**< Link to next network result */
 } nwk_pan_descriptor_t;
 
 /**
@@ -106,7 +101,7 @@ typedef struct nwk_pan_descriptor_t {
  * \return -3 Function not enabled at border router.
  *
  */
-extern int8_t arm_net_energy_scan(int8_t interface_id, channel_list_s *scan_list, void (*passed_fptr)(uint8_t *), uint8_t energy_tresshold);
+extern int8_t arm_net_energy_scan(int8_t interface_id, channel_list_s *scan_list, void (*passed_fptr)(int8_t if_id, const mlme_scan_conf_t *conf), uint8_t energy_tresshold);
 /**
  * \brief Active network scan for configured channels.
  *
@@ -120,7 +115,7 @@ extern int8_t arm_net_energy_scan(int8_t interface_id, channel_list_s *scan_list
  * \return -3 Function not enabled at border router.
  *
  */
-extern int8_t arm_net_nwk_scan(int8_t interface_id, channel_list_s *scan_list, void (*passed_fptr)(uint8_t *), uint8_t scan_level);
+extern int8_t arm_net_nwk_scan(int8_t interface_id, channel_list_s *scan_list, void (*passed_fptr)(int8_t if_id, const mlme_scan_conf_t *conf), uint8_t scan_level);
 /**
  * \brief Active scan result read.
  *

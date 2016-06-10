@@ -13,7 +13,7 @@
  */
 
 /**
- * \file net_mle.h
+ * \file net_mle_api.h
  * \brief 6LoWPAN MLE options control API
  *
  */
@@ -57,7 +57,7 @@ int8_t arm_nwk_6lowpan_mle_host_lifetime_set(int8_t interface_id, uint16_t lifet
   * added to the MLE neighbor list.
   *
   * If the number of neighbors reaches the lower threshold, MLE starts to limit addition
-  * of new neighbors. Multicast MLE messages from unknown neighbors are ignored (ignore probability is randomized). 
+  * of new neighbors. Multicast MLE messages from unknown neighbors are ignored (ignore probability is randomized).
   * The value must be smaller than the upper threshold and maximum value.
   *
   * If the number of neighbors reaches the upper threshold, MLE stops adding new neighbors

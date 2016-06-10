@@ -48,7 +48,9 @@
 #define MESHCOP_TLV_SECURITY_POLICY                        12
 #define MESHCOP_TLV_GET                                    13
 #define MESHCOP_TLV_ACTIVE_TIME_STAMP                      14
+#define MESHCOP_TLV_COMMISSIONER_UDP_PORT                  15
 #define MESHCOP_TLV_STATE                                  16
+#define MESHCOP_TLV_JOINER_UDP_PORT                        18
 
 /**
  * Relay message TLV

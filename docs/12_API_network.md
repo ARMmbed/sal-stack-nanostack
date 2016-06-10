@@ -35,6 +35,7 @@ To use the Network Layer Control APIs, include the following headers:
 #include net_sleep.h
 #include net_polling.h
 #include multicast_api.h
+#include mac_api.h
 ```
 ## Network control API
 
@@ -46,14 +47,14 @@ The 6LoWPAN Stack contains the features and related functions shown in _Table 3-
 
 Feature|API function
 -------|------------
-Network interface creation|`arm_nwk_interface_init()`
+Network interface creation|`arm_nwk_interface_lowpan_init()`
 Network interface configuration|`arm_nwk_interface_configure()`
 Network interface start, operation mode setting, and interface-specific bootstrap start|`arm_nwk_interface_up()`
 Network interface stop|`arm_nwk_interface_down()`
 
 ### Interface enable
 
-To set up the configured network interface and enable the interface-specific bootstrap, use the following function:
+To set up the configured network interface and enable the interface-specific bootstrap:
 
 ```
 int8_t arm_nwk_interface_up
@@ -62,12 +63,12 @@ int8_t arm_nwk_interface_up
 )
 ```
 
-Where:
-<dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
-<dt><code>Return value</code></dt>
+<dl>
+<dt>Return value</dt>
 <dd>>=0 The interface is set up OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 Already in up state.</dd>
@@ -76,7 +77,7 @@ Where:
 
 ### Interface disable
 
-To stop and set the interface to idle, use the following function:
+To stop and set the interface to idle:
 
 ```
 int8_t arm_nwk_interface_down
@@ -85,13 +86,12 @@ int8_t arm_nwk_interface_down
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The process is OK.</dt>
 <dd>-1 An unknown network ID.</dt>
 <dd>-2 Not active.</dt>
@@ -153,16 +153,14 @@ int8_t arm_nwk_6lowpan_link_scan_parameter_set
 	uint8_t 	scan_time
 )
 ```
-where:
+
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`scan_time`|Scan duration exponent.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>scan_time</code></dt>
-<dd>Scan duration exponent</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>-1 Unknown interface ID.</dd>
 <dd>-3 Too long scan time.</dd>
@@ -180,15 +178,12 @@ int8_t arm_nwk_set_channel_list
 	const channel_list_s *nwk_channel_list
 )
 ```
-Where:
 
-<dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`nwk_channel_list`|A pointer to channel list structure.
 
-<dt><code>nwk_channel_list</code></dt>
-<dd>Pointer to channel list structure.</dd>
-</dl>
 ```
 typedef struct channel_list_s
 {
@@ -196,11 +191,13 @@ typedef struct channel_list_s
 	uint32_t channel_mask[8];
 } channel_list_s;
 ```
-Where:
-<dl>
-<dt><code>channel_page</code></dt>
-<dd>The channel page.</dd>
-</dl>
+
+Member|Description
+------|-----------
+`channel_page`|The channel page.
+`channel_mask`|The used channel mask.
+
+
 ```
 typedef enum
 {
@@ -215,17 +212,12 @@ typedef enum
 	CHANNEL_PAGE_10 = 10
 } channel_page_e;
 ```
-<dl>
-<dt><code>channel_mask</code></dt>
-<dd>Used channel mask.</dd>
-</dl>
 
 <dl>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 Channel configuration OK.</dd>
 <dd>-1 Unknown network interface ID.</dd>
 <dd>-2 Empty channel list, no channel enabled.</dd>
-<dd>-3 If channel list is not supported by PHY driver.</dd>
 <dd>-4 If network interface is already active and cannot be re-configured.</dd>
 </dl>
 
@@ -241,7 +233,7 @@ Two hopping modes:
 
 By default, the 6LoWPAN Stack uses the single channel mode. 
 
-To enable the FHSS mode use the `arm_fhss_enable` function:
+To enable the FHSS mode:
 
 ```
 int8_t arm_fhss_enable
@@ -251,19 +243,15 @@ int8_t arm_fhss_enable
 	const fhss_configuration_s *fhss_configuration
 )
 ```
-Where:
+
+Parameter|Descripion
+---------|----------
+`interface_id`|The network interface ID.
+`fhss_platform_functions`|A pointer to the platform functions structure.
+`fhss_configuration`|A pointer to the FHSS configuration structure.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>fhss_platform_functions</code></dt>
-<dd>A pointer to the platform functions structure.</dd>
-
-<dt><code>fhss_configuration</code></dt>
-<dd>A pointer to the FHSS configuration structure.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd> 0 on success.</dd>
 <dd>-1 in case of invalid input parameters.</dd>
 <dd>-2 if no channels are available in the channel list.</dd>
@@ -290,30 +278,16 @@ typedef struct
     uint8_t fhss_resolution_divider;
 } fhss_platform_functions_s;
 ```
-Where:
 
-<dl>
-<dt><code>fhss_timer_start</code></dt>
-<dd>FHSS timer start platform function.</dd>
-
-<dt><code>fhss_timer_stop</code></dt>
-<dd>FHSS timer stop platform function.</dd>
-
-<dt><code>fhss_get_remaining_slots</code></dt>
-<dd>FHSS timer get remaining slots platform function.</dd>
-
-<dt><code>fhss_time_measure_start</code></dt>
-<dd>FHSS time measure start platform function.</dd>
-
-<dt><code>fhss_time_measure_read</code></dt>
-<dd>FHSS time measure read platform function.</dd>
-
-<dt><code>fhss_time_measure_stop</code></dt>
-<dd>FHSS time measure stop platform function.</dd>
-
-<dt><code>fhss_resolution_divider</code></dt>
-<dd>FHSS timer resolution divider.</dd>
-</dl>
+Member|Description
+------|-----------
+`fhss_timer_start`|FHSS timer start platform function.
+`fhss_timer_stop`|FHSS timer stop platform function.
+`fhss_get_remaining_slots`|FHSS timer get remaining slots platform function.
+`fhss_time_measure_start`|FHSS time measure start platform function.
+`fhss_time_measure_read`|FHSS time measure read platform function.
+`fhss_time_measure_stop`|FHSS time measure stop platform function.
+`fhss_resolution_divider`|FHSS timer resolution divider.
 
 FHSS configuration is always given from the border router using the `fhss_configuration_s` structure. The endpoint learns the configuration from the received synchronization message. In the initialization phase, the endpoint sets the FHSS configuration as NULL:
 
@@ -327,26 +301,16 @@ typedef struct fhss_configuration_s
     uint32_t fhss_beacon_send_interval;
 } fhss_configuration_s;
 ```
-Where:
 
-<dl>
-<dt><code>fhss_number_of_bc_channels</code></dt>
-<dd>Number of broadcast channels.</dd>
+Member|Description
+------|-----------
+`fhss_number_of_bc_channels`|Number of broadcast channels.
+`fhss_number_of_tx_slots`|Number of TX slots per channel.
+`fhss_superframe_length`|Superframe dwell time (us).
+`fhss_number_of_superframes`|Number of superframes per channel.
+`fhss_beacon_send_interval`|Interval of sending synchronization messages. This configuration is currently disabled.
 
-<dt><code>fhss_number_of_tx_slots</code></dt>
-<dd>Number of TX slots per channel.</dd>
-
-<dt><code>fhss_superframe_length</code></dt>
-<dd>Superframe dwell time (us).</dd>
-
-<dt><code>fhss_number_of_superframes</code></dt>
-<dd>Number of superframes per channel.</dd>
-
-<dt><code>fhss_beacon_send_interval</code></dt>
-<dd>Interval of sending synchronization messages. This configuration is currently disabled.</dd>
-</dl>
-
-To disable the FHSS mode, use `arm_fhss_disable` function:
+To disable the FHSS mode:
 
 ```
 int8_t arm_fhss_disable
@@ -354,13 +318,13 @@ int8_t arm_fhss_disable
 	int8_t interface_id,
 )
 ```
-Where:
+
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd> 0 on success.</dd>
 <dd>-1 on fail.</dd>
 </dl>
@@ -376,16 +340,14 @@ int8_t arm_fhss_set_tuning_params
 	const fhss_platform_tuning_params_s *fhss_tuning_params
 )
 ```
-Where:
+
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`fhss_tuning_params`|A pointer to the FHSS tuning parameters.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>fhss_tuning_params</code></dt>
-<dd>A pointer to the FHSS tuning parameters.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd> 0 on success.</dd>
 <dd>-1 on fail.</dd>
 </dl>
@@ -401,27 +363,19 @@ typedef struct
     uint32_t data_rx_processing_time;
 } fhss_platform_tuning_params_s;
 ```
-Where:
 
-<dl>
-<dt><code>synch_tx_processing_time</code></dt>
-<dd>Processing delay between synch info written and TX start (us).</dd>
-
-<dt><code>synch_rx_processing_time</code></dt>
-<dd>Processing delay between TX done and synch info read (us).</dd>
-
-<dt><code>data_tx_processing_time</code></dt>
-<dd>Processing delay between data pushed to driver and transmission started (us).</dd>
-
-<dt><code>data_rx_processing_time</code></dt>
-<dd>Processing delay between TX done and Ack TX start (us).</dd>
-</dl>
+Member|Description
+------|-----------
+`synch_tx_processing_time`|Processing delay between synch info written and TX start (us).
+`synch_rx_processing_time`|Processing delay between TX done and synch info read (us).
+`data_tx_processing_time`|Processing delay between data pushed to driver and transmission started (us).
+`data_rx_processing_time`|Processing delay between TX done and Ack TX start (us).
 
 ### Beacon protocol ID filter
 
 During an active 802.15.4 MAC scan, the 6LoWPAN Stack transmits MAC beacon requests to the pre-defined channels. If it receives a beacon, it will filter the beacon by using the protocol ID (this filter is disabled by default).
 
-To set the protocol ID filter, use the following function:
+To set the protocol ID filter:
 
 ```
 int8_t arm_nwk_6lowpan_link_protocol_id_filter_for_nwk_scan
@@ -431,17 +385,14 @@ int8_t arm_nwk_6lowpan_link_protocol_id_filter_for_nwk_scan
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`protocol_ID`|The value `0-0xFE` enables the filter for a specific ID.<br>
+The value `0xFF` (default) disables the filter.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>protocol_ID</code></dt>
-<dd>The value 0-0xFE enables the filter for a specific ID.</dd>
-<dd>The value 0xFF (default) disables the filter.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 </dl>
@@ -450,7 +401,7 @@ The stack will respond to the application with `ARM_NWK_SCAN_FAIL`, if no valid 
 
 ### PAN ID filter
 
-To set a PAN ID filter of a configured network interface for a network scan, use the following function:
+To set a PAN ID filter of a configured network interface for a network scan:
 
 ```
 int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan
@@ -460,25 +411,21 @@ int8_t arm_nwk_6lowpan_link_panid_filter_for_nwk_scan
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`pan_id_filter`|Values `0x0000-0xFFFD` enable the filter for a specific ID.<br>
+The value `0xFFFE` or `0xFFFF` (default) disables the filter.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>pan_id_filter</code></dt>
-
-<dd>Values <code>0x0000-0xFFFD</code> enable the filter for a specific ID.</dd>
-<dd>The value <code>0xFFFE</code> or <code>0xFFFF</code> (default) disables the  filter.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 </dl>
 
 ### Network ID filter
 
-To set a network ID filter of a configured network interface for a network scan, use the following function:
+To set a network ID filter of a configured network interface for a network scan:
 
 ```
 int8_t arm_nwk_6lowpan_link_nwk_id_filter_for_nwk_scan
@@ -488,18 +435,13 @@ int8_t arm_nwk_6lowpan_link_nwk_id_filter_for_nwk_scan
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`nwk_id_filter`|A pointer to a 16-byte array used to filter network. The value NULL (default) disables the filter.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>nwk_id_filter</code></dt>
-
-<dd>A pointer to a 16-byte array used to filter network.</dd>
-<dd>The value NULL (default) disables the filter.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 </dl>
@@ -519,13 +461,12 @@ int8_t interface_id
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>Join priority to be transmitted in beacon.</dd>
 </dl>
 
@@ -542,19 +483,14 @@ uint8_t link_quality
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`join_priority`|The join priority that has been received in beacon. 0 to 255.
+`link_quality`|Link quality. 0 to 255. 255 is the best quality.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>join_priority</code></dt>
-<dd>Join priority that has been received in beacon. 0 to 255.</dd>
-
-<dt><code>link_quality</code></dt>
-<dd>Link quality. 0 to 255. 255 is the best quality.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>Connect to preference. 0 to 255. 255 is highest connect to preference.</dd>
 </dl>
 
@@ -570,16 +506,13 @@ beacon_join_priority_tx_cb *beacon_join_priority_tx_cb_ptr
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`beacon_join_priority_tx_cb_ptr`|A function pointer.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>beacon_join_priority_tx_cb_ptr</code></dt>
-<dd>Function pointer.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>=0 Success.</dd>
 <dd>-1 Unknown network ID.</dd>
 <dd>-2 Other error.</dd>
@@ -597,16 +530,13 @@ beacon_compare_rx_cb *beacon_compare_rx_cb_ptr
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`beacon_compare_rx_cb_ptr`|A function pointer.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>beacon_compare_rx_cb_ptr</code></dt>
-<dd>Function pointer.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>=0 Success.</dd>
 <dd>-1 Unknown network ID.</dd>
 <dd>-2 Other error.</dd>
@@ -628,7 +558,7 @@ This section describes the functions of the security API that you can use to:
 
 #### Set TLS PSK key
 
-To set a PSK key to the TLS module, use the following function:
+To set a PSK key to the TLS module:
 
 ```
 int8_t arm_tls_add_psk_key
@@ -638,23 +568,20 @@ int8_t arm_tls_add_psk_key
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`key_ptr`|A pointer to a 16-byte long PSK key.
+`key_id`|ID for the PSK key.
 
 <dl>
-<dt><code>key_ptr</code></dt>
-<dd>A pointer to a 16-byte long PSK key.</dd>
-
-<dt><code>key_id</code></dt>
-<dd>ID for the PSK key.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>-1 Failure.</dd>
 </dl>
 
 #### Remove TLS PSK key
 
-To remove the PSK key from the TLS module, use the following function:
+To remove the PSK key from the TLS module:
 
 ```
 int8_t arm_tls_remove_psk_key
@@ -663,18 +590,19 @@ int8_t arm_tls_remove_psk_key
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`key_id`|ID for the PSK key.
+
 <dl>
-<dt><code>key_id</code></dt>
-<dd>ID for the PSK key.
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>-1 Failure.</dd>
 </dl>
 
 #### Set certificate chain for network
 
-To set a certificate chain for network authentication, use the following function:
+To set a certificate chain for network authentication:
 
 ```
 int8_t arm_network_certificate_chain_set
@@ -683,18 +611,16 @@ int8_t arm_network_certificate_chain_set
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`chain_info`|A pointer to a certificate chain.
 
 <dl>
-<dt><code>chain_info</code></dt>
-<dd>A pointer to a certificate chain.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The certificate chain register is OK.</dd>
 <dd>-1 TLS is not supported in this stack.</dd>
 <dd>-2 A NULL pointer parameter.</dd>
 </dl>
-
 
 ## Network start and stop control API
 
@@ -711,7 +637,7 @@ After configuring the network interface, start the network using the `arm_nwk_in
 
 ### 6LoWPAN bootstrap configure
 
-To configure the 6LoWPAN bootstrap, use the following function:
+To configure the 6LoWPAN bootstrap:
 
 ```
 int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set
@@ -722,31 +648,25 @@ int8_t arm_nwk_interface_configure_6lowpan_bootstrap_set
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`bootstrap_mode`|Values to start the bootstrap mode:<br>
+`NET_6LOWPAN_BORDER_ROUTER` initializes a basic setup for the border router.<br>
+`NET_6LOWPAN_ROUTER` enables normal 6LoWPAN ND and RPL to bootstrap.<br>
+`NET_6LOWPAN_HOST` enables normal 6LoWPAN ND only to bootstrap.<br>
+`NET_6LOWPAN_SLEEPY_HOST` enables normal 6LoWPAN ND only to bootstrap.
+`enable_mle_protocol`|The value `0x01` enables the MLE protocol.<br>
+The value `0x00` disables the MLE for bootstrap.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>bootstrap_mode</code></dt>
-<dd>Values to start the bootstrap mode:</dd>
-<dd><code>NET_6LOWPAN_BORDER_ROUTER</code> initializes a basic setup for the border router.</dd>
-<dd><code>NET_6LOWPAN_ROUTER</code> enables normal 6LoWPAN ND and RPL to bootstrap.</dd>
-<dd><code>NET_6LOWPAN_HOST</code> enables normal 6LoWPAN ND only to bootstrap.</dd>
-<dd><code>NET_6LOWPAN_SLEEPY_HOST</code> enables normal 6LoWPAN ND only to bootstrap.</dd>
-
-<dt><code>enable_mle_protocol</code></dt>
-<dd>The value <code>0x01</code> enables the MLE protocol.</dd>
-<dd>The value <code>0x00</code> disables the MLE for bootstrap.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The bootstrap mode is set OK.</dd>
 <dd>-1 An unknown network ID.</dd>
 <dd>-2 An unsupported bootstrap type in this stack.</dd>
 <dd>-3 No memory for a 6LoWPAN Stack.</dd>
 <dd>-4 A <code>NULL</code> pointer parameter.</dd>
 </dl>
-
 
 The `arm_nwk_interface_up()` function call starts the stack bootstrap process. The bootstrap process performs 802.15.4 MAC beacon active scanning on the selected channel list, 6LoWPAN ND, and RPL router discovery.
 
@@ -758,7 +678,7 @@ All configuration calls (such as channel selection) must be performed before cal
 
 ### IPv6 bootstrap configure
 
-To configure the IPv6 bootstrap, use the following function:
+To configure the IPv6 bootstrap:
 
 ```
 int8_t arm_nwk_interface_configure_ipv6_bootstrap_set
@@ -769,30 +689,24 @@ int8_t arm_nwk_interface_configure_ipv6_bootstrap_set
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`bootstrap_mode`|Values to start the bootstrap mode:<br>
+`NET_IPV6_BOOTSTRAP_STATIC`|The application defines the IPv6 prefix.
+`ipv6_prefix_pointer`|A pointer to a 64-bit IPv6 prefix.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>bootstrap_mode</code></dt>
-<dd>Values to start the bootstrap mode:</dd>
-<dd><code>NET_IPV6_BOOTSTRAP_STATIC</code> application defines the IPv6 prefix.</dd>
-
-<dt><code>ipv6_prefix_pointer</code></dt>
-<dd>A pointer to a 64-bit IPv6 prefix.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The bootstrap mode is set OK.</dd>
 <dd>-1 An unknown network ID.</dd>
 </dl>
-
 
 The `arm_nwk_interface_up()` function call starts the stack bootstrap process and performs neighbour discovery.
 
 ### Security mode for RF link layer
 
-To set a security mode for the link layer of a configured network interface, use the following function:
+To set a security mode for the link layer of a configured network interface:
 
 ```
 int8_t arm_nwk_link_layer_security_mode
@@ -804,25 +718,15 @@ int8_t arm_nwk_link_layer_security_mode
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`mode`|Defines the security mode for the link layer:<br>`NET_SEC_MODE_NO_SECURITY`, security is disabled.<br>`NET_SEC_MODE_PSK_LINK_SECURITY`, security is enabled with selected mode and PSK key info.<br>`NET_SEC_MODE_PANA_LINK_SECURITY`, link layer keys are defined by the PANA authentication server.
+`sec_level`|Supported values are 1 to 7. This parameter is only checked when the mode is `NET_SEC_MODE_PSK_LINK_SECURITY`.
+`psk_key_info`|A pointer to PSK key material: key and key ID. This parameter is only checked when the mode is `NET_SEC_MODE_PSK_LINK_SECURITY`.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>mode</code></dt>
-<dd>Defines the security mode for the link layer:</dd>
-<dd><code>NET_SEC_MODE_NO_SECURITY</code>, security is disabled.</dd>
-<dd><code>NET_SEC_MODE_PSK_LINK_SECURITY</code>, security is enabled with selected mode and PSK key info.</dd>
-<dd><code>NET_SEC_MODE_PANA_LINK_SECURITY</code>, link layer keys are defined by the PANA authentication server.</dd>
-
-<dt><code>sec_level</code></dt>
-<dd>Supported values are 1 to 7. This parameter is only checked when the mode is <code>NET_SEC_MODE_PSK_LINK_SECURITY</code>.</dd>
-
-<dt><code>psk_key_info</code></dt>
-<dd>A pointer to PSK key material: key and key ID. This parameter is only checked when the mode is <code>NET_SEC_MODE_PSK_LINK_SECURITY</code>.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 Unsupported PANA authentication in this stack.</dd>
@@ -833,7 +737,7 @@ Where:
 
 ## Interface address mode API
 
-To set the global address mode for a configured network interface, use the following function:
+To set the global address mode for a configured network interface:
 
 ```
 int8_t arm_nwk_6lowpan_gp_address_mode
@@ -845,25 +749,15 @@ int8_t arm_nwk_6lowpan_gp_address_mode
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`mode`|Defines the register mode of the 6LoWPAN global address:<br>`NET_6LOWPAN_GP64_ADDRESS`, the interface only registers GP64.<br>`NET_6LOWPAN_GP16_ADDRESS`, the interface only registers GP16.<br>`NET_6LOWPAN_MULTI_GP_ADDRESS`, the interface registers both GP16 (primary) and GP64 (secondary) addresses.
+`short_address_base`|Short address base. If an application defines the value `0-0xFFD`, 6LoWPAN tries to register the GP16 address using that address. Values `0xFFFE` and `0xFFFF` generate a random 16-bit short address. If the border router wants to use a short address, it defines it here.
+`define_new_short-address_at_DAD`|This parameter is only checked when the mode is not `NET_6LOWPAN_GP64_ADDRESS` and the `short_address_base` is `0-0xFFD`. The recommended value 1 enables an automatic new address definition at Duplicate Address Detection (DAD). The value 0 generates a DAD error for an interface bootstrap, which the border router does not check.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>mode</code></dt>
-<dd>Defines the register mode of the 6LoWPAN global address:</dd>
-<dd><code>NET_6LOWPAN_GP64_ADDRESS</code>, the interface only registers GP64.</dd>
-<dd><code>NET_6LOWPAN_GP16_ADDRESS</code>, the interface only registers GP16.</dd>
-<dd><code>NET_6LOWPAN_MULTI_GP_ADDRESS</code>, the interface registers both GP16 (primary) and GP64 (secondary) addresses.</dd>
-
-<dt><code>short_address_base</code></dt>
-<dd>Short address base. If an application defines the value <code>0-0xFFD</code>, 6LoWPAN tries to register the GP16 address using that address. <code>0xFFFE</code> and <code>0xFFFF</code> generate a random 16-bit short address. If the border router wants to use a short address, it defines it here.</dd>
-
-<dt><code>define_new_short-address_at_DAD</code></dt>
-<dd>This parameter is only checked when the mode is not <code>NET_6LOWPAN_GP64_ADDRESS</code> and the <code>short_address_base</code> is <code>0-0xFFD</code>. The recommended value 1 enables an automatic new address definition at Duplicate Address Detection (DAD). The value 0 generates a DAD error for an interface bootstrap, which the border router does not check.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The link layer security of the interface is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 Bootstrap mode is not selected.</dd>
@@ -897,7 +791,7 @@ The border router is configured in three phases:
 
 #### Define border router setup
 
-To define the border router MAC and 6LoWPAN ND setup for a selected interface, use the following function:
+To define the border router MAC and 6LoWPAN ND setup for a selected interface:
 
 ```
 int8_t arm_nwk_6lowpan_border_router_init
@@ -907,16 +801,13 @@ int8_t arm_nwk_6lowpan_border_router_init
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`border_router_setup_ptr`|A pointer to the MAC and 6LoWPAN ND setup.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>border_router_setup_ptr</code></dt>
-<dd>A pointer to the MAC and 6LoWPAN ND setup.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The basic setup of the border router is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 A NULL pointer parameter.</dd>
@@ -940,25 +831,16 @@ int8_t interface_id,
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`c_id_flags`|Bit [5] indicates compression support and bit [0:3] a context ID.
+`context_len`|The context length in bits must be [64:128].
+`ttl`|The time to live value of the context in minutes.
+`context_ptr`|A pointer to a full 128-bit memory area.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>c_id_flags</code></dt>
-<dd>Bit [5] indicates compression support and bit [0:3] a context ID.</dd>
-
-<dt><code>context_len</code></dt>
-<dd>The context length in bits must be [64:128].</dd>
-
-<dt><code>ttl</code></dt>
-<dd>The time to live value of the context in minutes.</dd>
-
-<dt><code>context_ptr</code></dt>
-<dd>A pointer to a full 128-bit memory area.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 Context is added to the proxy OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 No memory for a new context.</dd>
@@ -981,23 +863,15 @@ int8_t arm_nwk_6lowpan_border_router_context_parameter_update
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`c_id`|A context ID for detection of a proper context.
+`compress_mode`|1 Enables 6LoWPAN compression for TX and RX. 0 Disables context compression for TX.
+`ttl`|The time-to-live value of the context in minutes.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>c_id</code></dt>
-<dd>A context ID for detection of a proper context.</dd>
-
-<dt><code>compress_mode</code></dt>
-<dd>1 Enables 6LoWPAN compression for TX and RX.</dd>
-<dd>0 Disables context compression for TX.</dd>
-
-<dt><code>ttl</code></dt>
-<dd>The time-to-live value of the context in minutes.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The basic setup of the border router is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 An unknown context ID.</dd>
@@ -1017,22 +891,18 @@ int8_t arm_nwk_6lowpan_border_router_context_remove_by_id
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`c_id`|A context ID for detection of a proper context.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>c_id</code></dt>
-<dd>A context ID for detection of a proper context.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The basic setup of the border router is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 An unknown context ID.</dd>
 <dd>-3 The interface bootstrap is not <code>NET_6LOWPAN_BORDER_ROUTER</code> or the border router init was not called.</dd>
 </dl>
-
 
 #### Reload 6LoWPAN contexts
 
@@ -1046,16 +916,13 @@ int8_t arm_nwk_6lowpan_border_router_configure_push
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`c_id`|A context ID for detection of a proper context.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>c_id</code></dt>
-<dd>A context ID for detection of a proper context.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The basic setup of the border router is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 An unknown context ID.</dd>
@@ -1109,7 +976,7 @@ void eventOS_scheduler_idle(void)
 }
 ```
 
-Where `eventOS_scheduler_sleep( )` and `eventOS_scheduler_wait( )` are functions in the platform port, which put the processor in sleep or in an idle (=waiting signal) state.
+Where `eventOS_scheduler_sleep( )` and `eventOS_scheduler_wait( )` are functions in the platform port. They put the processor in sleep or in an idle (=waiting signal) state.
 
 ### Checking if sleep mode possible
 
@@ -1119,34 +986,37 @@ Use the function `arm_net_check_enter_deep_sleep_possibility()` to check whether
 uint32_t time_to_sleep=0;
 time_to_sleep = arm_net_check_enter_deep_sleep_possibility()
 ```
+
 <dl>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, not possible to sleep.</dd>
 <dd>Time in milliseconds, possible to sleep for that amount of time.</dd>
 </dl>
 
 ### Enter sleep mode
 
-Use `arm_net_enter_sleep()` function to put the stack to sleep.
+To put the stack to sleep:
 
 ```
 int arm_net_enter_sleep(void);
 ```
+
 <dl>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, stack stopped.</dd>
 <dd>-1, action not supported at the moment.</dd>
 </dl>
 
 ### Restart stack and synch timers
 
-Use `arm_net_wakeup_and_timer_synch()` function to restart the stack and synchronize timers.
+To restart the stack and synchronize timers:
 
 ```
 int arm_net_wakeup_and_timer_synch(uint32_t time_to_sleep);
 ```
+
 <dl>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, stack restarted.</dd>
 <dd>1, stack will restart after sleeping for a time defined as time_to_sleep.</dd>
 <dd>-1, stack already active.</dd>
@@ -1158,7 +1028,7 @@ The 6LoWPAN Border Router defines an RPL MOP and DODAG preference. The ZigBeeIP 
 
 The DODAG instance ID is dynamically allocated. It generates the first free number starting from `0x01`, and ends to `0xFE`.
 
-The DODAG configuration structure has the following variables:
+The DODAG configuration structure has the following members:
 
 ```
 typedef struct dodag_config_s
@@ -1175,37 +1045,17 @@ typedef struct dodag_config_s
 } dodag_config_s;
 ```
 
-Where:
-
-<dl>
-<dt><code>DAG_SEC_PCS</code></dt>
-<dd>Defines the possible parents for node. The recommended and maximum value 1 means two parents.</dd>
-
-<dt><code>DAG_DIO_INT_DOUB</code></dt>
-<dd>RPL Trickle DIOIntervalDoublings. Should use 12.</dd>
-
-<dt><code>DAG_DIO_INT_MIN</code></dt>
-<dd>RPL Trickle DIOIntervalMin. Should use 9.</dd>
-
-<dt><code>DAG_DIO_REDU</code></dt>
-<dd>RPL Trickle DIORedundancyConstant. Should use 3.</dd>
-
-<dt><code>DAG_MAX_RANK_INC</code></dt>
-<dd>RPL MaxRankIncrease. Should use 2048.</dd>
-
-<dt><code>DAG_MIN_HOP_RANK_INC</code></dt>
-<dd>RPL MinHopRankIncrease. Should use 128.</dd>
-
-<dt><code>DAG_OCP</code></dt>
-<dd>Objective Code Point must use 1.</dd>
-
-<dt><code>LIFE_IN_SECONDS</code></dt>
-<dd>Lifetime that is used as default for all routes (expressed in units of lifetime unit). Default lifetime in seconds is <code>LIFE_IN_SECONDS * LIFETIME_UNIT</code>.</dd>
-
-<dt><code>LIFETIME_UNIT</code></dt>
-<dd>Defines the unit in seconds that is used to express route lifetimes. 60 means 1 minute.</dd>
-
-</dl>
+Member|Description
+------|-----------
+`DAG_SEC_PCS`|Defines the possible parents for node. The recommended and maximum value 1 means two parents.
+`DAG_DIO_INT_DOUB`|RPL Trickle DIOIntervalDoublings. Should use 12.
+`DAG_DIO_INT_MIN`|RPL Trickle DIOIntervalMin. Should use 9.
+`DAG_DIO_REDU`|RPL Trickle DIORedundancyConstant. Should use 3.
+`DAG_MAX_RANK_INC`|RPL MaxRankIncrease. Should use 2048.
+`DAG_MIN_HOP_RANK_INC`|RPL MinHopRankIncrease. Should use 128.
+`DAG_OCP`|Objective Code Point must use 1.
+`LIFE_IN_SECONDS`|Lifetime that is used as default for all routes (expressed in units of lifetime unit). Default lifetime in seconds is `LIFE_IN_SECONDS * LIFETIME_UNIT`.
+`LIFETIME_UNIT`|Defines the unit in seconds that is used to express route lifetimes. 60 means 1 minute.
 
 ### DODAG root setup
 
@@ -1213,8 +1063,7 @@ The DODAG root setup is as follows:
 
 **_DODAGPreference_ (Prf)**
 
-A 3-bit unsigned integer that defines how preferable the root of this DODAG is compared to other DODAG roots within the instance. The DAGPreference ranges from `0x00` (least preferred) to `0x07` (most preferred).
-The default is `0` least preferred).
+A 3-bit unsigned integer that defines how preferable the root of this DODAG is compared to other DODAG roots within the instance. The DAGPreference ranges from `0x00` (least preferred) to `0x07` (most preferred). The default is `0`, least preferred.
 
 ```
 #define RPL_DODAG_PREF_MASK 0x07
@@ -1253,7 +1102,7 @@ This section introduces the functionality of the RPL root API.
 
 ### Define RPL DODAG root proxy
 
-To define the RPL DODAG root proxy for a selected interface, use the following function:
+To define the RPL DODAG root proxy for a selected interface:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_init
@@ -1264,19 +1113,14 @@ int8_t arm_nwk_6lowpan_rpl_dodag_init
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`config`|A pointer to the DODAG configure structure.
+`flags`|Defines the RPL MOP,  DODAG Pref and Grounded. The ZigBeeIP must use the non storing mode of operation and the most preferred preference `(BR_DODAG_MOP_NON_STORING | BR_DODAG_PREF_7)`
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>config</code></dt>
-<dd>A pointer to the DODAG configure structure.</dd>
-
-<dt><code>flags</code></dt>
-<dd>Defines the RPL MOP,  DODAG Pref and Grounded. The ZigBeeIP must use the non stroring mode of operation and the most preferred preference <code>(BR_DODAG_MOP_NON_STRORING | BR_DODAG_PREF_7)</code>.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG proxy allocation is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has already defined the DODAG root.</dd>
@@ -1286,7 +1130,7 @@ Where:
 
 ### Update RPL prefix
 
-To update the RPL prefix to the DODAG proxy, use the following function:
+To update the RPL prefix to the DODAG proxy:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_prefix_update
@@ -1299,27 +1143,16 @@ int8_t arm_nwk_6lowpan_rpl_dodag_prefix_update
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID that defines the root proxy where the prefix update will come.
+`prefix_ptr`|A pointer to the IPv6 prefix (16 bytes).
+`prefix_len`|The prefix length must be 64.
+`flags`|Defines:<br>R-flag `(RPL_PREFIX_ROUTER_ADDRESS_FLAG)`.<br>A-flag `(RPL_PREFIX_AUTONOMOUS_ADDRESS_FLAG)`.
+`lifetime`|The prefix lifetime.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID that defines the root proxy where the prefix update will come.</dd>
-
-<dt><code>prefix_ptr</code></dt>
-<dd>A pointer to the IPv6 prefix (16 bytes).</dd>
-
-<dt><code>prefix_len</code></dt>
-<dd>The prefix length must be 64.</dd>
-
-<dt><code>flags</code></dt>
-<dd>Defines: </dd>
-<dd>R-flag <code>(RPL_PREFIX_ROUTER_ADDRESS_FLAG)</code>.</dd>
-<dd>A-flag <code>(RPL_PREFIX_AUTONOMOUS_ADDRESS_FLAG)</code>.</dd>
-
-<dt><code>lifetime</code></dt>
-<dd>The prefix lifetime.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG proxy allocation is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 No root defined for a specific interface.</dd>
@@ -1329,7 +1162,7 @@ Where:
 
 ### Update RPL route information
 
-To update the RPL route information to the DODAG proxy, use the following function:
+To update the RPL route information to the DODAG proxy:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_route_update
@@ -1342,25 +1175,16 @@ int8_t arm_nwk_6lowpan_rpl_dodag_route_update
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID that defines the root proxy where the prefix update will come.
+`prefix_ptr`|A pointer to the IPv6 prefix (16 bytes).
+`prefix_len`|The prefix length must be 64.
+`flags`|Defines the R-flag `(RPL_PREFIX_ROUTER_ADDRESS_FLAG)`
+`lifetime`|The route lifetime.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID that defines the root proxy where the prefix update will come.</dd>
-
-<dt><code>prefix_ptr</code></dt>
-<dd>A pointer to the IPv6 prefix (16 bytes).</dd>
-
-<dt><code>prefix_len</code></dt>
-<dd>The prefix length must be 64.</dd>
-
-<dt><code>flags</code></dt>
-<dd>Defines the R-flag <code>(RPL_PREFIX_ROUTER_ADDRESS_FLAG)</code>.</dd>
-
-<dt><code>lifetime</code></dt>
-<dd>The route lifetime.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG proxy allocation is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 No root defined for a specific interface.</dd>
@@ -1370,7 +1194,7 @@ Where:
 
 ### Activate RPL DODAG
 
-To activate the defined and configured RPL DODAG, if the configuration was done when the interface was in _up_ state, use the following function:
+To activate the defined and configured RPL DODAG, if the configuration was done when the interface was in _up_ state:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_start
@@ -1379,13 +1203,12 @@ int8_t arm_nwk_6lowpan_rpl_dodag_start
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG is started OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1402,13 +1225,12 @@ int8_t arm_nwk_6lowpan_rpl_dodag_dao_trig
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG DAO trig is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1416,7 +1238,7 @@ Where:
 
 ### DODAG version increment
 
-Network devices reset the current RPL instance. To do a unicast DIS/DIO and DAO/DAO ACK handshake, use the following function:
+Network devices reset the current RPL instance. To do a unicast DIS/DIO and DAO/DAO ACK handshake:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_version_increment
@@ -1425,13 +1247,12 @@ int8_t arm_nwk_6lowpan_rpl_dodag_version_increment
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG DAO trig is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1439,7 +1260,7 @@ Where:
 
 ### RPL DODAG preference set
 
-RPL DODAG preference set.
+To set the RPL DODAG preference:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_pref_set
@@ -1449,16 +1270,13 @@ uint8_t preference
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
+`preference`|DODAG preference. 0 to 7. 0 is least preferred.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>preference</code></dt>
-<dd>DODAG preference. 0 to 7. 0 is least preferred.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 Set OK</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1475,13 +1293,12 @@ int8_t arm_nwk_6lowpan_rpl_dodag_poison
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG flooding started OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1489,7 +1306,7 @@ Where:
 
 ### Remove DODAG root setup
 
-To remove the DODAG root setup from the selected interface, use the following function:
+To remove the DODAG root setup from the selected interface:
 
 ```
 int8_t arm_nwk_6lowpan_rpl_dodag_remove
@@ -1498,13 +1315,12 @@ int8_t arm_nwk_6lowpan_rpl_dodag_remove
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The network interface ID.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The RPL DODAG removal is OK.</dd>
 <dd>-1 An unknown interface ID.</dd>
 <dd>-2 The interface has not defined any RPL DODAG root.</dd>
@@ -1521,7 +1337,7 @@ Address|Description
 `ADDR_IPV6_GP`|Primary GP IPv6 address. Every IPv6 and 6LoWPAN interface supports this by default.
 `ADDR_IPV6_GP_SEC`|Secondary IPv6 address. The 6LoWPAN interface supports this only when the address mode for bootstrap is `NET_6LOWPAN_MULTI_GP_ADDRESS`.
 
-To read the network address information, use the following function:
+To read the network address information:
 
 ```
 extern int8_t arm_net_address_get
@@ -1532,27 +1348,24 @@ extern int8_t arm_net_address_get
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`addr_id`|Identifies the address information type to be read.
+`address`|A pointer to a structure where the address information is written to.
+
 <dl>
-<dt><code>addr_id</code></dt>
-<dd>Identifies the address information type to be read.</dd>
-
-<dt><code>address</code></dt>
-<dd>A pointer to a structure where the address information is written to.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>-1 Failure.</dd>
 </dl>
 
 ## IPv6 API
 
-Behaviour of the IPv6 layer can be controlled by the following functions.
+The behaviour of the IPv6 layer can be controlled by the following functions.
 
 ### Maximum fragmented-datagram reception unit
 
-To adjust the maximum IPv6 fragmented datagram size that the IPv6 stack will
-allocate memory for, use the following function:
+To adjust the maximum IPv6 fragmented datagram size that the IPv6 stack will allocate memory for:
 
 ```
 int8_t arm_nwk_ipv6_frag_mru(
@@ -1560,26 +1373,21 @@ int8_t arm_nwk_ipv6_frag_mru(
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`frag_mru`|Fragmented Maximum Reception Unit in octets.
 
 <dl>
-<dt><code>frag_mru</code></dt>
-<dd>Fragmented Maximum Reception Unit in octets.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Change OK - actual MRU is at least requested value.</dd>
 <dd><0 Change invalid - unable to set the specified MRU.</dd>
 </dl>
 
-RFC 2460 requires this value to be at least 1500. It should also be at least
-as large as the MTU of each attached link. Implementation details such as
-alignment mean that the actual MRU may be larger than requested - 1504 is
-typical.
+RFC 2460 requires this value to be at least 1500. It should also be at least as large as the MTU of each attached link. Implementation details such as alignment mean that the actual MRU may be larger than requested - 1504 is typical.
 
 ### Flow label generation
 
-The system default for automatic IPv6 flow label generation can be modified with
-the following function:
+To modify the system default for automatic IPv6 flow label generation:
 
 ```
 void arm_nwk_ipv6_auto_flow_label(
@@ -1587,23 +1395,17 @@ void arm_nwk_ipv6_auto_flow_label(
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`auto_flow_label`|`true` to enable auto-generation.
 
-<dl>
-<dt><code>auto_flow_label</code></dt>
-<dd><code>true</code> to enable auto-generation.</dd>
-</dl>
 
-If enabled, the stack auto-generates flow labels on outgoing packets following
-the guidelines in [RFC 6437](https://tools.ietf.org/html/rfc6437), either by
-random assignment for connected sockets, otherwise by hashing the 5-tuple
+If enabled, the stack auto-generates flow labels on outgoing packets following the guidelines in [RFC 6437](https://tools.ietf.org/html/rfc6437), either by random assignment for connected sockets, otherwise by hashing the 5-tuple
 {dest addr, source addr, protocol, dest port, source port}.
 
-When acting as a tunnel entry point, flow labels are created for tunnel packets
-according to the guidelines in [RFC 6438](https://tools.ietf.org/html/rfc6438).
+When acting as a tunnel entry point, flow labels are created for tunnel packets according to the guidelines in [RFC 6438](https://tools.ietf.org/html/rfc6438).
 
-Flow labels can also be controlled on a per-socket basis using
-`socket_setsockopt(SOCKET_IPV6_FLOW_LABEL)`.
+Flow labels can also be controlled on a per-socket basis using `socket_setsockopt(SOCKET_IPV6_FLOW_LABEL)`.
 
 
 ## MLE router and host lifetime configuration API
@@ -1629,8 +1431,7 @@ If you set a shorter router lifetime:
 
 ### Router lifetime set
 
-The router lifetime can be changed when an interface is created. Setting must be set
-before the bootstrap is started.
+The router lifetime can be changed when an interface is created. It must be set before the bootstrap is started.
 
 ```
 int8_t arm_nwk_6lowpan_mle_router_lifetime_set(
@@ -1639,23 +1440,20 @@ uint16_t lifetime
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The interface ID for setting a new lifetime value.
+`lifetime`|Supported lifetime values are between 64 and 2560 seconds.
+
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>Interface ID for setting new lifetime value.</dd>
-
-<dt><code>lifetime</code></dt>
-<dd> Supported lifetime values are between 64 and 2560 seconds.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, Lifetime update OK.</dd>
 <dd><0 Lifetime update fail.</dd>
 </dl>
 
 ### Host lifetime set
 
-The host lifetime can be changed when an interface is created. Setting must be set before
-the bootstrap is started.
+The host lifetime can be changed when an interface is created. It must be set before the bootstrap is started.
 
 ```
 int8_t arm_nwk_6lowpan_mle_host_lifetime_set(
@@ -1664,32 +1462,26 @@ uint16_t lifetime
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The interface ID for setting a new lifetime value.
+`lifetime`|Supported lifetime values are between 64 and 2560 seconds.
+
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>Interface ID for setting new lifetime value.</dd>
-
-<dt><code>lifetime</code></dt>
-<dd> Supported lifetime values are between 64 and 2560 seconds.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, Lifetime update OK.</dd>
 <dd><0 Lifetime update fail.</dd>
 </dl>
 
 ## MLE neighbor limits configuration API
 
-MLE neighbor limits configuration settings limit the number of neighbors added to MLE neighbor list.
+MLE neighbor limits settings limit the number of neighbors added to MLE neighbor list.
 
-If the number of neighbors reaches the lower threshold, MLE starts to limit addition
-of new neighbors by starting to ignore multicast MLE messages from unknown neighbors (ignore probability is randomized).
-The value must be smaller than the upper threshold and maximum value.
+If the number of neighbors reaches the lower threshold, MLE starts to limit addition of new neighbors by starting to ignore multicast MLE messages from unknown neighbors (ignore probability is randomized). The value must be smaller than the upper threshold and maximum value.
 
-If the number of neighbors reaches the upper threshold, MLE stops adding new neighbors
-based on multicast MLE messages. Only the nodes that select this node for a parent during the bootstrap will be accepted. 
-The value must be smaller or the same as the maximum value.
+If the number of neighbors reaches the upper threshold, MLE stops adding new neighbors based on multicast MLE messages. Only the nodes that select this node for a parent during the bootstrap are accepted. The value must be smaller or the same as the maximum value.
 
-If the number of neighbors reaches the maximum value, no new neighbors are added. 
+If the number of neighbors reaches the maximum value, no new neighbors are added.
 
 If the MLE neighbor list limits are not used, all values must be set to 0.
   
@@ -1707,33 +1499,24 @@ uint16_t max
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|The interface ID for setting new MLE neighbor list limits.<
+`lower_threshold`|Lower threshold. 5 to 499. 0 limits not used.
+`upper_threshold`|Upper threshold. 5 to 500. 0 limits not used.
+`max`|The maximum number of neighbors. 5 to 500. 0 limits not used.
+
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>Interface ID for setting new MLE neighbor list limits.</dd>
-
-<dt><code>lower_threshold</code></dt>
-<dd>Lower threshold. 5 to 499. 0 limits not used.</dd>
-
-<dt><code>upper_threshold</code></dt>
-<dd>Upper threshold. 5 to 500. 0 limits not used.</dd>
-
-<dt><code>max</code></dt>
-<dd>Maximum number of neighbors. 5 to 500. 0 limits not used.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, Limits update OK.</dd>
 <dd><0 Limits update fail.</dd>
 </dl>
 
 ## MLE token bucket configuration API
 
-The MLE message token bucket limits the MLE message sending rate. The token bucket size
-controls the bucket size. The token bucket rate controls the rate of adding new tokens. The count defines how many tokens 
-at a time are added to the bucket.
+The MLE message token bucket limits the MLE message sending rate. The token bucket size controls the bucket size. The token bucket rate controls the rate of adding new tokens. The count defines how many tokens at a time are added to the bucket.
 
-The minimum interval of the rate is 0.1 seconds (for example, if the rate is 3
-and the count is 4, then 4 new tokens are added to bucket every 0.3 seconds).
+The minimum interval of the rate is 0.1 seconds (for example, if the rate is 3 and the count is 4, then 4 new tokens are added to bucket every 0.3 seconds).
 
 If the token bucket is not used, all values must be set to 0.
 
@@ -1748,21 +1531,15 @@ uint8_t count
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`interface_id`|Interface ID for setting new MLE message token bucket settings.
+`size`|Bucket size. 1 to 255. 0 token bucket not used.
+`rate`|Token rate. 1 to 255. 0 token bucket not used.
+`count`|Token count. 1 to 255. 0 token bucket not used.
+
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>Interface ID for setting new MLE message token bucket settings.</dd>
-
-<dt><code>size</code></dt>
-<dd>Bucket size. 1 to 255. 0 token bucket not used.</dd>
-
-<dt><code>rate</code></dt>
-<dd>Token rate. 1 to 255. 0 token bucket not used.</dd>
-
-<dt><code>count</code></dt>
-<dd>Token count. 1 to 255. 0 token bucket not used.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0, Token bucket settings update OK.</dd>
 <dd><0 Token bucket settings update fail.</dd>
 </dl>
@@ -1780,7 +1557,7 @@ Function|Description
 
 ### Parameter structure
 
-This structure defines the 6LoWPAN ND parameters and has the following variables:
+This structure defines the 6LoWPAN ND parameters and has the following members:
 
 ```
 typedef struct nd_parameters_s
@@ -1804,57 +1581,24 @@ typedef struct nd_parameters_s
 } nd_parameters_s;
 ```
 
-Where:
-
-<dl>
-<dt><code>rs_retry_max</code></dt>
-<dd>Defines the maximum retry count of the bootstrap RS.</dd>
-
-<dt><code>ns_retry_max</code></dt>
-<dd>Defines the maximum retry count of the bootstrap NS.</dd>
-
-<dt><code>timer_random_max</code></dt>
-<dd>Defines the interval random in 6LoWPAN bootstrap timer ticks for RS, NS and starting NS-NA process.</dd>
-
-<dt><code>rs_retry_interval_min</code></dt>
-<dd>Defines the retry interval in 6LoWPAN bootstrap timer ticks waiting for RA.</dd>
-
-<dt><code>ns_retry_interval_min</code></dt>
-<dd>Defines the retry interval in 6LoWPAN bootstrap timer ticks waiting for NA.</dd>
-
-<dt><code>ns_retry_linear_backoff</code></dt>
-<dd>Defines the linear backoff of the retry interval in bootstrap timer ticks.</dd>
-
-<dt><code>multihop_dad</code></dt>
-<dd>Defines whether routers perform duplicate address detection with border router or locally.</dd>
-
-<dt><code>iids_map_to_mac</code></dt>
-<dd>Defines whether IPv6 IIDs can be assumed to be based on MAC address (so no address resolution by routers).</dd>
-
-<dt><code>send_nud_probes</code></dt>
-<dd>Defines whether IPv6 NUD probes are enabled (disabling may limit fault detection).</dd>
-
-<dt><code>ra_interval_min</code></dt>
-<dd>Defines the initial transmission interval for Router Advertisements in standard timer ticks.</dd>
-
-<dt><code>ra_transmits</code></dt>
-<dd>Defines the number of RA transmissions.</dd>
-
-<dt><code>ra_cur_hop_limit</code></dt>
-<dd>Defines the value of current hop limit placed in Router Advertisements.</dd>
-
-<dt><code>ra_link_mtu</code></dt>
-<dd>Defines the value of link MTU placed in Router Advertisements.</dd>
-
-<dt><code>ra_reachable_time</code></dt>
-<dd>Defines the value of reachable time placed in Router Advertisements (in milliseconds).</dd>
-
-<dt><code>ra_retrans_time</code></dt>
-<dd>Defines the value of retrans timer placed in Router Advertisements (in milliseconds).</dd>
-
-<dt><code>ns_forward_timeout</code></dt>
-<dd>Defines the timeout when forwarding NS messages. If reached, our own address discovery process is restarted.</dd>
-</dl>
+Member|Description
+------|-----------
+`rs_retry_max`|Defines the maximum retry count of the bootstrap RS.
+`ns_retry_max`|Defines the maximum retry count of the bootstrap NS.
+`timer_random_max`|Defines the interval random in 6LoWPAN bootstrap timer ticks for RS, NS and starting NS-NA process.
+`rs_retry_interval_min`|Defines the retry interval in 6LoWPAN bootstrap timer ticks waiting for RA.
+`ns_retry_interval_min`|Defines the retry interval in 6LoWPAN bootstrap timer ticks waiting for NA.
+`ns_retry_linear_backoff`|Defines the linear backoff of the retry interval in bootstrap timer ticks.
+`multihop_dad`|Defines whether routers perform duplicate address detection with border router or locally.
+`iids_map_to_mac`|Defines whether IPv6 IIDs can be assumed to be based on MAC address (so no address resolution by routers).
+`send_nud_probes`|Defines whether IPv6 NUD probes are enabled (disabling may limit fault detection).
+`ra_interval_min`|Defines the initial transmission interval for Router Advertisements in standard timer ticks.
+`ra_transmits`|Defines the number of RA transmissions.
+`ra_cur_hop_limit`|Defines the value of current hop limit placed in Router Advertisements.
+`ra_link_mtu`|Defines the value of link MTU placed in Router Advertisements.
+`ra_reachable_time`|Defines the value of reachable time placed in Router Advertisements (in milliseconds).
+`ra_retrans_time`|Defines the value of retrans timer placed in Router Advertisements (in milliseconds).
+`ns_forward_timeout`|Defines the timeout when forwarding NS messages. If reached, our own address discovery process is restarted.
 
 ### 6LoWPAN ND parameter set
 
@@ -1875,13 +1619,12 @@ int8_t net_6lowpan_nd_parameter_set
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`parameter_ptr`|A pointer for ND parameters.
 
 <dl>
-<dt><code>parameter_ptr</code></dt>
-<dd>A pointer for ND parameters.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Change is OK.</dd>
 <dd>-1 Invalid values.</dd>
 <dd>-2 6LoWPAN interface is already active.</dd>
@@ -1898,13 +1641,9 @@ void net_6lowpan_nd_parameter_read
 )
 ```
 
-Where:
-
-<dl>
-<dt><code>parameter_ptr</code></dt>
-<dd>An output pointer for ND parameters.</dd>
-</dl>
-
+Parameter|Description
+---------|-----------
+`parameter_ptr`|An output pointer for ND parameters.
 
 ## PANA configuration API
 
@@ -1919,7 +1658,7 @@ Function|Description
 
 ### Parameter structure
 
-This structure defines the PANA module dynamic parameters and has the following variables:
+This structure defines the PANA module dynamic parameters and has the following members:
 
 ```
 typedef struct pana_lib_parameters_s
@@ -1938,42 +1677,19 @@ typedef struct pana_lib_parameters_s
 } pana_lib_parameters_s;
 ```
 
-Where:
-
-<dl>
-<dt><code>PCI_IRT</code></dt>
-<dd>Initial PCI timeout in seconds. The default is 10.</dd>
-
-<dt><code>PCI_MRT</code></dt>
-<dd>Maximum PCI timeout value in seconds. The default is 60.</dd>
-
-<dt><code>PCI_MRC</code></dt>
-<dd><code>PCI_MRC</code> Maximum PCI retransmission attempts. The default is 5.</dd>
-
-<dt><code>REQ_IRT</code></dt>
-<dd><code>PCI_MRC</code> Initial request timeout in seconds. The default is 20.</dd>
-
-<dt><code>REQ_MRT</code></dt>
-<dd>Maximum request timeout value. The default is 60.</dd>
-
-<dt><code>REQ_MRC</code></dt>
-<dd>Maximum request retransmission attempts. The default is 4.</dd>
-
-<dt><code>AUTHENTICATION_TIMEOUT</code></dt>
-<dd>Maximum timeout for authentication timeout. The default is 100 seconds.</dd>
-
-<dt><code>KEY_UPDATE_THRESHOLD</code></dt>
-<dd>A gap in seconds when the server starts sending a new network key. The default is 10.</dd>
-
-<dt><code>KEY_ID_MAX_VALUE</code></dt>
-<dd>Defines the resolution for key ID <code>[1-KEY_ID_MAX_VALUE]</code>. The default is 255. The minimum accepted value is 3.</dd>
-
-<dt><code>EAP_FRAGMENT_SIZE</code></dt>
-<dd>Defines the EAP fragment slot size. Fragmentation is activated when the EAP payload is more than 920. The default is 296.</dd>
-
-<dt><code>AUTH_COUNTER_MAX</code></dt>
-<dd>Defines the limit for the PANA session re-authentication. When the maximum value is reached, the server does not respond to PANA notify request. The default is <code>0xFF</code>.</dd>
-</dl>
+Member|Description
+------|-----------
+`PCI_IRT`|Initial PCI timeout in seconds. The default is 10.
+`PCI_MRT`|Maximum PCI timeout value in seconds. The default is 60.
+`PCI_MRC`|PCI_MRC</code> Maximum PCI retransmission attempts. The default is 5.
+`REQ_IRT`|PCI_MRC</code> Initial request timeout in seconds. The default is 20.
+`REQ_MRT`|Maximum request timeout value. The default is 60.
+`REQ_MRC`|Maximum request retransmission attempts. The default is 4.
+`AUTHENTICATION_TIMEOUT`|Maximum timeout for authentication timeout. The default is 100 seconds.
+`KEY_UPDATE_THRESHOLD`|A gap in seconds when the server starts sending a new network key. The default is 10.
+`KEY_ID_MAX_VALUE`|Defines the resolution for key ID <code>[1-KEY_ID_MAX_VALUE]</code>. The default is 255. The minimum accepted value is 3.
+`EAP_FRAGMENT_SIZE`|Defines the EAP fragment slot size. Fragmentation is activated when the EAP payload is more than 920. The default is 296.
+`AUTH_COUNTER_MAX`|Defines the limit for the PANA session re-authentication. When the maximum value is reached, the server does not respond to PANA notify request. The default is `0xFF`.
 
 ### PANA parameter set
 
@@ -1994,13 +1710,12 @@ int8_t net_pana_parameter_set
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`parameter_ptr`|A pointer for PANA parameters.
 
 <dl>
-<dt><code>parameter_ptr</code></dt>
-<dd>A pointer for PANA parameters.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Change is OK.</dd>
 <dd>-1 Invalid values.</dd>
 <dd>-2 PANA is not supported.</dd>
@@ -2017,12 +1732,12 @@ int8_t net_pana_parameter_read
 )
 ```
 
-Where:
-<dl>
-<dt><code>parameter_ptr</code></dt>
-<dd>An output pointer for PANA parameters.</dd>
+Parameter|Description
+---------|-----------
+`parameter_ptr`|An output pointer for PANA parameters.
 
-<dt><code>Return value</code></dt>
+<dl>
+<dt>Return value</dt>
 <dd>0 Read OK.</dd>
 <dd>-1 PANA is not supported.</dd>
 </dl>
@@ -2041,7 +1756,7 @@ Function|Description
 
 ### Network layer configurations
 
-To read network layer configurations, use the following function:
+To read network layer configurations:
 
 ```
 int8_t arm_nwk_param_read
@@ -2050,14 +1765,12 @@ int8_t arm_nwk_param_read
 	link_layer_setups_s 	*network_params
 )
 ```
-
-Where:
+Parameter|Description
+---------|-----------
+`network_params`|A pointer to the structure where the network layer configurations are written to.
 
 <dl>
-<dt><code>network_params</code></dt>
-<dd>A pointer to the structure where the network layer configurations are written to.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>-1 Unknown PAN coordinator.</dd>
 </dl>
@@ -2075,28 +1788,17 @@ typedef struct link_layer_setups_s
 }link_layer_setups_s;
 ```
 
-Where:
-
-<dl>
-<dt><code>PANId</code></dt>
-<dd>Network PAN ID.</dd>
-
-<dt><code>LogicalChannel</code></dt>
-<dd>Network logical channel.</dd>
-
-<dt><code>addr_mode</code></dt>
-<dd>Coordinator address mode.</dd>
-
-<dt><code>address</code></dt>
-<dd>Coordinator address.</dd>
-
-<dt><code>sf</code></dt>
-<dd>Network super frame setup.</dd>
-</dl>
+Member|Description
+------|-----------
+`PANId`|Network PAN ID.
+`LogicalChannel`|Network logical channel.
+`addr_mode`|Coordinator address mode.
+`address`|Coordinator address.
+`sf`|Network super frame setup.
 
 ### Link layer address read
 
-To read the MAC PAN ID, short address and EUI-64, use the following function:
+To read the MAC PAN ID, short address and EUI-64:
 
 ```
 int8_t arm_nwk_mac_address_read
@@ -2106,15 +1808,14 @@ int8_t arm_nwk_mac_address_read
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`mac_params`|A pointer to the structure where the MAC addresses are written to.
 
 <dl>
-<dt><code>mac_params</code></dt>
-<dd>A pointer to the structure where the MAC addresses are written to.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
-<dd>-1 .</dd>
+<dd><0 Interface is not known.</dd>
 </dl>
 
 This structure defines the network MAC address information and it is used to read the link layer address:
@@ -2129,25 +1830,17 @@ typedef struct link_layer_address_s
 }link_layer_address_s;
 ```
 
-Where:
+Member|Description
+------|-----------
+`PANId`|Network PAN ID.
+`mac_short`|MAC short address. Valid, if the value is `<0xFFFE`.
+`mac_long`|MAC long address (EUI-64 for IEEE 802.15.4; EUI-48 for Ethernet).
+`iid_eui64`|IPv6 Interface ID based on EUI-64.
 
-<dl>
-<dt><code>PANId</code></dt>
-<dd>Network PAN ID.</dd>
-
-<dt><code>mac_short</code></dt>
-<dd>MAC short address. Valid, if the value is <code><0xFFFE</code>.</dd>
-
-<dt><code>mac_long</code></dt>
-<dd>MAC long address (EUI-64 for IEEE 802.15.4; EUI-48 for Ethernet).</dd>
-
-<dt><code>iid_eui64</code></dt>
-<dd>IPv6 Interface Identifier based on EUI-64.</dd>
-</dl>
 
 ### 6LoWPAN parameter read
 
-To read the 6LoWPAN ND border router address and NWK prefix, use the following function:
+To read the 6LoWPAN ND border router address and NWK prefix:
 
 ```
 int8_t arm_nwk_nd_address_read
@@ -2157,15 +1850,14 @@ int8_t arm_nwk_nd_address_read
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`nd_addr_info`|A pointer to the structure where the 6LoWPAN ND border router address is written to.
 
 <dl>
-<dt><code>nd_addr_info</code></dt>
-<dd>A pointer to the structure where the 6LoWPAN ND border router address is written to.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
-<dd>-1 .</dd>
+<dd><0 Network interface is not known or it is not in active or ready state.</dd>
 </dl>
 
 This structure defines the parent address information of the network layer and comprises the following variables:
@@ -2178,15 +1870,10 @@ typedef struct network_layer_address_s
 }network_layer_address_s;
 ```
 
-Where:
-
-<dl>
-<dt><code>border_router</code></dt>
-<dd>ND border router address.</dd>
-
-<dt><code>prefix</code></dt>
-<dd>A long, 64-bit network ID.</dd>
-</dl>
+Member|Description
+------|-----------
+`border_router`|ND border router address.
+`prefix`|A long, 64-bit network ID.
 
 ## Multicast API
 
@@ -2196,8 +1883,7 @@ This section introduces functions for multicasting where data can be forwarded t
 
 The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters()`where multicast groups are managed using the function calls `multicast_add_address()` and `multicast_free_address()`.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**
-
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note:**
 - Only multicast addresses are accepted.
 - Trickle forwarding cannot be used with link local addresses.
 - The maximum number of multicast groups is 100 where including multicast groups consumes memory allocated by the 6LoWPAN stack.</span>
@@ -2205,7 +1891,7 @@ The multicast API can be used to subscribe and unsubscribe different multicast g
 
 ### Set new parameters for trickle multicast
 
-To set new parameters for a trickle multicast, use the following function:
+To set new parameters for a trickle multicast:
 
 ```
 void multicast_set_parameters
@@ -2218,30 +1904,19 @@ void multicast_set_parameters
 )
 ```
 
-Where:
-
-<dl>
-<dt><code>i_min</code></dt>
-<dd>The minimum trickle timer interval (50ms resolution), so: <code>Imin = i_min * 50ms</code>.</dd>
-
-<dt><code>i_max</code></dt>
-<dd>The maximum trickle timer interval as number if doubling of minimum interval.</dd>
-
-<dt><code>k</code></dt>
-<dd>A redundancy constant.</dd>
-
-<dt><code>timer_expirations</code></dt>
-<dd>Number if trickle timer expires before terminating the trickle process.</dd>
-
-<dt><code>window_expiration</code></dt>
-<dd>Time window state is kept after the trickle process has ended in 50ms resolution.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`i_min`|The minimum trickle timer interval (50ms resolution), so: `Imin = i_min * 50ms`.
+`i_max`|The maximum trickle timer interval as number if doubling of minimum interval.
+`k`|A redundancy constant.
+`timer_expirations`|Number if trickle timer expires before terminating the trickle process.
+`window_expiration`|Time window state is kept after the trickle process has ended in 50ms resolution.
 
 <span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: If the `window_expiration` value is set too small, an infinite retransmission loop can occur when using the trickle multicast.</span>
 
 ### Add a new address to a multicast group
 
-To add a new address to a multicast group, use the following function:
+To add a new address to a multicast group:
 
 ```
 uint8_t multicast_add_address
@@ -2251,18 +1926,13 @@ uint8_t multicast_add_address
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`address_ptr`|A pointer to an array containing the address to be added.
+`use_trickle`|Possible trickle values:<br>0 - No trickle multicast forwarding.<br>>0 - Trickle multicast forward is used with this address.
 
 <dl>
-<dt><code>address_ptr</code></dt>
-<dd>A pointer to an array containing the address to be added.</dd>
-
-<dt><code>use_trickle</code></dt>
-<dd>Possible trickle values:</dd>
-<dd>0 - No trickle multicast forwarding.</dd>
-<dd>>0 - Trickle multicast forward is used with this address.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 General error.</dd>
 <dd>1 Address updated.</dd>
 <dd>2 Address added.</dd>
@@ -2271,7 +1941,7 @@ Where:
 
 ### Free an address from a multicast group
 
-To free an address from a multicast group, use the following function:
+To free an address from a multicast group:
 
 ```
 uint8_t multicast_free_address
@@ -2280,13 +1950,12 @@ uint8_t multicast_free_address
 )
 ```
 
-Where:
+Parameter|Description
+---------|-----------
+`address_ptr`|A pointer to a 16 byte array that contains the address to be removed.
 
 <dl>
-<dt><code>address_ptr</code></dt>
-<dd>A pointer to a 16 byte array that contains the address to be removed.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Success.</dd>
 <dd>>0 Failure, an error occurred trying to remove the address.</dd>
 </dl>
@@ -2341,6 +2010,3 @@ uint8_t add_multicast_address
 	return return_value;
 }
 ```
-
-
-

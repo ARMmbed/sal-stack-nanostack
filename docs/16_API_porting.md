@@ -95,7 +95,7 @@ Function|Description
 
 #### Initialize platform timer peripheral
 
-To initialize the peripheral driver of the 6LoWPAN Stack timer, use the following function call:
+To initialize the peripheral driver of the 6LoWPAN Stack timer:
 
 ```
 void platform_timer_enable
@@ -106,7 +106,7 @@ void platform_timer_enable
 
 #### Disable platform timer
 
-To stop the system timer source of the driver, use the following function call:
+To stop the system timer source of the driver:
 
 ```
 void platform_timer_disable
@@ -117,7 +117,7 @@ void platform_timer_disable
 
 #### Set compare timer
 
-To set the compare timer event for the stack, use the following function call:
+To set the compare timer event for the stack:
 
 ```
 void platform_system_timer_start
@@ -126,16 +126,13 @@ void platform_system_timer_start
 )
 ```
 
-where:
-
-<dl>
-<dt><code>slots</code></dt>
-<dd>Defines the number of 50us time slots the timer event stack wants.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`slots`|The number of 50us time slots the timer event stack wants.
 
 #### Callback function set
 
-To set the timer interrupt handler for the stack, use the following callback function call:
+To set the timer interrupt handler for the stack:
 
 ```
 void platform_system_timer_set_cb
@@ -145,17 +142,13 @@ void platform_system_timer_set_cb
 )
 ```
 
-where:
-
-<dl>
-<dt><code>new_fp</code></dt>
-<dd>A function pointer for stack giving timer handler.</dd>
-</dl>
-
+Parameter|Description
+---------|-----------
+`new_fp`|A function pointer for stack giving timer handler.
 
 ### AES 128-bit block encode API
 
-To perform a 128-bit `Si=E[key,Ai]` block encoding for given `Ai` data using the supplied key, use the following function call:
+To perform a 128-bit `Si=E[key,Ai]` block encoding for given `Ai` data using the supplied key:
 
 ```
 void platform_aes128_block_encode
@@ -166,25 +159,20 @@ void platform_aes128_block_encode
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`key_ptr`|A pointer to a 128-bit key.
+`Ai_ptr`|A pointer to a 128-bit data block that is to be decoded.
+`Si_ptr`|A pointer to a 128-bit data block where the encoded result is stored in.
 
 <dl>
-<dt><code>key_ptr</code></dt>
-<dd>A pointer to a 128-bit key.</dd>
-
-<dt><code>Ai_ptr</code></dt>
-<dd>A pointer to a 128-bit data block that is to be decoded.</dd>
-
-<dt><code>Si_ptr</code></dt>
-<dd>A pointer to a 128-bit data block where the encoded result is stored in.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>None.</dd>
 </dl>
 
 ### Random number API
 
-To return a 32-bit seed for a pseudorandom generator, use the following function call:
+To return a 32-bit seed for a pseudorandom generator:
 
 ```
 uint32_t platform_random_seed_get
@@ -193,10 +181,8 @@ uint32_t platform_random_seed_get
 )
 ```
 
-where:
-
 <dl>
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>A 32-bit random initialization seed value.</dd>
 </dl>
 
@@ -204,7 +190,7 @@ The pseudorandom generator requests this seed on initialization.
 
 ### Global interrupt control API
 
-The platform driver code must provide protection for a stack when there are critical code sections. Some stack interfaces might be called within interrupts or from multiple threads, so protection is required. On some platform, these disable interrupts. On some platform, it is only a recursive mutex.
+The platform driver code must provide protection for the stack when there are critical code sections. Some stack interfaces might be called within interrupts or from multiple threads, so protection is required. On some platform, these disable interrupts. On some platform, it is only a recursive mutex.
 
 When the stack is about to enter a critical section, it uses the following function call:
 
@@ -260,13 +246,12 @@ uint32_t eventOS_scheduler_sleep
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`sleep_time_ms`|Sleep time in milliseconds.
 
 <dl>
-<dt><code>sleep_time_ms</code></dt>
-<dd>Sleep time in milliseconds.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>Time slept in milliseconds.</dd>
 </dl>
 
@@ -284,11 +269,13 @@ The following steps describe how you can create a new RF driver.
 
 2. Fill in the actual transceiver-specific parts of the RF driver.
 
-3. Register the driver to 6LoWPAN Stack on your application. You can use the example node applications with your driver.
+3. Register the driver to the 6LoWPAN Stack on your application. You can use the example node applications with your driver.
 
-4. Configure the interface. See instructions in section _How to configure a network interface_ of the chapter [_6LoWPAN Stack Initialisation_](07_API_initialize.md).
+4. Create a MAC that is suitable for your purpose (802.15.4, Ethernet or serial). 
 
-5. Check with a RF sniffer tool that you can see RF packets transmitted when you start your device. The 6LoWPAN bootstrap should start with IEEE 802.15.4 Beacon Request packets.
+5. Configure the interface. See instructions in section _How to configure a network interface_ of the chapter [_6LoWPAN Stack Initialisation_](07_API_initialize.md#how-to-configure-a-network-interface).
+
+6. Check with a RF sniffer tool that you can see RF packets transmitted when you start your device. The 6LoWPAN bootstrap should start with IEEE 802.15.4 Beacon Request packets.
 
 ### RF driver states
 
@@ -296,35 +283,16 @@ _Figure 11-1_ below shows the basic states of the RF driver.
 
 The following describes the basic states in more detail:
 
-<dl>
-<dt><b>DOWN</b></dt>
-<dd>This is the initial state of the driver. The radio is not used in this state.</dd>
+State|Description
+-----|-----------
+`DOWN`|This is the initial state of the driver. The radio is not used in this state.
+`RX ACTIVE`|In this state, the driver has the radio turned on and it can receive a packet or ACK from the radio. The driver can also go from this state to the TX ACTIVE state to transmit a packet.
+`TX ACTIVE`|In this state, the driver will try to start a transmission:<br>1. It must first check that it is not currently busy doing something else.<br>2. It must check that the channel is free.<br>3. Finally, it can try to transmit the packet.
+`SNIFFER`|This mode can be implemented to enable using the device as a packet sniffer. In this state, the RX is always on and the received packets are sent to the application layer but nothing is transmitted back.
+`ED SCAN`|This mode can be implemented to enable using energy scan. It enables scanning the energy from channels one by one and nothing else.
+`ANY STATE`|This state represents all the states in the state machine.
 
-<dt><b>RX ACTIVE</b></dt>
-<dd>In this state, the driver has the radio turned on and it can receive a packet or ACK from the radio. The driver can also go from this state to the TX ACTIVE state to transmit a packet.</dd>
-
-<dt><b>TX ACTIVE</b></dt>
-<dd>In this state, the driver will try to start a transmission:</dd>
-<dd>
-<ol>
-<li>It must first check that it is not currently busy doing something else.</li>
-<li>It must check that the channel is free.</li>
-<li>Finally, it can try to transmit the packet.</li>
-</ol>
-</dd>
-<dt><b>SNIFFER</b></dt>
-<dd>This mode can be implemented to enable using the device as a packet sniffer. In this state, the RX is always on and the received packets are sent to the application layer but nothing is transmitted back.</dd>
-
-<dt><b>ED SCAN</b></dt>
-<dd>This mode can be implemented to enable using energy scan. It enables scanning the energy from channels one by one and nothing else.</dd>
-
-<dt><b>ANY STATE</b></dt>
-<dd>This state represents all the states in the state machine.</dd>
-</dl>
-
-**Note**
-
-The driver initialization and registration using the function `arm_net_phy_register` are not covered here and must be performed before the driver is functional.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: The driver initialization and registration using the function `arm_net_phy_register` are not covered here and must be performed before the driver is functional.</span>
 
 For more details on the TX process, see _Figure 4-1_.
 
@@ -351,14 +319,10 @@ _Figure 4-2_ describes the TX process.
 
 The following describes the states in more detail:
 
-<dl>
-<dt><b>CCA PROCESS</b></dt>
-<dd>In the <i>Clear Channel Assessment</i> (CCA) process, the radio checks that the channel is free before it starts sending anything to avoid collisions.<br>
-Before starting the actual CCA process, the driver checks that it is not currently receiving a packet from the radio, in which case the CCA process fails.</dd>
-
-<dt><b>SEND PACKET</b></dt>
-<dd>In this state, the driver commands the radio to send the data given to the driver as a parameter from the function tx defined in the struct of type <code>phy_device_driver_s</code>.</dd>
-</dl>
+State|Description
+-----|-----------
+`CCA PROCESS`|In the _Clear Channel Assessment_ (CCA) process, the radio checks that the channel is free before it starts sending anything to avoid collisions. Before starting the actual CCA process, the driver checks that it is not currently receiving a packet from the radio, in which case the CCA process fails.
+`SEND PACKET`|In this state, the driver commands the radio to send the data given to the driver as a parameter from the function tx defined in the struct of type `phy_device_driver_s`.
 
 **Figure 4-2 TX process**
 
@@ -368,7 +332,7 @@ Before starting the actual CCA process, the driver checks that it is not current
 
 This function is for the dynamic registration of a PHY device driver. The 6LoWPAN Stack allocates its own device driver list internally. This list is used when an application creates network interfaces to a specific PHY driver.
 
-To register a PHY driver to the stack, use the following function call:
+To register a PHY driver to the stack:
 
 ```
 int8_t arm_net_phy_register
@@ -377,13 +341,12 @@ int8_t arm_net_phy_register
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`phy_driver`|A pointer to a driver structure.
 
 <dl>
-<dt><code>phy_driver</code></dt>
-<dd>A pointer to a driver structure.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 The registration is OK and the return value indicates a unique ID for the device driver. The ID is required for pairing a network stack interface with the correct driver instance.</dd>
 <dd>-1 A structure parameter failure or a NULL pointer.</dd>
 </dl>
@@ -398,7 +361,6 @@ The driver API platform calls this function to push the received data from a PHY
 ```
 int8_t arm_net_phy_rx
 (
-	data_protocol_e data_type,
 	const uint8_t *data_ptr,
 	uint16_t data_len,
 	uint8_t link_quality,
@@ -407,34 +369,17 @@ int8_t arm_net_phy_rx
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`data_type`|Defines the received data packet content. The value can be one of the following:<br>`NANOSTACK_LOCAL_SOCKET_DATA` Local socket data between tunnel drivers.<br>`NANOSTACK_INTERFACE_DATA` Interface configuration data.<br>`PHY_LAYER_PAYLOAD` PHY layer packet, for example Ethernet.<br>`IPV6_DATAGRAM` Packet is IPv6 frame.
+`data_ptr`|A pointer to data.
+`data_len`|Data length.
+`link_quality`|A link quality value. A value of `0x00` indicates the worst possible and `0xFF` the best possible link quality. If the device driver cannot determine the link quality, the value must be set to `0x80`.
+`dbm`|A received signal strength indication, in the range of -128 to +127, expressed as dBm. If the device driver cannot determine the signal strength, the value must be set to `0`.
+`interface_id`|The interface ID where the packet is coming from.
 
 <dl>
-<dt><code>data_type</code></dt>
-<dd>Defines the received data packet content. The value can be one of the following:</dd>
-<dd><code>NANOSTACK_LOCAL_SOCKET_DATA</code> Local socket data between tunnel drivers.</dd>
-<dd><code>NANOSTACK_INTERFACE_DATA</code> Interface configuration data.</dd>
-<dd><code>PHY_LAYER_PAYLOAD</code> PHY layer packet, for example Ethernet.</dd>
-<dd><code>IPV6_DATAGRAM</code> Packet is IPv6 frame.</dd>
-
-<dt><code>data_ptr</code></dt>
-<dd>A pointer to data.</dd>
-
-<dt><code>data_len</code></dt>
-<dd>Data length.</dd>
-
-<dt><code>link_quality</code></dt>
-<dd>A link quality value. A value of <code>0x00</code> indicates the worst possible and <code>0xFF</code> the best possible link quality. If the device driver cannot determine the link quality, the value must be
-set to <code>0x80</code>.</dd>
-
-<dt><code>dbm</code></dt>
-<dd>A received signal strength indication, in the range of -128 to +127, expressed as dBm. If the device driver cannot determine the signal strength, the value must be
-set to <code>0</code>.</dd>
-
-<dt><code>interface_id</code></dt>
-<dd>The interface ID where the packet is coming from.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 Data allocation is OK and the Packet push to the stack was successful.</dd>
 <dd>-1 A memory allocation failure or a stack RX queue overflow.</dd>
 </dl>
@@ -456,29 +401,16 @@ int8_t arm_net_phy_tx_done
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`interface_id`|An interface ID for the TX done event.
+`tx_handle`|A handle to indicate the packet this event is related to.
+`status`|`PHY_LINK_TX_DONE` Packet transmitted and ACK received succesfully.<br>`PHY_LINK_TX_DONE_PENDING` Transmitted succesfully and ACKed. The received ACK contains indirect data pending flag set.<br>`PHY_LINK_TX_SUCCESS` Packet transmitted. Might be pending for ACK packet (on unicast packets).<br>`PHY_LINK_TX_FAIL` Failed to receive ACK from destination.<br>`PHY_LINK_CCA_FAIL` CCA process failed, channel busy.
+`cca_retry`|Defines the number of CCA attempts made. Used for CSMA-CA.
+`tx_retry`|Number of TX attempts made. Used for auto-retry mode.
 
 <dl>
-<dt><code>interface_id</code></dt>
-<dd>An interface ID for the TX done event.</dd>
-
-<dt><code>tx_handle</code></dt>
-<dd>A handle to indicate the packet this event is related to.</dd>
-
-<dt><code>status</code></dt>
-<dd><code>PHY_LINK_TX_DONE</code>Packet transmitted and ACK received succesfully.</dd>
-<dd><code>PHY_LINK_TX_DONE_PENDING</code> Transmitted succesfully and ACKed. The received ACK contains indirect data pending flag set.</dd>
-<dd><code>PHY_LINK_TX_SUCCESS</code> Packet transmitted. Might be pending for ACK packet (on unicast packets).</dd>
-<dd><code>PHY_LINK_TX_FAIL</code> Failed to receive ACK from destination.</dd>
-<dd><code>PHY_LINK_CCA_FAIL</code> CCA process failed, channel busy.</dd>
-
-<dt><code>cca_retry</code></dt>
-<dd>Defines the number of CCA attempts made. Used for CSMA-CA.</dd>
-
-<dt><code>tx_retry</code></dt>
-<dd>Number of TX attempts made. Used for auto-retry mode.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>=0 OK.</dd>
 <dd>-1 An unknown interface ID or handle.</dd>
 </dl>
@@ -508,24 +440,13 @@ typedef enum phy_link_tx_status_e
 } phy_link_tx_status_e;
 ```
 
-where:
-
-<dl>
-<dt><code>TX_DONE</code></dt>
-<dd>TX process is Ready and ACK RX.</dd>
-
-<dt><code>TX_DONE_PENDING</code></dt>
-<dd>TX process is OK with an ACK pending flag.</dd>
-
-<dt><code>TX_SUCCESS</code></dt>
-<dd>MAC TX complete MAC will make a decision to enter a wait ack or TX Done state.</dd>
-
-<dt><code>TX_FAIL</code></dt>
-<dd>The link TX process fails.</dd>
-
-<dt><code>CCA_FAIL</code></dt>
-<dd>RF link CCA process fails.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`TX_DONE`|TX process is Ready and ACK RX.
+`TX_DONE_PENDING`|TX process is OK with an ACK pending flag.
+`TX_SUCCESS`|MAC TX complete MAC will make a decision to enter a wait ack or TX Done state.
+`TX_FAIL`|The link TX process fails.
+`CCA_FAIL`|RF link CCA process fails.
 
 #### PHY address types
 
@@ -541,21 +462,12 @@ typedef enum phy_address_type_e
 } phy_address_type_e;
 ```
 
-where:
-
-<dl>
-<dt><code>MAC_48BIT</code></dt>
-<dd>is an IPv4 or IPv6 link layer address for Ethernet. This is optional information.</dd>
-
-<dt><code>MAC_64BIT</code></dt>
-<dd>is an RF or a generic link layer address.</dd>
-
-<dt><code>MAC_16BIT</code></dt>
-<dd>is an RF interface short address.</dd>
-
-<dt><code>MAC_PANID</code></dt>
-<dd>is an RF interface 16-bit PAN ID.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`MAC_48BIT`|An IPv4 or IPv6 link layer address for Ethernet. This is optional information.
+`MAC_64BIT`|An RF or a generic link layer address.
+`MAC_16BIT`|An RF interface short address.
+`MAC_PANID`|An RF interface 16-bit PAN ID.
 
 #### PHY interface control types
 
@@ -570,18 +482,11 @@ typedef enum phy_interface_state_e
 } phy_interface_state_e;
 ```
 
-where:
-
-<dl>
-<dt><code>RESET</code></dt>
-<dd>resets a PHY driver and sets it to idle.</dd>
-
-<dt><code>DOWN</code></dt>
-<dd>disables the PHY interface driver (RF radio disabled).</dd>
-
-<dt><code>UP</code></dt>
-<dd>enables the PHY interface driver (RF radio receiver ON).</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`RESET`|Resets a PHY driver and sets it to idle.
+`DOWN`|Disables the PHY interface driver (RF radio disabled).
+`UP`|Enables the PHY interface driver (RF radio receiver ON).
 
 #### PHY extension types
 
@@ -597,25 +502,16 @@ typedef enum phy_extension_type_e
 } phy_extension_type_e;
 ```
 
-where:
-
-<dl>
-<dt><code>CTRL_PENDING_BIT</code></dt>
-<dd>controls the MAC pending bit for indirect data.</dd>
-
-<dt><code>SET_CHANNEL</code></dt>
-<dd>sets the RF channel.</dd>
-
-<dt><code>READ_CHANNEL_ENERGY</code></dt>
-<dd>reads the ED scan energy of the RF interface.</dd>
-
-<dt><code>READ_LINK_STATUS</code></dt>
-<dd>reads the link status.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`CTRL_PENDING_BIT`|Controls the MAC pending bit for indirect data.
+`SET_CHANNEL`|Sets the RF channel.
+`READ_CHANNEL_ENERGY`|Reads the ED scan energy of the RF interface.
+`READ_LINK_STATUS`|Reads the link status.
 
 #### PHY device driver
 
-This PHY device driver structure comprises the following variables:
+This PHY device driver structure comprises the following members:
 
 ```
 typedef struct phy_device_driver_s
@@ -623,6 +519,7 @@ typedef struct phy_device_driver_s
 	phy_link_type_e link_type;
 	driver_data_request_e data_request_layer;
 	uint8_t *PHY_MAC;
+	uint16_t phy_MTU;                                               /**< Define MAX PHY layer MTU size. */
 	char * driver_description;
 	uint16_t phy_MTU;
 	uint8_t phy_tail_length;
@@ -632,56 +529,43 @@ typedef struct phy_device_driver_s
 	int8_t (*address_write)(phy_address_type_e ,uint8_t *);
 	int8_t (*extension)(phy_extension_type_e,uint8_t *);
 	const phy_device_channel_page_s *phy_channel_pages;
+	
+	//Upper layer callbacks, set with arm_net_phy_init();
+	arm_net_phy_rx *phy_rx_cb;
+	arm_net_phy_tx_done *phy_tx_done_cb;
+	//Virtual upper layer rx/tx functions
+	arm_net_virtual_rx *arm_net_virtual_rx_cb;
+	arm_net_virtual_tx *arm_net_virtual_tx_cb;
+	uint16_t tunnel_type;
 } phy_device_driver_s;
 ```
 
-where:
+Member|Description
+------|-----------
+`link_type`|Defines the device driver type.
+`data_request_layer`|Defines the interface Data OUT protocol.
+`PHY_MAC`|A pointer to a 48-bit or 64-bit MAC address.
+`PHY_MTU`|The size of the maximum transmission unit.
+`driver_description`|A short driver-specific description in Null-terminated string format.
+`phy_MTU`|The maximum MTU size of the physical layer.
+`phy_tail_length`|The tail length used by the PHY driver.
+`phy_header_length`|The header length used by the PDU PHY driver.
+`state_control`|A function pointer to the interface state control.
+`tx`|A function pointer to the interface TX functionality.
+`address_write`|A function pointer to the interface address writing (PAN ID, short address).
+`extension`|A function pointer to the interface extension control.
+`phy_channel_pages`|This pointer must be set only when the interface type is:<br>`NET_INTERFACE_WIFI`<br>`NET_INTERFACE_RF_6LOWPAN`<br>`NET_INTERFACE_RF_ZIGBEEIP`
+`phy_rx_cb`|A function pointer to the upper layer RX callback. Must be initialized to NULL, is set by MAC layer.
+`phy_tx_done_cb`|A function pointer to the upper layer TX callback. Must be initialized to NULL, is set by MAC layer.
+`arm_net_virtual_rx_cb`|A function pointer to the upper layer RX callback. Only needed by a virtual RF driver! Must be initialized to NULL, is set by MAC layer or virtual RF driver.
+`arm_net_virtual_tx_cb`|A function pointer to the upper layer tx callback. Only needed by virtual RF driver! Must be initialized to NULL, is set by MAC layer or virtual RF driver
+`tunnel_type`|TUN driver type this is only valid when link type is PHY_TUN
 
-<dl>
-<dt><code>link_type</code></dt>
-<dd>defines the device driver type.</dd>
 
-<dt><code>data_request_layer</code></dt>
-<dd>defines the interface Data OUT protocol.</dd>
-
-<dt><code>PHY_MAC</code></dt>
-<dd>is a pointer to a 48-bit or 64-bit MAC address.</dd>
-
-<dt><code>driver_description</code></dt>
-<dd>is a short driver-specific description in Null-terminated string format.</dd>
-
-<dt><code>phy_MTU</code></dt>
-<dd>defines the maximum MTU size of the physical layer.</dd>
-
-<dt><code>phy_tail_length</code></dt>
-<dd>defines the tail length used by the PHY driver.</dd>
-
-<dt><code>phy_header_length</code></dt>
-<dd>defines the header length used by the PDU PHY driver.</dd>
-
-<dt><code>state_control</code></dt>
-<dd>is a function pointer to the interface state control.</dd>
-
-<dt><code>tx</code></dt>
-<dd>is a function pointer to the interface TX functionality.</dd>
-
-<dt><code>address_write</code></dt>
-<dd>is a function pointer to the interface address writing (PAN ID, short address).</dd>
-
-<dt><code>extension</code></dt>
-<dd>is a function pointer to the interface extension control.</dd>
-
-<dt><code>phy_channel_pages</code></dt>
-<dd>this pointer must be set only when the interface type is:</dd>
-<dd><code>NET_INTERFACE_WIFI</code></dd>
-<dd><code>NET_INTERFACE_RF_6LOWPAN</code></dd>
-<dd><code>NET_INTERFACE_RF_ZIGBEEIP</code></dd>
-<dd><code>NET_INTERFACE_PLC_6LOWPAN</code></dd>
-</dl>
 
 #### PHY device channel page information
 
-This structure defines the PHY device channel page information and comprises the following variables:
+This structure defines the PHY device channel page information and comprises the following members:
 
 ```
 typedef struct phy_device_channel_page_s
@@ -691,15 +575,10 @@ typedef struct phy_device_channel_page_s
 } phy_device_channel_page_s;
 ```
 
-where:
-
-<dl>
-<dt><code>channel_page</code></dt>
-<dd>defines the supported channel page(s).</dd>
-
-<dt><code>rf_channel_configuration</code></dt>
-<dd>defines the used rf configuration for channel page.</dd>
-</dl>
+Member|Description
+------|-----------
+`channel_page`|The supported channel page(s).
+`rf_channel_configuration`|The used RF configuration for the channel page.
 
 #### PHY device link type
 
@@ -711,25 +590,18 @@ typedef enum phy_link_type_e
 	PHY_LINK_ETHERNET_TYPE,
 	PHY_LINK_15_4_2_4GHZ_TYPE,
 	PHY_LINK_15_4_SUBGHZ_TYPE,
-	PHY_LINK_TUN
+	PHY_LINK_TUN,
+	PHY_LINK_SLIP,
 } phy_link_type_e;
 ```
 
-where:
-
-<dl>
-<dt><code>ETHERNET_TYPE</code></dt>
-<dd>is a standard IEEE 802 Ethernet type.</dd>
-
-<dt><code>15_4_2_4GHZ_TYPE</code></dt>
-<dd>is a standard 802.15.4 2.4GHz radio.</dd>
-
-<dt><code>15_4_SUBGHZ_TYPE</code></dt>
-<dd>is a standard 802.15.4 sub-1GHz radio 868/915MHz.</dd>
-
-<dt><code>TUN</code></dt>
-<dd>is a Linux virtual TUN interface or similar.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`ETHERNET_TYPE`|The standard IEEE 802 Ethernet type.
+`15_4_2_4GHZ_TYPE`|The standard 802.15.4 2.4GHz radio.
+`15_4_SUBGHZ_TYPE`|The standard 802.15.4 sub-1GHz radio 868/915MHz.
+`TUN`|The Linux virtual TUN interface.
+`SLIP`|The SLIP interface.
 
 #### PHY device channel page
 
@@ -750,12 +622,9 @@ typedef enum
 } channel_page_e;
 ```
 
-where:
-
-<dl>
-<dt><code>CHANNEL_PAGE_x</code></dt>
-<dd>is a IEEE 802.15.4 channel page</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`CHANNEL_PAGE_x`|The IEEE 802.15.4 channel page.
 
 #### PHY device RF channel configuration
 
@@ -772,24 +641,13 @@ typedef struct phy_rf_channel_configuration_s
 } phy_rf_channel_configuration_s;
 ```
 
-where:
-
-<dl>
-<dt><code>channel_0_center_frequency</code></dt>
-<dd>is first channel center frequency.</dd>
-
-<dt><code>channel_spacing</code></dt>
-<dd>is RF channel spacing.</dd>
-
-<dt><code>datarate</code></dt>
-<dd>is RF datarate.</dd>
-
-<dt><code>number_of_channels</code></dt>
-<dd>is a number of supported channels.</dd>
-
-<dt><code>modulation</code></dt>
-<dd>is RF modulation method.</dd>
-</dl>
+Member|Description
+------|-----------
+`channel_0_center_frequency`|The first channel center frequency.
+`channel_spacing`|The RF channel spacing.
+`datarate`|The RF datarate.
+`number_of_channels`|The number of supported channels.
+`modulation`|The RF modulation method.
 
 #### PHY device RF modulation methods
 
@@ -806,24 +664,13 @@ typedef enum phy_modulation_e
 } phy_modulation_e;
 ```
 
-where:
-
-<dl>
-<dt><code>M_OFDM</code></dt>
-<dd>is OFDM modulation method.</dd>
-
-<dt><code>M_OQPSK</code></dt>
-<dd>is OQPSK modulation method.</dd>
-
-<dt><code>M_BPSK</code></dt>
-<dd>is BPSK modulation method.</dd>
-
-<dt><code>M_GFSK</code></dt>
-<dd>is GFSK modulation method.</dd>
-
-<dt><code>M_UNDEFINED</code></dt>
-<dd>is RF modulation method undefined.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`M_OFDM`|The OFDM modulation method.
+`M_OQPSK`|The OQPSK modulation method.
+`M_BPSK`|The BPSK modulation method.
+`M_GFSK`|The GFSK modulation method.
+`M_UNDEFINED`|The RF modulation method undefined.
 
 ### Example RF driver
 
@@ -880,6 +727,12 @@ int8_t rf_device_register(void)
     device_driver.tx = &rf_start_cca;
     /*Set supported channel pages*/
     device_driver.phy_channel_pages = phy_channel_pages;
+    //Nullify rx/tx callbacks
+    device_driver.phy_rx_cb = NULL;
+    device_driver.phy_tx_done_cb = NULL;
+    device_driver.arm_net_virtual_rx_cb = NULL;
+    device_driver.arm_net_virtual_tx_cb = NULL;
+    
     /*Register device driver*/
     rf_radio_driver_id = arm_net_phy_register(&device_driver);
 
@@ -907,7 +760,9 @@ void rf_handle_rx_end(void)
     /* Note: Checksum of the packet must be checked and removed before entering here */
 
     /* Send received data and link information to the network stack */
-    arm_net_phy_rx(PHY_LAYER_PAYLOAD, rf_buffer, rf_buffer_len, rf_lqi, rf_rssi, rf_radio_driver_id);
+    if( device_driver.phy_rx_cb ){
+    	device_driver.phy_rx_cb(rf_buffer, rf_buffer_len, rf_lqi, rf_rssi, rf_radio_driver_id);
+    }
 }
 
 int8_t rf_start_cca(uint8_t *data_ptr, uint16_t data_length, uint8_t tx_handle, data_protocol_e data_protocol)

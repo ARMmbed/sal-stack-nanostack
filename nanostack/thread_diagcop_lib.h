@@ -12,6 +12,7 @@
  *
  */
 
+
 #ifndef NANOSTACK_SOURCE_6LOWPAN_THREAD_THREAD_DIAGCOP_LIB_H_
 #define NANOSTACK_SOURCE_6LOWPAN_THREAD_THREAD_DIAGCOP_LIB_H_
 
@@ -19,10 +20,12 @@
 #include "thread_meshcop_lib.h" // this uses the same parser functions than meshcop but different message types
 
 /**
- * CoAP diagnostic TLV definitions
+ * \file thread_diagcop_lib.h
+ * \brief CoAP diagnostic TLV.
  * Note that these TLV types overlap with meshcop
  * and must not be used in same messages.
-*/
+ */
+
 #define DIAGCOP_TLV_SOURCE_ADDRESS                           0
 #define DIAGCOP_TLV_ADDRESS16                                1
 #define DIAGCOP_TLV_MODE                                     2

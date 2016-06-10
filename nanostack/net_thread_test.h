@@ -174,6 +174,24 @@ int thread_test_set_context_id_reuse_timeout(
  * \return <0 Remove fail
  */
 int thread_test_remove_router_by_id(int8_t interface_id, uint8_t routerId);
+/**
+ * \brief Start router upgrade process.
+ *
+ * \param interface_id Network Interface
+ *
+ * \return 0, upgrade started
+ * \return <0 fail
+ */
+int thread_test_router_upgrade(int8_t interface_id);
+/**
+ * \brief Start router downgrade process.
+ *
+ * \param interface_id Network Interface
+ *
+ * \return 0, downgrade started
+ * \return <0 fail
+ */
+int thread_test_router_downgrade(int8_t interface_id);
 
 /**
  * \brief Set Thread Security Material. Terms are defined in Thread security specification
@@ -189,6 +207,16 @@ int thread_test_remove_router_by_id(int8_t interface_id, uint8_t routerId);
  */
 int thread_test_security_material_set(int8_t interface_id, bool enableSecurity, uint8_t *thrMasterKey, uint32_t thrKeySequenceCounter, uint32_t thrKeyRotation);
 
+/**
+ * \brief Set Thread version number.
+ *
+ * \param interface_id Network Interface
+ * \param version "1 == Thread version 1.0" or "2 == Thread version 1.1"
+ *
+ * \return 0, OK
+ * \return <0 Error
+ */
+int thread_test_version_set(int8_t interface_id, uint8_t version);
 /**
  * \brief Increment Thread key sequence counter
  *
@@ -340,6 +368,18 @@ typedef int (response_cb)(int8_t interface_id, uint8_t *response_ptr, uint16_t r
  * \return <0               Command send Fail
  */
 int thread_test_diagnostic_command_send(int8_t interface_id, uint8_t *address_ptr,const char *uri_ptr, uint8_t request_length, uint8_t *request_ptr, response_cb *resp_cb);
+
+
+/**
+ * \brief Set initial SLAAC iid.
+ *
+ * \param interface_id      Network Interface
+ * \param iid               Interface identifier pointer must be 8 bytes long buffer. can be NULL to disable.
+ * \return 0,               Command OK
+ * \return <0               Command Fail
+ */
+int8_t thread_test_initial_slaac_iid_set(int8_t interface_id, uint8_t *iid);
+
 #ifdef __cplusplus
 }
 #endif

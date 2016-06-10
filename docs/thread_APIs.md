@@ -17,7 +17,9 @@ Thread Commissioning API is used for enabling the Thread commissioning process.
 
 ### Registering a commissioner candidate
 
-If the Border Router or a Commissioner Router interface is up in the network, a Thread commissioner candidate can begin to register with the network. To start the registration process, use the `commissioning_register()` function.
+If the Border Router or a Commissioner Router interface is up in the network, a Thread commissioner candidate can begin to register with the network. 
+
+To start the registration process:
 
 ```
 int commissioning_register(uint8_t interface_id);
@@ -27,7 +29,7 @@ Parameter|Description
 `interface_id`|The interface ID of the commissioner candidate.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd>-1, if a commissioner exists already.</dd>
 <dd>-2, if failed to create a commissioner, interface does not exist.</dd>
 <dd>0, success.</dd>
@@ -37,7 +39,7 @@ Parameter|Description
 
 Unregisters the commissioner candidate from the network.
 
-To start the unregistration, use the `commissioning_unregister()` function.
+To start the unregistration:
 
 ```
 int commissioning_unregister(uint8_t interface_id);
@@ -48,14 +50,16 @@ Parameter|Description
 `interface_id`|The interface ID of the commissioner.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd>any value other than 0, failure.</dd>
 <dd>0, success.</dd>
 </dl>
 
 ### Petitioning process
 
-After the registration to the network, the commissioner candfidate initiates petitioning to validate itself as the sole commissioner of the network via a Commissioner Router or Border Router (Commissioner Representative) to the Thread Leader Router. To initiate the petitioning process, use the following function call:
+After the registration to the network, the commissioner candfidate initiates petitioning to validate itself as the sole commissioner of the network via a Commissioner Router or Border Router (Commissioner Representative) to the Thread Leader Router. 
+
+To initiate the petitioning process:
 
 ```
 int commissioning_petition_start(int8_t interface_id, char *commissioner_id_ptr, commissioning_status_cb *status_cb_ptr);
@@ -68,7 +72,7 @@ Parameter|Description
 `status_cb_ptr`|A pointer to the callback function to receive the state of the commissioning process.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd>any value other than 0, failure.</dd>
 <dd>0, success.</dd>
 </dl>
@@ -104,7 +108,9 @@ typedef int (commissioning_status_cb)(int8_t interface_id, commissioning_state_e
 
 ### Petition keep alive messages
 
-The commissioner keeps secure commissioning session via a Commissioner Router or Border Router with the Leader Router using keep alive messages that can be secured and authenticated using DTLS. Use the following function to set the keep alive messages going:
+The commissioner keeps secure commissioning session via a Commissioner Router or Border Router with the Leader Router using keep alive messages that can be secured and authenticated using DTLS. 
+
+To set the keep alive messages going:
 
 ```
 int commissioning_petition_keep_alive(int8_t interface_id, commissioning_state_e state);
@@ -112,7 +118,9 @@ int commissioning_petition_keep_alive(int8_t interface_id, commissioning_state_e
 
 ### Adding a joiner device
 
-A device that wants to join the Thread network is typically called a joiner device. Such a device is added to the Thread network through the commissioning process. To add a joiner device to the Thread network, use the following function:
+A device that wants to join the Thread network is typically called a joiner device. Such a device is added to the Thread network through the commissioning process. 
+
+To add a joiner device to the Thread network:
 
 ```
 int commissioning_device_add(int8_t interface_id, bool short_eui64,
@@ -130,14 +138,14 @@ Parameter|Description
 `joining_device_cb_ptr`|A pointer to the callback function, to receive the result of the joining process.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd>failure otherwise.</dd>
 </dl>
 
 ### Removing a joiner device
 
- To remove a joiner device from the Thread network, use the following function:
+To remove a joiner device from the Thread network:
 
 ```
 int commissioning_device_delete(int8_t interface_id, uint8_t EUI64[8]);
@@ -149,7 +157,7 @@ Parameter|Description
 `EUI64[8]`|A pointer to the buffer where the EUI64 bit address is stored.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd>failure otherwise.</dd>
 </dl>
@@ -171,7 +179,7 @@ Parameter|Description
 `message_len`|Length of the message.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd>failure otherwise.</dd>
 </dl>
@@ -198,7 +206,7 @@ Parameter Name | Description
 
 ### Registering a Thread Management Interface
 
-The function `thread_management_register()` is used to instantiate a Thread Management Interface which can in turn start the Thread Management Session.
+To instantiate a Thread Management Interface which can in turn start the Thread Management Session:
 
 ```
 int thread_management_register(int8_t interface_id);
@@ -210,7 +218,7 @@ Parameter|Description
 
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> An integer other than 0 or -1, the <code>instance_id</code>, a handle of the management interface.</dd>
 <dd>0, if the stack failed to allocate memory for the management session.</dd>
 <dd>-1, if the stack failed to free up memory for the management session.</dd>
@@ -218,7 +226,7 @@ Parameter|Description
 
 ### Unregister a Thread Management Interface
 
-The function `thread_management_unregister()` is used to remove a Thread Management Interface and therefore removes any management session bound to that interface.
+To remove a Thread Management Interface and therefore remove any management session bound to that interface:
 
 ```
 int thread_management_register(int8_t interface_id);
@@ -229,14 +237,14 @@ Parameter|Description
 `interface_id`|ID of the management interface.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd>-1, failure.</dd>
 </dl>
 
 ### Setting up the Thread network name
 
-Use the following function to set the name for Thread network.
+To set the name for Thread network:
 
 ```
 int thread_management_set_network_name(int8_t instance_id, uint8_t *name_ptr, uint8_t name_len, management_set_response_cb *cb_ptr);
@@ -250,14 +258,14 @@ Parameter|Description
 `cb_ptr`|Pointer to the management response callback function.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
 
 ### Thread management response callback
 
-This callback function is used to receive the response to the Thread management commands.
+To receive the response to the Thread management commands:
 
 ```
 typedef int (management_set_response_cb)(int8_t interface_id, management_state_e status);
@@ -302,7 +310,7 @@ Parameter|Description
 `cb_ptr`|A pointer to `management_set_response_cb` callback function.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
@@ -323,14 +331,14 @@ Parameter|Description
 `cb_ptr`|A pointer to `management_set_response_cb` callback function. It can be set to NULL, if no response is required.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
 
 ### Thread commissioning time-stamps
 
-You can add time-stamps to the Thread commissioning related chunks of data. Use the following function:
+To add time-stamps to the Thread commissioning related chunks of data:
 
 ```
 int thread_management_set_commissioning_data_timestamp(int8_t instance_id, uint64_t time, management_set_response_cb *cb_ptr);
@@ -344,14 +352,14 @@ Parameter|Description
 `cb_ptr`|A pointer to `management_set_response_cb` callback function.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
 
 ### Setting up commissioning credentials
 
-The function `thread_management_set_commissioning_credentials()` is used to set up the security credentials for the Thread network.
+To set up the security credentials for the Thread network:
 
 ```
 int thread_management_set_commissioning_credentials(int8_t instance_id, uint8_t PSKc[32], uint8_t PSKc_len, management_set_response_cb *cb_ptr);
@@ -365,7 +373,7 @@ Parameter|Description
 `cb_ptr`|A pointer to `management_set_response_cb` callback function.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
@@ -382,14 +390,14 @@ Parameter|Description
 `cb_ptr`|A pointer to `management_get_response_cb` callback function.
 
 <dl>
-<dt><code>Response</code></dt>
+<dt>Response</dt>
 <dd> 0, success.</dd>
 <dd><0, failure.</dd>
 </dl>
 
 ### Thread management get response callback
 
-`(management_get_response_cb)` is a callback function for receiving the information regarding Thread management from various fields related to the Thread management. Such fields can be parsed using macros defined in `thread_meshcop_lib.h`.
+The callback function `(management_get_response_cb)` is used for receiving the information regarding Thread management from various fields related to the Thread management. Such fields can be parsed using macros defined in `thread_meshcop_lib.h`.
 
 ```
 typedef int (management_get_response_cb)(int8_t instance_id, management_state_e status, uint8_t *response_message_ptr, uint16_t response_message_len);

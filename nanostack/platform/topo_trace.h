@@ -20,8 +20,9 @@
 extern "C" {
 #endif
 
-/*
- * API to trace the network topology
+/**
+ * \file topo_trace.h
+ * \brief test API to trace the network topology
  */
 
 #ifndef HAVE_TOPO_TRACE

@@ -35,9 +35,6 @@ typedef struct whiteboard_entry_t {
     uint_least24_t                  ttl;                /*!< Whiteboard entry TTL (seconds). */
     uint8_t                         eui64[8];           /*!< EUI-64 of node that IP address is registered to. */
     int8_t                          interface_index;
-#ifdef NVM_BORDER_ROUTER
-    uint16_t                        nvm_offset;
-#endif
 } whiteboard_entry_t;
 
 /**

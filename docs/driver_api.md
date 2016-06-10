@@ -46,7 +46,9 @@ void uart_reader()
 	while(0 != (size=uart_read(buffer))) {
 			// Incoming packets are pushed to Stack
 			// using arm_net_phy_rx()
-			arm_net_phy_rx(buffer, size, 0, interface_id);
+			if( my_driver.phy_rx_cb ){
+			    my_driver.phy_rx_cb(buffer, size, 0, 0, interface_id);
+			}
 	}
 }
 

@@ -28,7 +28,7 @@ Data type|Description
 
 ## Socket address type definition
 
-This structure defines the socket address type and has the following variables:
+This structure defines the socket address type and has the following members:
 
 ```
 typedef struct ns_address_t
@@ -39,19 +39,12 @@ typedef struct ns_address_t
 }ns_address_t;
 ```
 
-where:
-
-<dl>
-<dt><code>type</code></dt>
-<dd>The address type.</dd>
-
-<dt><code>address</code></dt>
-<dd>The address data in the format defined by type.</dd>
-
-<dt><code>identifier</code></dt>
-<dd>The port for TCP/UDP, message ID for ICMP.</dd>
+Member|Description
+------|-----------
+`type`|The address type.
+`address`|The address data in the format defined by type.
+`identifier`|The port for TCP/UDP, message ID for ICMP.
 </dl>
-
 
 ## Address type
 
@@ -66,18 +59,11 @@ typedef enum address_type_t
 }address_type_t;
 ```
 
-where:
-
-<dl>
-<dt><code>ADDRESS_IPV6</code></dt>
-<dd>IPv6 address type. The address is in 128-bit binary form.</dd>
-
-<dt><code>ADDRESS_IPV4</code></dt>
-<dd>IPv4 address type. The address is in 32-bit binary form.</dd>
-
-<dt><code>ADDRESS_TUN_DRIVER_ID</code></dt>
-<dd>Local socket address type. The address is an 8-bit driver ID for packet source.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`ADDRESS_IPV6`|IPv6 address type. The address is in 128-bit binary form.
+`ADDRESS_IPV4`|IPv4 address type. The address is in 32-bit binary form.
+`ADDRESS_TUN_DRIVER_ID`|Local socket address type. The address is an 8-bit driver ID for packet source.
 
 ## Address type
 

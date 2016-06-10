@@ -81,6 +81,7 @@ typedef enum fhss_channel_mode_e {
     FHSS,               //< Frequency hopping mode
 } fhss_channel_mode_e;
 
+#if 0
 /**
  * \brief Enable FHSS mode. Note: arm_nwk_interface_configure_6lowpan_bootstrap_set() must be called before enabling FHSS.
  *
@@ -117,5 +118,11 @@ extern int8_t arm_fhss_disable(int8_t interface_id);
  * \return 0 on success, -1 on fail.
  */
 extern int8_t arm_fhss_set_tuning_params(int8_t interface_id, const fhss_platform_tuning_params_s *fhss_tuning_params);
+
+#else
+#define arm_fhss_enable(interface_id, fhss_platform_functions,fhss_configuration) (int8_t) -1
+#define arm_fhss_disable(interface_id) (int8_t) -1
+#define arm_fhss_set_tuning_params(interface_id, fhss_tuning_params) (int8_t) -1
+#endif
 
 #endif /* NET_FHSS_H_ */

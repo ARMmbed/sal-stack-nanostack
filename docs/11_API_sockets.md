@@ -24,12 +24,10 @@ Socket name|Socket description
 `SOCKET_TCP`|TCP socket type.
 `SOCKET_ICMP`|ICMP raw socket type; see section _ICMP socket instruction_.
 `SOCKET_RAW`|raw IPv6 socket type.
-`SOCKET_LOCAL`|Local application space socket.
 
 ### ICMP socket instruction
 
-When using _Internet Control Message Protocol_ (ICMP) sockets, the minimum packet length is eight bytes where the first four bytes comprise the ICMP header, as described in _Table 3-19_. The stack will calculate the checksum
-automatically before transmitting the packet.
+When using _Internet Control Message Protocol_ (ICMP) sockets, the minimum packet length is eight bytes where the first four bytes comprise the ICMP header, as described in _Table 3-19_. The stack will calculate the checksum automatically before transmitting the packet.
 
 **Table 3-19 General ICMP packet structure**
 
@@ -71,24 +69,14 @@ typedef struct socket_callback_t {
     uint8_t 	LINK_LQI;
 } socket_callback_t;
 ```
-where:
 
-<dl>
-<dt><code>event_type</code></dt>
-<dd>Socket event type as provided in Table 3-22.</dd>
-
-<dt><code>socket_id</code></dt>
-<dd>ID of the socket that caused the event.</dd>
-
-<dt><code>interface_id</code></dt>
-<dd>The network interface ID. Same as received from <code>arm_nwk_interface_init</code> </dd>
-
-<dt><code>d_len</code></dt>
-<dd>Length of data available or sent.
-
-<dt><code>LINK_LQI</code></dt>
-<dd>Link quality indicator value if the interface can provide any.</dd>
-</dl>
+Member|Description
+------|-----------
+`event_type`|Socket event type as provided in Table 3-22.
+`socket_id`|The ID of the socket that caused the event.
+`interface_id`|The network interface ID. Same as received from `arm_nwk_interface_init`.
+`d_len`|The length of data available or sent.
+`LINK_LQI`|The Link Quality Indicator value if the interface can provide any.
 
 **Table 3-22 Supported socket event types**
 
@@ -160,8 +148,7 @@ The connection can be closed by calling function `socket_close( )`. The 6LoWPAN 
 
 ## Using UDP and ICMP sockets
 
-A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately after a successful call to `socket_open( )`. Data can then be transmitted using the
-`socket_sendto( )` function call. The same function call can also be used for an ICMP socket.
+A _User Datagram Protocol_ (UDP) socket is ready to receive and send data immediately after a successful call to `socket_open( )`. Data can then be transmitted using the `socket_sendto( )` function call. The same function call can also be used for an ICMP socket.
 
 ## Detailed Socket API usage
 
@@ -169,7 +156,7 @@ This section describes the socket layer functions in more detail. Each function 
 
 ### How to open a socket
 
-To initialize a socket ready for communication, use the following function:
+To initialize a socket ready for communication:
 
 ```
 int8_t socket_open
@@ -180,49 +167,37 @@ int8_t socket_open
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`protocol`|The protocol to be used over this socket and valid values for the argument are:<br>`SOCKET_UDP` UDP: standard communication.<br>`SOCKET_TCP` TCP: standard communication.<br>`SOCKET_ICMP` ICMPv6: used for ping functionality.<br>`SOCKET_RAW` raw IPv6: used for other specialised protocols.
+`identifier`|The port identifier for UDP and TCP. 0 indicates that the port is not specified and it will be selected automatically when using the socket. The port can also be bound later with the function `socket_bind()`.
+`passed_fptr`|A function pointer to the desired socket receive callback function.
 
 <dl>
-<dt><code>protocol</code></dt>
-<dd>The protocol to be used over this socket and valid values for the argument are:</dd>
-<dd><code>SOCKET_UDP</code> UDP: standard communication.</dd>
-<dd><code>SOCKET_TCP</code> TCP: standard communication.</dd>
-<dd><code>SOCKET_ICMP</code> ICMPv6: used for ping functionality.</dd>
-<dd><code>SOCKET_RAW</code> raw IPv6: used for other specialised protocols.</dd>
-
-<dt><code>identifier</code></dt>
-<dd>The port identifier for UDP and TCP. 0 indicates that the port is not specified and it will be selected automatically when using the socket. The port can also be bound later with the function `socket_bind()`.</dd>
-<dd>For raw sockets, the identifier is the IPv6 protocol number.</dd>
-
-<dt><code>passed_fptr</code></dt>
-<dd>A function pointer to the desired socket receive callback function.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Socket ID, used as a reference to the specific socket in subsequent calls.</dd>
 <dd>-1 No free sockets or invalid protocol.</dd>
 </dl>
 
 ### How to release a socket
 
-To release a socket, use the following function:
+To release a socket:
 
 `int8_t socket_free( int8_t socket )`
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID of the socket to be released.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID of the socket to be released.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Socket release successful.</dd>
 <dd>-1 Socket release failed. Socket ID invalid or already released.</dd>
 </dl>
 
 ### How to bind a socket
 
-To bind socket to a port and address, use the following function:
-
+To bind socket to a port and address:
 
 ```
 int8_t socket_bind
@@ -232,15 +207,13 @@ int8_t socket_bind
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID returned by `socket_open`.
+`address`|Structure that contains port and/or address to be bound to the socket.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID returned by <code>socket_open</code>.</dd>
-<dt><code>address</code></dt>
-<dd>Structure that contains port and/or address to be bound to the socket.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 on success.</dd>
 <dd>-1 if given address is NULL.</dd>
 <dd>-2 if port is already bound to another socket.</dd>
@@ -248,10 +221,9 @@ where:
 <dd>-5 bind is not supported on this type of socket.</dd>
 </dl>
 
-The port and the address can be bound only once. The port can also be bound to the socket with the function  `socket_open( )`.
+The port and the address can be bound only once. The port can also be bound to the socket with the function `socket_open( )`.
 
-To bind a local address to a socket based on a destination address and address 
-selection preferences, use the following function:
+To bind a local address to a socket based on a destination address and address selection preferences:
 
 ```
 int8_t socket_bind2addrsel
@@ -261,15 +233,13 @@ int8_t socket_bind2addrsel
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID returned by `socket_open`.
+`dst_address`|Destination address to which the socket wants to communicate.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID returned by <code>socket_open</code>.</dd>
-<dt><code>dst_address</code></dt>
-<dd>Destination address to which the socket wants to communicate.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 on success.</dd>
 <dd>-1 if given address is NULL or socket ID is invalid.</dd>
 <dd>-2 if memory allocation failed.</dd>
@@ -281,7 +251,7 @@ where:
 
 ### How to read data from a socket
 
-To read received data from a socket, use the following function:
+To read received data from a socket:
 
 ```
 int16_t socket_read
@@ -293,22 +263,16 @@ int16_t socket_read
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID of the socket to be read.
+`address`|A pointer to an address structure containing the source address of the packet (populated by the stack). Can be NULL.
+`buffer`|A pointer to a byte array containing the payload of the packet.
+`length`|The length of the payload data to be stored in the buffer.
+
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID of the socket to be read.</dd>
-
-<dt><code>address</code></dt>
-<dd>A pointer to an address structure containing the source address of the packet (populated by the stack). Can be NULL.</dd>
-
-<dt><code>buffer</code></dt>
-<dd>A pointer to a byte array containing the payload of the packet.</dd>
-
-<dt><code>length</code></dt>
-<dd>The length of the payload data to be stored in the buffer.</dd>
-
-<dt><code>Return value</code></dt>
-<dd>&gt 0 The length of the data copied to the buffer.</dd>
+<dt>Return value</dt>
+<dd>> 0 The length of the data copied to the buffer.</dd>
 <dd>0 No data is available to read.</dd>
 <dd>-1 Invalid input parameters.</dd>
 </dl>
@@ -341,8 +305,7 @@ Response Event|Socket Type|Description
 `SOCKET_TX_FAIL`|UDP|UDP link layer TX fails.
 `SOCKET_CONNECT_FAIL_CLOSED`|TCP|TX process fails and connection closed.
 
-
-To transmit data on an unconnected socket, use the following function:
+To transmit data on an unconnected socket:
 
 ```
 int8_t socket_sendto
@@ -354,31 +317,23 @@ int8_t socket_sendto
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID to use for transmission.
+`address`|A pointer to an address structure containing the destination address of the packet (populated by the application).
+`buffer`|A pointer to a byte array containing the payload of the packet.
+`length`|The length of the payload data in the buffer.
+
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID to use for transmission.</dd>
-
-<dt><code>address</code></dt>
-<dd>A pointer to an address structure containing the destination address of the packet (populated by the application).</dd>
-
-<dt><code>buffer</code></dt>
-<dd>A pointer to a byte array containing the payload of the packet.</dd>
-
-<dt><code>length</code></dt>
-<dd>The length of the payload data in the buffer.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>0 Data packet accepted by the stack.</dd>
 <dd>-1 Fail.</dd>
 </dl>
 
-To send data via a connected socket, use the following function:
+To send data via a connected socket:
 
-**Note**
-
-A socket connection must be ready before using this function. The stack will automatically use the address of the remote connected host address as the destination for the packet.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: A socket connection must be ready before using this function. The stack will automatically use the address of the remote connected host address as the destination for the packet.</span>
 
 ```
 int8_t socket_send
@@ -389,19 +344,14 @@ int8_t socket_send
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID to use for transmission.
+`buffer`|A pointer to a byte array containing the payload of the packet.
+`length`|The length of the payload data in the buffer.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID to use for transmission.</dd>
-
-<dt><code>buffer</code></dt>
-<dd>A pointer to a byte array containing the payload of the packet.</dd>
-
-<dt><code>length</code></dt>
-<dd>The length of the payload data in buffer.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>>0 Data packet accepted by the stack.</dd>
 <dd>-1 Fail.</dd>
 </dl>
@@ -418,7 +368,7 @@ Function|Description
 `socket_connect()`|Connect socket to a host.
 `socket_close()`|Close socket connection.
 
-To set a TCP socket into the listen state, use the following function:
+To set a TCP socket into the listen state:
 
 ```
 int8_t socket_listen
@@ -426,19 +376,19 @@ int8_t socket_listen
 	int8_t	socket
 
 ```
-where:
+
+Parameter|Description
+---------|-----------
+`socket`|The socket ID that is to be set to the listen state.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID that is to be set to the listen state.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Valid request.</dd>
 <dd><b>Note:</b> This does not imply that the state of the socket has been successfully changed.</dd>
 <dd>-1 Fail.</dd>
 </dl>
 
-To connect a socket to a remote host, use the following function:
+To connect a socket to a remote host:
 
 ```
 int8_t socket_connect
@@ -449,19 +399,14 @@ int8_t socket_connect
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID, which is used to connect to the remote host.
+`address`|A pointer to an <code>address_t</code> structure that contains the address of the remote host.
+`randomly_take_src_numbers`|Value 1 indicates that a randomly selected source port number is used.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID, which is used to connect to the remote host.</dd>
-
-<dt><code>address</code></dt>
-<dd>A pointer to an <code>address_t</code> structure that contains the address of the remote host.</dd>
-
-<dt><code>randomly_take_src_numbers</code></dt>
-<dd>Value 1 indicates that a randomly selected source port number is used.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Valid request.</dd>
 <dd><b>Note:</b>This does not imply that the state of the socket has been successfully changed.</dd>
 <dd>-1 Fail.</dd>
@@ -469,15 +414,13 @@ where:
 
 There are two possible responses from the stack for `socket_connect( )`:
 
-<dl>
-<dt><code>SOCKET_BIND_DONE</code></dt>
-<dd>TCP handshake ready.</dd>
+- `SOCKET_BIND_DONE`
+	- TCP handshake ready.
 
-<dt><code>SOCKET_CONNECT_FAIL_CLOSED</code></dt>
-<dd>TCP handshake fail.</dd>
-</dl>
+- `SOCKET_CONNECT_FAIL_CLOSED`
+	- TCP handshake fail.
 
-To close a TCP connection, use the following function:
+To close a TCP connection:
 
 ```
 int8_t socket_close
@@ -487,16 +430,13 @@ int8_t socket_close
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID of the socket to be disconnected from the remote host.
+`address`|The destination client address; a client should use a null pointer for this parameter.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>The socket ID of the socket to be disconnected from the remote host.</dd>
-
-<dt><code>address</code></dt>
-<dd>The destination client address; a client should use a null pointer for this parameter.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Valid request.</dd>
 <dd><b>Note:</b>This does not imply that the state of the socket has been successfully changed.</dd>
 <dd>-1 Fail.</dd>
@@ -504,7 +444,7 @@ where:
 
 ### Modifying socket options
 
-To specify miscellaneous options for a socket, use the following function:
+To specify miscellaneous options for a socket:
 
 ```
 int8_t socket_setsockopt
@@ -517,25 +457,16 @@ int8_t socket_setsockopt
 )
 ```
 
-where:
+Parameter|Description
+---------|-----------
+`socket`|The socket ID.
+`level`|The option level.
+`opt_name`|The option name.
+`opt_value`|A pointer to the value of the specified option.
+`opt_len`|The size of the data pointed to by a value.
 
 <dl>
-<dt><code>socket</code></dt>
-<dd>Socket ID.</dd>
-
-<dt><code>level</code></dt>
-<dd>Option level.</dd>
-
-<dt><code>opt_name</code></dt>
-<dd>Option name.</dd>
-
-<dt><code>opt_value</code></dt>
-<dd>A pointer to the value of the specified option.</dd>
-
-<dt><code>opt_len</code></dt>
-<dd>Size of the data pointed to by a value.</dd>
-
-<dt><code>Return value</code></dt>
+<dt>Return value</dt>
 <dd>0 Done.</dd>
 <dd>-1 Invalid socket ID.</dd>
 <dd>-2 Invalid or unsupported option.</dd>
@@ -549,9 +480,8 @@ Each socket has unique control of the following items:
 
 A socket uses a configured setup until the user changes it with a new function call.
 
-**Note**
-
-`SOCKET_IPV6_ADDRESS_SELECT` is only supported when the interface bootstrap address mode is `NET_6LOWPAN_MULTI_GP_ADDRESS`.
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: 
+`SOCKET_IPV6_ADDRESS_SELECT` is only supported when the interface bootstrap address mode is `NET_6LOWPAN_MULTI_GP_ADDRESS`.</span>
 
 #### How to set address mode for a socket
 
@@ -572,22 +502,13 @@ You can use `socket_setsockopt()` to set the socket traffic class. When this opt
 
 Parameters for Traffic class:
 
-<dl>
-<dt><code>socket</code></dt>
-<dd>The socket identified.</dd>
-
-<dt><code>level</code></dt>
-<dd><code>SOCKET_IPPROTO_IPV6</code></dd>
-
-<dt><code>opt_name</code></dt>
-<dd><code>SOCKET_IPV6_TCLASS</code></dd>
-
-<dt><code>opt_value</code></dt>
-<dd>A pointer to <code>int16_t</code> value. Valid values are from 0 to 255. -1 is for system default.</dd>
-
-<dt><code>opt_len</code></dt>
-<dd>Is the size of <code>int16_t</code>, 2 bytes.</dd>
-</dl>
+Parameter|Description
+---------|-----------
+`socket`|The socket identified.
+`level`|`SOCKET_IPPROTO_IPV6`
+`opt_name`|`SOCKET_IPV6_TCLASS`
+`opt_value`|A pointer to `int16_t` value. Valid values are from 0 to 255. -1 is for system default.
+`opt_len`|The size of `int16_t`, 2 bytes.
 
 [RFC 4594](https://tools.ietf.org/html/rfc4594) specifies the appropriate traffic class values. The 6LoWPAN Stack does not interpret the specified traffic class. It is just passed through.
 
@@ -597,25 +518,13 @@ You can use `socket_setsockopt()` to set the socket flow label.
 
 Parameters for flow label:
 
-<dl>
-<dt><code>socket</code></dt>
-<dd>The socket identified.</dd>
+Parameter|Description
+---------|-----------
+`socket`|The socket identified.
+`level`|`SOCKET_IPPROTO_IPV6`
+`opt_name`|`SOCKET_IPV6_FLOW_LABEL`
+`opt_value`|A pointer to `int32_t` value. Valid values are from `0` to `0xfffff`. -1 is for system default (set with `arm_nwk_ipv6_auto_flow_label()`). -2 will always autogenerate a flow label, regardless of system default.
+`opt_len`|The size of `int32_t`, 4 bytes.
 
-<dt><code>level</code></dt>
-<dd><code>SOCKET_IPPROTO_IPV6</code></dd>
-
-<dt><code>opt_name</code></dt>
-<dd><code>SOCKET_IPV6_FLOW_LABEL</code></dd>
-
-<dt><code>opt_value</code></dt>
-<dd>A pointer to <code>int32_t</code> value. Valid values are from 0 to 0xfffff. -1 is for system default (set with `arm_nwk_ipv6_auto_flow_label()`). -2 will always autogenerate a flow label, regardless of system default.</dd>
-
-<dt><code>opt_len</code></dt>
-<dd>Is the size of <code>int32_t</code>, 4 bytes.</dd>
-</dl>
-
-The stack auto-generates flow labels on outgoing packets following the
-guidelines in [RFC 6437]. The stack does not interpret the flow label on
-received packets, and nor does the socket API report flow label to the
-application.
+The stack auto-generates flow labels on outgoing packets following the guidelines in [RFC 6437](https://tools.ietf.org/html/rfc6437). The stack does not interpret the flow label on received packets, and nor does the socket API report flow label to the application.
 
