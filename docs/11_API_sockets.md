@@ -9,7 +9,6 @@ Socket API can be fully harnessed by including the following header files:
 ```
 #include net_interface.h
 #include socket_api.h
-#include socket_security.h
 ```
 
 ## Socket types available

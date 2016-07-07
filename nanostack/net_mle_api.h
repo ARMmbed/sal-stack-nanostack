@@ -30,7 +30,7 @@ extern "C" {
   * \brief Set default MLE neighbor lifetime for a router.
   *
   * \param interface_id Interface ID.
-  * \lifetime Lifetime in seconds. 64 to 2560.
+  * \param lifetime Lifetime in seconds. 64 to 2560.
   *
   * \return 0, Lifetime update OK.
   * \return < 0, Lifetime update fail.
@@ -71,7 +71,7 @@ int8_t arm_nwk_6lowpan_mle_host_lifetime_set(int8_t interface_id, uint16_t lifet
   *
   * \param interface_id Interface ID.
   * \param lower_threshold Lower threshold. 5 to 499. 0 limits not used.
-  * \param upper_threshold. Upper threshold. 5 to 500. 0 limits not used.
+  * \param upper_threshold Upper threshold. 5 to 500. 0 limits not used.
   * \param max Maximum number of neighbors. 5 to 500. 0 limits not used.
   *
   * \return 0, Limits update OK.

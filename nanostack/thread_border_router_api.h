@@ -34,13 +34,19 @@
  */
 typedef struct thread_border_router_info_t {
     unsigned            Prf: 2;               /**!< Prefix preference, 01 = High, 00 = Default, 11 = Low, 10 = Reserved. */
-    bool                P_slaac_preferred: 1; /**!< Allowed to configure a new address. */
-    bool                P_slaac_valid: 1;     /**!< Allowed to use old address. */
+    bool                P_preferred: 1;       /**!< Address is considered preferred address. */
+    bool                P_slaac: 1;           /**!< Allowed to configure a new address */
     bool                P_dhcp: 1;            /**!< DHCPv6 server is available in the network. */
     bool                P_configure: 1;       /**!< DHCPv6 agent provides other configuration. */
     bool                P_default_route: 1;   /**!< This device provides the default route. */
+    bool                P_on_mesh: 1;         /**!< This prefix is considered to be on-mesh */
+    bool                P_nd_dns: 1;          /**!< this border router is able to provide DNS information */
     bool                stableData: 1;        /**!< This data is stable and expected to be available at least 48h. */
 } thread_border_router_info_t;
+
+/* Define flags for backwards compatibility. Remove once applications have been updated */
+#define P_slaac_preferred   P_preferred
+#define P_slaac_valid       P_slaac
 
 /**
  * \brief Create local service that is provided to the Thread network.

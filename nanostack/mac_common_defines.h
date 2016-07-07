@@ -12,8 +12,14 @@
  *
  */
 
+/** \file mac_common_defines.h
+ * \brief Common definitions for MAC layer.
+ */
+
 #ifndef MAC_COMMON_DEFINES_H_
 #define MAC_COMMON_DEFINES_H_
+
+#include "ns_types.h"
 
 #define MAC_ADDR_MODE_NONE 0
 #define MAC_ADDR_MODE_16_BIT 2

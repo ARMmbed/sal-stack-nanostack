@@ -47,6 +47,8 @@
 #ifndef MAC_FILTER_API_H_
 #define MAC_FILTER_API_H_
 
+#include "ns_types.h"
+
 /**
  * \brief Start MAC level filter.
  * This function can be called again if default values are modified.
@@ -101,7 +103,7 @@ int_fast8_t mac_filter_clear(int8_t interface_id);
  *
  * \param interface_id Network Interface.
  * \param mac64 Extended address.
- * \param [out]mac16 Return the short address.
+ * \param mac16 Return the short address.
  *
  * \return 0, address resolved.
  * \return <0 No mapping found.

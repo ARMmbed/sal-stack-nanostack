@@ -26,23 +26,21 @@
  * and must not be used in same messages.
  */
 
-#define DIAGCOP_TLV_SOURCE_ADDRESS                           0
-#define DIAGCOP_TLV_ADDRESS16                                1
-#define DIAGCOP_TLV_MODE                                     2
-#define DIAGCOP_TLV_TIMEOUT                                  3
-#define DIAGCOP_TLV_CONNECTIVITY                             4
-#define DIAGCOP_TLV_ROUTING_TABLE                            5
-#define DIAGCOP_TLV_LEADER_DATA                              6
-#define DIAGCOP_TLV_NETWORK_DATA                             7
-#define DIAGCOP_TLV_IPV6_ADDRESS_LIST                        8
-#define DIAGCOP_TLV_PACKETS_SENT                             9
-#define DIAGCOP_TLV_PACKETS_RECEIVED                        10
-#define DIAGCOP_TLV_PACKETS_DROPPED_TX                      11
-#define DIAGCOP_TLV_PACKETS_DROPPED_RX                      12
-#define DIAGCOP_TLV_SECURITY_ERRORS                         13
-#define DIAGCOP_TLV_RETRIES                                 14
-#define DIAGCOP_TLV_VOLTAGE                                 15
-#define DIAGCOP_TLV_CHILD_TABLE                             16
+#define DIAGCOP_TLV_EXTENDED_MAC_ADDRESS                     0  /**< Can not reset*/
+#define DIAGCOP_TLV_ADDRESS16                                1  /**< Can not reset*/
+#define DIAGCOP_TLV_MODE                                     2  /**< Can not reset*/
+#define DIAGCOP_TLV_TIMEOUT                                  3  /**< Can not reset*/
+#define DIAGCOP_TLV_CONNECTIVITY                             4  /**< Can not reset*/
+#define DIAGCOP_TLV_ROUTE64                                  5  /**< Can not reset*/
+#define DIAGCOP_TLV_LEADER_DATA                              6  /**< Can not reset*/
+#define DIAGCOP_TLV_NETWORK_DATA                             7  /**< Can not reset*/
+#define DIAGCOP_TLV_IPV6_ADDRESS_LIST                        8  /**< Can not reset*/
+#define DIAGCOP_TLV_MAC_COUNTERS                             9  /**< Can reset*/
+#define DIAGCOP_TLV_BATTERY_LEVEL                           14  /**< Can reset*/
+#define DIAGCOP_TLV_SUPPLY_VOLTAGE                          15  /**< Can not reset*/
+#define DIAGCOP_TLV_CHILD_TABLE                             16  /**< Can not reset*/
+#define DIAGCOP_TLV_CHANNEL_PAGES                           17  /**< Can not reset*/
+
 #define DIAGCOP_TLV_GET                                     13
 
 /**

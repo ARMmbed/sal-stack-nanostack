@@ -52,6 +52,13 @@
 /** Message is unexpected or corrupted. */
 #define RET_MSG_CORRUPTED -2
 
+/** \name DHCP options */
+///@{
+#define TX_OPT_NONE                     0x00    /**< No options. */
+#define TX_OPT_USE_SHORT_ADDR           0x01    /**< Use short addresses. */
+#define TX_OPT_MULTICAST_HOP_LIMIT_64   0x02    /**< Use multicast hop limit of 64. */
+///@}
+
 /**
  * \brief DHCP Service receive callback.
  *
@@ -132,6 +139,7 @@ int dhcp_service_send_resp(uint32_t msg_tr_id, uint8_t options, uint8_t *msg_ptr
  * \param addr The address of the server.
  * \param msg_ptr An allocated message pointer. This pointer is the responsibility of the service after this call.
  * \param msg_len The length of the message.
+ * \param receive_resp_cb Callback pointer
  *
  * \return Transaction ID of the DHCP transaction
  * \return 0, if error occurred.
@@ -160,10 +168,6 @@ void dhcp_service_set_retry_timers(uint32_t msg_tr_id, uint16_t timeout_init, ui
  *
  */
 void dhcp_service_req_remove(uint32_t msg_tr_id);
-
-#define TX_OPT_NONE 0x00
-#define TX_OPT_USE_SHORT_ADDR 0x01
-#define TX_OPT_MULTICAST_HOP_LIMIT_64   0x02
 
 /**
  * \brief Timer tick function for retransmissions.

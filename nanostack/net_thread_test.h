@@ -218,6 +218,17 @@ int thread_test_security_material_set(int8_t interface_id, bool enableSecurity, 
  */
 int thread_test_version_set(int8_t interface_id, uint8_t version);
 /**
+ * \brief Set Thread router selection jitter.
+ *
+ * \param interface_id Network Interface
+ * \param value must be over 1 default is 120
+ *
+ * \return 0, OK
+ * \return <0 Error
+ */
+int thread_test_router_selection_jitter_set(int8_t interface_id, uint32_t jitter);
+
+/**
  * \brief Increment Thread key sequence counter
  *
  * \param interface_id Network Interface

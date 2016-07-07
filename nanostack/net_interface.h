@@ -955,9 +955,15 @@ extern int8_t arm_tls_check_key(uint16_t key_id);
 
 void arm_print_routing_table(void);
 
+/* Same as arm_print_routing_table, but accepts a custom print function */
+void arm_print_routing_table2(void (*print_fn)(const char *fmt, ...));
+
 void arm_ncache_flush(void);
 
 void arm_print_neigh_cache(void);
+
+/* Same as arm_print_neigh_cache, but accepts a custom print function */
+void arm_print_neigh_cache2(void (*print_fn)(const char *fmt, ...));
 
 /**
   * \brief Get the library version information.

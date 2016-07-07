@@ -12,6 +12,10 @@
  *
  */
 
+/** \file ns_virtual_rf_api.h
+ * \brief Virtual RF interface API.
+ */
+
 #ifndef NS_VIRTUAL_RF_API_H_
 #define NS_VIRTUAL_RF_API_H_
 #ifdef __cplusplus

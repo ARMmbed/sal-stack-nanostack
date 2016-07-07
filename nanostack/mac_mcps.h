@@ -12,6 +12,10 @@
  *
  */
 
+/** \file mac_mcps.h
+ * \brief MAC Common Part Sublayer API
+ */
+
 #ifndef MAC_MCPS_H
 #define MAC_MCPS_H
 

@@ -91,6 +91,7 @@ typedef struct nwk_pan_descriptor_t {
 /**
  * \brief Energy detection scan start for configured channel with application-specific threshold.
  *
+ * \param interface_id Interface id.
  * \param scan_list Channel list for scan operation.
  * \param passed_fptr A function pointer for scan result notify.
  * \param energy_tresshold Scan response lists all channels with smaller or equal level.
@@ -105,6 +106,7 @@ extern int8_t arm_net_energy_scan(int8_t interface_id, channel_list_s *scan_list
 /**
  * \brief Active network scan for configured channels.
  *
+ * \param interface_id Interface id.
  * \param scan_list Channel list for scan operation.
  * \param passed_fptr A function pointer for scan result notify.
  * \param scan_level NET_ACTIVE_SCAN_ONLY_NWK, NET_ACTIVE_SCAN_ACCEPT_ANY_BEACON_PAYLOAD,NET_ACTIVE_SCAN_ACCEPT_ONLY_ZIP_SPESIFIC

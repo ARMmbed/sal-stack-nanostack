@@ -13,6 +13,9 @@
  */
 #ifndef CCMLIB_H_
 #define CCMLIB_H_
+
+#include "ns_types.h"
+
 /**
  *
  * \file ccmLIB.h
@@ -44,17 +47,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define AES_NO_SECURITY         0x00
-#define AES_SECURITY_LEVEL_MIC32    0x01
-#define AES_SECURITY_LEVEL_MIC64    0x02
-#define AES_SECURITY_LEVEL_MIC128   0x03
-#define AES_SECURITY_LEVEL_ENC      0x04
-#define AES_SECURITY_LEVEL_ENC_MIC32    0x05
-#define AES_SECURITY_LEVEL_ENC_MIC64    0x06
-#define AES_SECURITY_LEVEL_ENC_MIC128   0x07
+#define AES_NO_SECURITY                 0x00    /**< No security */
+#define AES_SECURITY_LEVEL_MIC32        0x01    /**< MIC32 */
+#define AES_SECURITY_LEVEL_MIC64        0x02    /**< MIC64 */
+#define AES_SECURITY_LEVEL_MIC128       0x03    /**< MIC128 */
+#define AES_SECURITY_LEVEL_ENC          0x04    /**< ENC */
+#define AES_SECURITY_LEVEL_ENC_MIC32    0x05    /**< ENC_MIC32 */
+#define AES_SECURITY_LEVEL_ENC_MIC64    0x06    /**< ENC_MIC64 */
+#define AES_SECURITY_LEVEL_ENC_MIC128   0x07    /**< ENC_MIC128 */
 
-#define AES_CCM_ENCRYPT     0x00
-#define AES_CCM_DECRYPT     0x01
+#define AES_CCM_ENCRYPT                 0x00    /**< Encryption mode */
+#define AES_CCM_DECRYPT                 0x01    /**< Decryption mode */
 
 
 /**
@@ -92,13 +95,11 @@ typedef struct {
  * \return 0 When parameter fails or CCM is busy.
  */
 extern ccm_globals_t *ccm_sec_init(uint8_t sec_level, const uint8_t *ccm_key, uint8_t mode, uint8_t ccm_l);
+
 /**
  * \brief A function to run the configured CCM process.
  * When AES_CCM_ENCRYPT mode is selected and MIC is needed, the library saves MIC right after the encrypted data.
- * \param sec_level Used CCM security level (0-7).
- * \param ccm_key Pointer to 128-key.
- * \param mode AES_CCM_ENCRYPT or AES_CCM_DECRYPT.
- * \param ccm_l can be 2 or 3. 2 when NONCE length is 13 and 3 when 12. (NONCE length = (15-ccm_l))
+ * \param ccm_params CCM parameters
  *
  * \return 0 CCM process OK and when AES_CCM_DECRYPT mode was selected also MIC was correct.
  * \return -1 Init not called or data or adata pointers or lengths are zero.

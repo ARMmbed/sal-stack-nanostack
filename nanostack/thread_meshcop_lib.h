@@ -88,6 +88,8 @@
 #define MESHCOP_TLV_PERIOD                                 55
 #define MESHCOP_TLV_DURATION                               56
 #define MESHCOP_TLV_ENERGY_LIST                            57
+#define MESHCOP_TLV_DISCOVERY_REQUEST                      128
+#define MESHCOP_TLV_DISCOVERY_RESPONSE                     129
 
 /**
  * Write array TLV.
@@ -100,6 +102,17 @@
  * \return pointer value for writing the next TLV.
  */
 uint8_t *thread_meshcop_tlv_data_write(uint8_t *ptr, const  uint8_t type, const  uint16_t length, const uint8_t *data);
+
+/**
+ * Write header.
+ *
+ * \param ptr pointer for array where to write the TLV.
+ * \param type Type of TLV.
+ * \param length length of the data that is written in TLV.
+ *
+ * \return pointer value for writing the remaining bytes of network data.
+ */
+uint8_t *thread_meshcop_tlv_data_write_header(uint8_t *ptr, uint8_t type, uint16_t length);
 
 /**
  * Write 1 byte length TLV.

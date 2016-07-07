@@ -12,8 +12,14 @@
  *
  */
 
+/** \file sw_mac.h
+ * \brief Software MAC API.
+ */
+
 #ifndef NS_SW_MAC_H
 #define NS_SW_MAC_H
+
+#include "ns_types.h"
 
 #ifdef __cplusplus
 extern "C" {

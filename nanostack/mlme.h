@@ -12,6 +12,10 @@
  *
  */
 
+/** \file mlme.h
+ * \brief MLME API
+ */
+
 #ifndef MLME_H_
 #define MLME_H_
 

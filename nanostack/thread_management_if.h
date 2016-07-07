@@ -76,10 +76,15 @@ typedef struct link_configuration {
 } link_configuration_s;
 
 /**
- * Security policy options. default is 0;
+ * Security policy options. Default for all is '1';
  */
-#define SECURITY_POLICY_NATIVE_COMMISSIONING_RESTRICTED 0x40/**< Native commissioning is not allowed*/
-#define SECURITY_POLICY_OUT_OF_BAND_COMMISSIONING_RESTRICTED 0x80 /**< out of band commissioning is not allowed*/
+#define SECURITY_POLICY_ALL_SECURITY                            0xff
+#define SECURITY_POLICY_OUT_OF_BAND_COMMISSIONING_ALLOWED       0x80       /**< Obtaining the Master Key for out-of-band commissioning is enabled when this is set. */
+#define SECURITY_POLICY_NATIVE_COMMISSIONING_ALLOWED            0x40       /**< Native Commissioning using PSKc is allowed when this is set. */
+#define SECURITY_POLICY_ALL_ROUTERS_JOIN_ALLOWED                0x20       /**< Thread 1.x Routers are enabled when this is set. */
+#define SECURITY_POLICY_EXTERNAL_COMMISSIONER_ALLOWED           0x10       /**< This indicates that external Commissioner authentication is allowed using PSKc. */
+#define SECURITY_POLICY_BEACON_PAYLOAD_ENABLED                  0x08       /**< Thread 1.x Beacons are enabled when this is set. */
+
 /*
  * Mandatory device information
  *

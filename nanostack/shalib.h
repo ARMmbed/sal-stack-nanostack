@@ -17,7 +17,7 @@
  *
  *  \section sha256-api SHA256 Library API:
  *   There are two ways to calculate SHA256:
- *   1.Calc by given 1 data and length pointer
+ *   1. Calc by given 1 data and length pointer
  *      - SHALIB_SHA256_HASH(), A function to calculate SHA256 for given data.
  *   2. Calc by different data pointer sequence given separately
  *      - SHALIB_init_sha256(), Init SHA registers
@@ -50,12 +50,17 @@
 
 #ifndef SHALIB_H_
 #define SHALIB_H_
+
+#include "ns_types.h"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//Do Not change
+/** Do Not change. */
 #define SHALIB_RING_BUFFER_SIZE 64
+
 /*!
  * \struct prf_sec_param_t
  * \brief PRF 256 stucture
@@ -64,7 +69,7 @@ extern "C" {
 typedef struct {
     const uint8_t *secret;  /**< HMAC security signature pointer. */
     uint8_t sec_len;        /**< HMAC security signature length. */
-    uint8_t label[25]; //25 /**< Label text. */
+    uint8_t label[25];      /**< Label text. */
     uint8_t lablen;         /**< Label text length. */
     const uint8_t *seed;    /**< Seed data. */
     uint8_t seedlen;        /**< Seed data length. */
@@ -79,7 +84,6 @@ typedef struct {
     uint8_t  m_Data[SHALIB_RING_BUFFER_SIZE];   /**< 64-bytes ring buffer for SHA256 operation. */
     uint8_t  m_Read;                            /**< Read pointer to ring buffer. */
     uint8_t  m_Write;                           /**< Write pointer to ring buffer. */
-    uint8_t  m_ReadCount;
     uint32_t SHALIB_pushed_bytes;           /**< Hash total byte coun. t*/
     uint8_t SHALIB_buffered_bytes;          /**< Ring buffer data in. */
     uint32_t areg_temps[8];                 /**< Shalib operation 8 HREG. */

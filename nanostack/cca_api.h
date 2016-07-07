@@ -23,14 +23,17 @@
 #ifndef CCA_API_H_
 #define CCA_API_H_
 
-/* CCA modes */
-#define CCA_RANDOM_IN_RANGE 1
-#define CCA_FHSS            2
+#include "ns_types.h"
 
+/* CCA modes */
+#define CCA_RANDOM_IN_RANGE 1   /**< Random CCA time in given range */
+#define CCA_FHSS            2   /**< Run CCA in FHSS mode */
+
+/** Channel status for callback */
 typedef enum
 {
-    CHANNEL_IDLE,
-    CHANNEL_NOT_IDLE,
+    CHANNEL_IDLE,       /** Channel is free */
+    CHANNEL_NOT_IDLE,   /** Channel is busy */
 } channel_status_e;
 
 /**

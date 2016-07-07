@@ -26,15 +26,15 @@
 extern "C" {
 #endif
 
-/*!
+/**
  * \struct whiteboard_entry_t
  * \brief A structure describing a whiteboarding entry.
  */
 typedef struct whiteboard_entry_t {
-    uint8_t                         address[16];        /*!< Registered IP address. */
-    uint_least24_t                  ttl;                /*!< Whiteboard entry TTL (seconds). */
-    uint8_t                         eui64[8];           /*!< EUI-64 of node that IP address is registered to. */
-    int8_t                          interface_index;
+    uint8_t                         address[16];        /**< Registered IP address. */
+    uint_least24_t                  ttl;                /**< Whiteboard entry TTL (seconds). */
+    uint8_t                         eui64[8];           /**< EUI-64 of node that IP address is registered to. */
+    int8_t                          interface_index;    /**< Interface id */
 } whiteboard_entry_t;
 
 /**

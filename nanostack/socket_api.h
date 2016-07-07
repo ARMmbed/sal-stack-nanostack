@@ -177,11 +177,11 @@ extern "C" {
  */
 
 typedef struct socket_callback_t {
-    uint8_t event_type; /**< Socket Callback Event check list below*/
-    int8_t socket_id; /** Socket id queue which socket cause call back */
-    int8_t interface_id; /** Network Interface ID where Packet came */
-    uint16_t  d_len;  /** Data length if event type is SOCKET_DATA */
-    uint8_t LINK_LQI; /** LINK LQI info if interface cuold give */
+    uint8_t event_type;     /**< Socket Callback Event check list below*/
+    int8_t socket_id;       /**< Socket id queue which socket cause call back */
+    int8_t interface_id;    /**< Network Interface ID where Packet came */
+    uint16_t  d_len;        /**< Data length if event type is SOCKET_DATA */
+    uint8_t LINK_LQI;       /**< LINK LQI info if interface cuold give */
 } socket_callback_t;
 
 /** IPv6 wildcard address IN_ANY */

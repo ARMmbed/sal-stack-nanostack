@@ -12,6 +12,10 @@
  *
  */
 
+/** \file ethernet_mac_api.h
+ * \brief Ethernet MAC API
+ */
+
 #ifndef ETHERNET_MAC_API_H
 #define ETHERNET_MAC_API_H
 

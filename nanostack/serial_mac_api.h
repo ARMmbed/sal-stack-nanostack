@@ -12,6 +12,10 @@
  *
  */
 
+/** \file serial_mac_api.h
+ * \brief Serial MAC API.
+ */
+
 #ifndef SERIAL_MAC_API_H_
 #define SERIAL_MAC_API_H_
 
