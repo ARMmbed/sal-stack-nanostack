@@ -953,16 +953,43 @@ extern int8_t arm_tls_remove_psk_key(uint16_t key_id);
  */
 extern int8_t arm_tls_check_key(uint16_t key_id);
 
+/**
+ * \brief Print routing table
+ *
+ * Prints the routing table to the command line
+ */
 void arm_print_routing_table(void);
 
-/* Same as arm_print_routing_table, but accepts a custom print function */
+/**
+ * \brief Print routing table
+ *
+ * Outputs the routing table using the given printf style function
+ *
+ * \param print_fn pointer to a printf style output function
+ */
 void arm_print_routing_table2(void (*print_fn)(const char *fmt, ...));
 
+/**
+ * \brief Flush neighbor cache
+ *
+ * Flushes the neighbor cache
+ */
 void arm_ncache_flush(void);
 
+/**
+ * \brief Print neighbor cache
+ *
+ * Prints neighbor cache to the command line
+ */
 void arm_print_neigh_cache(void);
 
-/* Same as arm_print_neigh_cache, but accepts a custom print function */
+/**
+ * \brief Print neighbor cache
+ *
+ * Outputs the neighbor cache using the given printf style function
+ *
+ * \param print_fn pointer to a printf style output function
+ */
 void arm_print_neigh_cache2(void (*print_fn)(const char *fmt, ...));
 
 /**

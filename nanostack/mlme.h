@@ -358,7 +358,7 @@ typedef struct mlme_scan_s {
 typedef struct mlme_set_s {
     mlme_attr_t attr;
     uint8_t attr_index;
-    void *value_pointer;
+    const void *value_pointer;
     uint8_t value_size;
 } mlme_set_t;
 

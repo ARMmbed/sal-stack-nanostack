@@ -282,7 +282,7 @@ All data must be read by one call. If data is too long to fit in the supplied bu
 
 ### How to send data to a socket
 
-To transmit data using a socket, the 6LoWPAN Stack offers two different functions depending on the transport layer protocol that is used, as shown in _Table 3-23_.
+To transmit data using a socket, the 6LoWPAN stack offers two different functions depending on the transport layer protocol that is used, as shown in _Table 3-23_.
 
 After successfully calling the function, the application must await the TX process to complete.
 
@@ -332,7 +332,7 @@ Parameter|Description
 
 To send data via a connected socket:
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: A socket connection must be ready before using this function. The stack will automatically use the address of the remote connected host address as the destination for the packet.</span>
+<span class="notes">**Note**: A socket connection must be ready before using this function. The stack will automatically use the address of the remote connected host address as the destination for the packet.</span>
 
 ```
 int8_t socket_send
@@ -479,8 +479,7 @@ Each socket has unique control of the following items:
 
 A socket uses a configured setup until the user changes it with a new function call.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: 
-`SOCKET_IPV6_ADDRESS_SELECT` is only supported when the interface bootstrap address mode is `NET_6LOWPAN_MULTI_GP_ADDRESS`.</span>
+<span class="notes">**Note**: `SOCKET_IPV6_ADDRESS_SELECT` is only supported when the interface bootstrap address mode is `NET_6LOWPAN_MULTI_GP_ADDRESS`.</span>
 
 #### How to set address mode for a socket
 
@@ -509,7 +508,7 @@ Parameter|Description
 `opt_value`|A pointer to `int16_t` value. Valid values are from 0 to 255. -1 is for system default.
 `opt_len`|The size of `int16_t`, 2 bytes.
 
-[RFC 4594](https://tools.ietf.org/html/rfc4594) specifies the appropriate traffic class values. The 6LoWPAN Stack does not interpret the specified traffic class. It is just passed through.
+[RFC 4594](https://tools.ietf.org/html/rfc4594) specifies the appropriate traffic class values. The 6LoWPAN stack does not interpret the specified traffic class. It is just passed through.
 
 ### How to set flow label for a socket
 

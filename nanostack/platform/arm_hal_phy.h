@@ -26,15 +26,16 @@
 extern "C" {
 #endif
 
+/** Interface states */
 typedef enum {
     PHY_INTERFACE_RESET,            /**< Reset PHY driver and set to idle. */
     PHY_INTERFACE_DOWN,             /**< Disable PHY interface driver (RF radio disable). */
     PHY_INTERFACE_UP,               /**< Enable PHY interface driver (RF radio receiver ON). */
-    PHY_INTERFACE_RX_ENERGY_STATE, /**< Enable wirless interface ED scan mode. */
+    PHY_INTERFACE_RX_ENERGY_STATE,  /**< Enable wireless interface ED scan mode. */
     PHY_INTERFACE_SNIFFER_STATE     /**< Enable sniffer mode. */
 } phy_interface_state_e;
 
-
+/** TX process return codes */
 typedef enum {
     PHY_LINK_TX_DONE,           /**< TX process ready and ACK RX. */
     PHY_LINK_TX_DONE_PENDING,   /**< TX process OK with ACK pending flag. */
@@ -43,7 +44,7 @@ typedef enum {
     PHY_LINK_CCA_FAIL,          /**< RF link CCA process fail. */
 } phy_link_tx_status_e;
 
-
+/** Extension types */
 typedef enum {
     PHY_EXTENSION_CTRL_PENDING_BIT, /**< Control MAC pending bit for indirect data. */
     PHY_EXTENSION_READ_LAST_ACK_PENDING_STATUS, /**< Read status if the last ACK is still pending. */
@@ -53,6 +54,7 @@ typedef enum {
     PHY_EXTENSION_CONVERT_SIGNAL_INFO, /**< Convert signal info. */
 } phy_extension_type_e;
 
+/** Address types */
 typedef enum {
     PHY_MAC_48BIT, /**< IPv4/IPv6/BLE link layer address for Ethernet. This is optional. */
     PHY_MAC_64BIT, /**< RF/PLC link layer address. */
@@ -60,6 +62,7 @@ typedef enum {
     PHY_MAC_PANID, /**< RF interface 16-Bit PAN-ID. */
 } phy_address_type_e;
 
+/** PHY types */
 typedef enum phy_link_type_e {
     PHY_LINK_ETHERNET_TYPE,         /**< Standard IEEE 802 Ethernet. */
     PHY_LINK_15_4_2_4GHZ_TYPE,      /**< Standard 802.15.4 2.4GHz radio. */
@@ -68,6 +71,7 @@ typedef enum phy_link_type_e {
     PHY_LINK_SLIP,                  /**< Generic SLIP driver which just forward SLIP payload */
 } phy_link_type_e;
 
+/** Data layers */
 typedef enum data_protocol_e {
     LOCAL_SOCKET_DATA = 0,          /**< 6LoWPAN library local socket data. */
     INTERFACE_DATA = 1,             /**< 6LoWPAN library interface internal used protocol. */
@@ -76,13 +80,14 @@ typedef enum data_protocol_e {
     UNKNOWN_PROTOCOL = 4            /**< Non-supported protocol ID. */
 } data_protocol_e;
 
-
+/** Requested data layer */
 typedef enum driver_data_request_e {
     PHY_LAYER_PAYLOAD_DATA_FLOW,    /**< PHY layer data. */
     IPV6_DATAGRAMS_DATA_FLOW,       /**< IP layer data or TUN driver request data. */
 } driver_data_request_e;
 
-/**
+/** \brief Signal info types.
+ *
  * Types of signal quality indication desired by various link protocols. Some are
  * really statistical, but a driver should ideally be able to create an estimate
  * based on its LQI/DBM numbers, for example to bootstrap a statistic calculation.
@@ -93,6 +98,7 @@ typedef enum phy_signal_info_type_e {
     PHY_SIGNAL_INFO_LINK_MARGIN,    /**< Link margin, unsigned 16-bit fixed-point dB*256, [0..255], for example Thread routing draft. */
 } phy_signal_info_type_e;
 
+/** Signal level info */
 typedef struct phy_signal_info_s {
     phy_signal_info_type_e type;    /**< Signal info type desired. */
     uint8_t lqi;                    /**< Quality passed to arm_net_phy_rx. */
@@ -100,43 +106,48 @@ typedef struct phy_signal_info_s {
     uint16_t result;                /**< Resulting signal information. */
 } phy_signal_info_s;
 
+/** PHY modulation scheme */
 typedef enum phy_modulation_e
 {
-    M_OFDM,
-    M_OQPSK,
-    M_BPSK,
-    M_GFSK,
-    M_UNDEFINED
+    M_OFDM,     ///< QFDM
+    M_OQPSK,    ///< OQPSK
+    M_BPSK,     ///< BPSK
+    M_GFSK,     ///< GFSK
+    M_UNDEFINED ///< UNDEFINED
 } phy_modulation_e;
 
+/** Channel page numbers */
 typedef enum
 {
-    CHANNEL_PAGE_0 = 0,
-    CHANNEL_PAGE_1 = 1,
-    CHANNEL_PAGE_2 = 2,
-    CHANNEL_PAGE_3 = 3,
-    CHANNEL_PAGE_4 = 4,
-    CHANNEL_PAGE_5 = 5,
-    CHANNEL_PAGE_6 = 6,
-    CHANNEL_PAGE_9 = 9,
-    CHANNEL_PAGE_10 = 10
+    CHANNEL_PAGE_0 = 0,     ///< Page 0
+    CHANNEL_PAGE_1 = 1,     ///< Page 1
+    CHANNEL_PAGE_2 = 2,     ///< Page 2
+    CHANNEL_PAGE_3 = 3,     ///< Page 3
+    CHANNEL_PAGE_4 = 4,     ///< Page 4
+    CHANNEL_PAGE_5 = 5,     ///< Page 5
+    CHANNEL_PAGE_6 = 6,     ///< Page 6
+    CHANNEL_PAGE_9 = 9,     ///< Page 9
+    CHANNEL_PAGE_10 = 10    ///< Page 10
 } channel_page_e;
 
+/** Channel configuration */
 typedef struct phy_rf_channel_configuration_s
 {
-    uint32_t channel_0_center_frequency;
-    uint32_t channel_spacing;
-    uint32_t datarate;
-    uint16_t number_of_channels;
-    phy_modulation_e modulation;
+    uint32_t channel_0_center_frequency;    ///< Center frequency
+    uint32_t channel_spacing;               ///< Channel spacing
+    uint32_t datarate;                      ///< Data rate
+    uint16_t number_of_channels;            ///< Number of channels
+    phy_modulation_e modulation;            ///< Modulation scheme
 } phy_rf_channel_configuration_s;
 
+/** Channel page configuration */
 typedef struct phy_device_channel_page_s
 {
-    channel_page_e channel_page;
-    const phy_rf_channel_configuration_s *rf_channel_configuration;
+    channel_page_e channel_page;            ///< Channel page
+    const phy_rf_channel_configuration_s *rf_channel_configuration; ///< Pointer to channel configuration
 } phy_device_channel_page_s;
 
+/** Virtual data request */
 typedef struct virtual_data_req_s {
     uint16_t parameter_length;
     uint8_t *parameters;
@@ -183,7 +194,7 @@ typedef int8_t arm_net_virtual_rx_fn(const uint8_t *data_ptr, uint16_t data_len,
  */
 typedef int8_t arm_net_virtual_tx_fn(const virtual_data_req_t *data_req,int8_t driver_id);
 
-
+/** Device driver structure */
 typedef struct phy_device_driver_s
 {
     phy_link_type_e link_type;                                      /**< Define driver types. */
@@ -197,19 +208,18 @@ typedef struct phy_device_driver_s
     int8_t (*tx)(uint8_t *, uint16_t, uint8_t, data_protocol_e);    /**< Function pointer for PHY driver write operation. */
     int8_t (*address_write)(phy_address_type_e , uint8_t *);        /**< Function pointer for PHY driver address write. */
     int8_t (*extension)(phy_extension_type_e, uint8_t *);           /**< Function pointer for PHY driver extension control. */
-    const phy_device_channel_page_s *phy_channel_pages;
+    const phy_device_channel_page_s *phy_channel_pages;             /**< Pointer to channel page list */
 
-    //Upper layer callbacks, set with arm_net_phy_init();
-    arm_net_phy_rx_fn *phy_rx_cb;
-    arm_net_phy_tx_done_fn *phy_tx_done_cb;
+    //Upper layer callbacks, set with arm_net_phy_register();
+    arm_net_phy_rx_fn *phy_rx_cb;                                   /**< PHY RX callback. Initialized by \ref arm_net_phy_register(). */
+    arm_net_phy_tx_done_fn *phy_tx_done_cb;                         /**< Transmission done callback. Initialized by \ref arm_net_phy_register(). */
     //Virtual upper data rx
-    arm_net_virtual_rx_fn *arm_net_virtual_rx_cb;
-    arm_net_virtual_tx_fn *arm_net_virtual_tx_cb;
+    arm_net_virtual_rx_fn *arm_net_virtual_rx_cb;                   /**< Virtual RX callback. Initialized by \ref arm_net_phy_register(). */
+    arm_net_virtual_tx_fn *arm_net_virtual_tx_cb;                   /**< Virtual TX callback. Initialized by \ref arm_net_phy_register(). */
     uint16_t tunnel_type; /**< Tun driver type. */
 } phy_device_driver_s;
 
 
-/** Net Library PHY Interface API*/
 /**
  * \brief This function registers the device driver to stack.
  *
@@ -266,9 +276,9 @@ extern int arm_net_phy_rf_type(int8_t id);
 extern uint16_t arm_net_phy_mtu_size(int8_t id);
 
 /**
- * \brief Un register driver from storage.
+ * \brief Unregister the driver from storage.
  *
- * \param  id driver id
+ * \param driver_id driver id
  *
  */
 extern void arm_net_phy_unregister(int8_t driver_id);

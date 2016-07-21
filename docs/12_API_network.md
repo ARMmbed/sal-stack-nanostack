@@ -41,7 +41,7 @@ To use the Network Layer Control APIs, include the following headers:
 
 This section describes the functions of the network control layer where each function is presented with its valid parameters.
 
-The 6LoWPAN Stack contains the features and related functions shown in _Table 3-13_.
+The 6LoWPAN stack contains the features and related functions shown in _Table 3-13_.
 
 **Table 3-13 The network control API features and related functions**
 
@@ -231,7 +231,7 @@ Two hopping modes:
 	* Frequency hopping mode.
 	* After the network scan, the node synchronizes to the best available network and starts continuous channel hopping using a predefined channel list.
 
-By default, the 6LoWPAN Stack uses the single channel mode. 
+By default, the 6LoWPAN stack uses the single channel mode. 
 
 To enable the FHSS mode:
 
@@ -373,7 +373,7 @@ Member|Description
 
 ### Beacon protocol ID filter
 
-During an active 802.15.4 MAC scan, the 6LoWPAN Stack transmits MAC beacon requests to the pre-defined channels. If it receives a beacon, it will filter the beacon by using the protocol ID (this filter is disabled by default).
+During an active 802.15.4 MAC scan, the 6LoWPAN stack transmits MAC beacon requests to the pre-defined channels. If it receives a beacon, it will filter the beacon by using the protocol ID (this filter is disabled by default).
 
 To set the protocol ID filter:
 
@@ -664,7 +664,7 @@ The value `0x00` disables the MLE for bootstrap.
 <dd>>=0 The bootstrap mode is set OK.</dd>
 <dd>-1 An unknown network ID.</dd>
 <dd>-2 An unsupported bootstrap type in this stack.</dd>
-<dd>-3 No memory for a 6LoWPAN Stack.</dd>
+<dd>-3 No memory for a 6LoWPAN stack.</dd>
 <dd>-4 A <code>NULL</code> pointer parameter.</dd>
 </dl>
 
@@ -674,7 +674,7 @@ If the application wants to save power and enter sleep, the network mode should 
 
 All configuration calls (such as channel selection) must be performed before calling `arm_nwk_interface_up()`.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: After successfully calling the `arm_nwk_interface_up()` function, the application must wait for the `ARM_LIB_NWK_INTERFACE_EVENT` status event from the stack before proceeding to perform another communications stack related function.</span>
+<span class="notes">**Note**: After successfully calling the `arm_nwk_interface_up()` function, the application must wait for the `ARM_LIB_NWK_INTERFACE_EVENT` status event from the stack before proceeding to perform another communications stack related function.</span>
 
 ### IPv6 bootstrap configure
 
@@ -931,7 +931,7 @@ Parameter|Description
 
 ## Network sleep control API
 
-If the application wants to save power, the 6LoWPAN Stack can enter sleep state by calling the `arm_net_enter_sleep()` function. 
+If the application wants to save power, the 6LoWPAN stack can enter sleep state by calling the `arm_net_enter_sleep()` function. 
 Sleep functionality is supported when the 6LoWPAN bootstrap mode is `NET_6LOWPAN_HOST` or `NET_6LOWPAN_SLEEPY_HOST`.
 
 The following reference implementation for a "bare-metal" (no OS) port shows an implementation of idle that provides full sleep 
@@ -1604,7 +1604,7 @@ Member|Description
 
 Use this API to change the 6LoWPAN ND bootstrap parameters.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
+<span class="notes">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
 
 For future compatibility, to support extensions to this structure:
 
@@ -1695,7 +1695,7 @@ Member|Description
 
 Use this API to change the PANA module parameters.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
+<span class="notes">**Note**: This function should be called after `net_init_core()` and definitely before creating any 6LoWPAN interface.</span>
 
 For future compatibility, to support extensions to this structure:
 
@@ -1879,11 +1879,11 @@ Member|Description
 
 This section introduces functions for multicasting where data can be forwarded to several devices within the network and what devices are included is subject to the multicast scope. For example, a link local multicast is sent to neighbors and cannot be forwarded. However, a site local multicast can be forwarded with a trickle throughout the network and can travel through to the border router. See more on the [Trickle Algorithm](https://tools.ietf.org/html/rfc6206).
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: The site local multicast is the only multicast scope that can be routed through the border router.</span>
+<span class="notes">**Note**: The site local multicast is the only multicast scope that can be routed through the border router.</span>
 
 The multicast API can be used to subscribe and unsubscribe different multicast groups and can change the trickle multicast parameters. The multicast parameters are set and changed using the function `multicast_set_parameters()`where multicast groups are managed using the function calls `multicast_add_address()` and `multicast_free_address()`.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note:**
+<span class="notes">**Note:**
 - Only multicast addresses are accepted.
 - Trickle forwarding cannot be used with link local addresses.
 - The maximum number of multicast groups is 100 where including multicast groups consumes memory allocated by the 6LoWPAN stack.</span>
@@ -1912,7 +1912,7 @@ Parameter|Description
 `timer_expirations`|Number if trickle timer expires before terminating the trickle process.
 `window_expiration`|Time window state is kept after the trickle process has ended in 50ms resolution.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: If the `window_expiration` value is set too small, an infinite retransmission loop can occur when using the trickle multicast.</span>
+<span class="notes">**Note**: If the `window_expiration` value is set too small, an infinite retransmission loop can occur when using the trickle multicast.</span>
 
 ### Add a new address to a multicast group
 

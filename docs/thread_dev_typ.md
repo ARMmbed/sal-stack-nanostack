@@ -5,9 +5,9 @@ Thread network device types and roles
 
 The different device types within a Thread network are described in the subsequent sections.
 
-### Border Routers
+### Border routers
 
-A Border Router is a specific type of a router that provides connectivity from the 802.15.4 network to adjacent networks on other physical layers (for example, WiFi and Ethernet). Border Routers provide services for devices within the 802.15.4 network, including routing services for off-network operations. There may be one or more Border Routers in a Thread network.
+A border router is a specific type of a router that provides connectivity from the 802.15.4 network to adjacent networks on other physical layers (for example, WiFi and Ethernet). Border routers provide services for devices within the 802.15.4 network, including routing services for off-network operations. There may be one or more border routers in a Thread network.
 
 ### Routers
 

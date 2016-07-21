@@ -19,11 +19,16 @@ Option Name | Features supported | Current binary size v2.1.13
 `thread_border_router` |  Thread router device with border router capability. | 320 kB
 `thread_router` | Thread host with routing capability. | 302 kB
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note:** The binary sizes have been estimated using GCC toolchains on Linux by the time of writing this document.
-They will differ based on the toolchains or the status of the repository.
-The final size can only be estimated when linking the final application. The indicated size only gives you a guideline of what kind of changes to expect between different options.</span>
+<span class="notes">**Note:** The binary sizes have been estimated using GCC toolchains on Linux by the time of writing this document.
+They will differ based on the toolchains or the status of the repository. The final size can only be estimated when linking the final application. The indicated size only gives you a guideline of what kind of changes to expect between different options.</span>
 
-## Using configuration option on mbed OS
+## Using configuration option on mbed OS 5.0
+
+For mbed OS 5.0, there will be only one binary module available. This is a temporary solution for mbed OS 5.0 toolchain and will be updated to support multiple configurations later.
+
+The binary module for mbed OS 5.0 follows the `mbedOS` configuration.
+
+## Using configuration option on mbed OS 3.0
 
 When using the Nanostack yotta module, you need to select the configuration option through the [yotta configuration system](http://yottadocs.mbed.com/reference/config.html).
 
@@ -43,7 +48,7 @@ Currently, none of the targets sets Nanostack options, so this needs to be done 
 
 ## Using configuration option in Nanomesh/bare-metal
 
-Build the Nanostack using the `CONFIG` option for make.
+Build Nanostack using the `CONFIG` option for make.
 
 For example:
 ~~~~

@@ -27,7 +27,9 @@ extern "C" {
 
 #ifndef HAVE_TOPO_TRACE
 /* Use DUMMY functions if not required. */
+/** \cond DOXYGEN_IGNORE */
 #define topo_trace(type, address, update_type) ((void) 0)
+/** \endcond */
 
 #else /* HAVE_TOPO_TRACE */
 

@@ -4,7 +4,7 @@ This chapter describes the timer functionality.
 
 If an application requires a timer, it can allocate one with the `eventOS_event_timer_request( )` function. Further to a successful allocation, the system timer event occurs.
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note**: The library supports dynamic timer count at the application layer. The stack can multiplex a single timer for multiple purposes.</span>
+<span class="notes">**Note**: The library supports dynamic timer count at the application layer. The stack can multiplex a single timer for multiple purposes.</span>
 
 ## API Headers
 

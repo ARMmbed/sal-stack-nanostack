@@ -14,9 +14,9 @@ This chapter discusses the networking topology and the protocols used. It contai
 
 ## Networking topology
 
-The 6LoWPAN Stack uses two types of networking topology, namely the star and tree topologies, as shown in _Figure 1-5_.
+The 6LoWPAN stack uses two types of networking topology, namely the star and tree topologies, as shown in _Figure 1-5_.
 
-**Figure 1-5 Networking topologies supported by the 6LoWPAN Stack ecosystem**
+**Figure 1-5 Networking topologies supported by the 6LoWPAN stack ecosystem**
 
 ![nw-topologies](img/6lowpan_stack_networking_topologies.png)
 
@@ -28,14 +28,14 @@ The MAC implements the non-beacon enabled modes of the standard. It does not imp
 
 ## UDP
 
-The 6LoWPAN Stack supports the UDP transport protocol. Applications can use the Socket API to send and receive data using UDP sockets. UDP is typically used by applications to deliver short messages over IP. It is an unreliable, connectionless protocol, but can be used for broadcast and multicast messages. The advantage of UDP is that it does not require any kind of connection formation or handshake process to take place prior to communication. UDP is the classic fire-and-forget transport mechanism that combines inherent low reliability, requiring minimal overhead.
+The 6LoWPAN stack supports the UDP transport protocol. Applications can use the Socket API to send and receive data using UDP sockets. UDP is typically used by applications to deliver short messages over IP. It is an unreliable, connectionless protocol, but can be used for broadcast and multicast messages. The advantage of UDP is that it does not require any kind of connection formation or handshake process to take place prior to communication. UDP is the classic fire-and-forget transport mechanism that combines inherent low reliability, requiring minimal overhead.
 
 A disadvantage of UDP can easily be mitigated by using a simple application layer, end-to-end acknowledgment scheme. As an efficient and scalable example of such a solution, see the _Constrained Application Protocol_
 (CoAP) _Acknowledgement_ (ACK) mechanism as defined in [CoAP](http://tools.ietf.org/html/rfc7252).
 
 ## TCP
 
-The 6LoWPAN Stack supports the _Transmission Control Protocol_ (TCP) and applications can use the socket interface APIs of the stack to send and receive data using TCP sockets. Applications requiring a reliable, ordered transport for a stream of bytes can typically use TCP. However, TCP is not suitable for every application because it only supports unicast communication and reacts badly to packet loss. TCP is not suitable for very short transactions because the ratio of overhead to application data typically increases fairly quickly. Additionally, the use of TCP can have very adverse effects on the power consumption of a device because of the duration of the TCP handshake process.
+The 6LoWPAN stack supports the _Transmission Control Protocol_ (TCP) and applications can use the socket interface APIs of the stack to send and receive data using TCP sockets. Applications requiring a reliable, ordered transport for a stream of bytes can typically use TCP. However, TCP is not suitable for every application because it only supports unicast communication and reacts badly to packet loss. TCP is not suitable for very short transactions because the ratio of overhead to application data typically increases fairly quickly. Additionally, the use of TCP can have very adverse effects on the power consumption of a device because of the duration of the TCP handshake process.
 
 ## RPL routing
 
@@ -43,7 +43,7 @@ _Routing Protocol for Low power and Lossy networks_ (RPL) is a distance vector I
 
 ## Network join process
 
-The developer has full control as to when the 6LoWPAN Stack attempts to join a network. The developer has the possibility to configure a channel, _Personal Area Network Identifier_ (PANID) and 128-bit _Network Identifier_ (NWKID) masks to filter out both unwanted channels or networks. With a few simple function calls the developer can inform the stack to initiate either a passive energy scan or a beacon scan to select channels. Network PANIDs and NWKIDs will be filtered and non-matching networks will be silently discarded. The stack will then proceed to perform the network level bootstrapping according to [6LOWPAN-ND](https://datatracker.ietf.org). When the stack joins a network or no network is found, the developer is notified using a standard system event. If the stack has not joined a network, the developer has the option to 1) select alternative parameters; 2) cease further attempts to join a network or 3) continue to retry the joining process. The stack will make no attempt to join a network when it informs the application layer of an unsuccessful attempt. However, the stack may choose to retry using the initial parameters.
+The developer has full control as to when the 6LoWPAN stack attempts to join a network. The developer has the possibility to configure a channel, _Personal Area Network Identifier_ (PANID) and 128-bit _Network Identifier_ (NWKID) masks to filter out both unwanted channels or networks. With a few simple function calls the developer can inform the stack to initiate either a passive energy scan or a beacon scan to select channels. Network PANIDs and NWKIDs will be filtered and non-matching networks will be silently discarded. The stack will then proceed to perform the network level bootstrapping according to [6LOWPAN-ND](https://datatracker.ietf.org). When the stack joins a network or no network is found, the developer is notified using a standard system event. If the stack has not joined a network, the developer has the option to 1) select alternative parameters; 2) cease further attempts to join a network or 3) continue to retry the joining process. The stack will make no attempt to join a network when it informs the application layer of an unsuccessful attempt. However, the stack may choose to retry using the initial parameters.
 
 **Figure 1-6 High level view of the network bootstrap process when using network authentication**
 
@@ -55,7 +55,7 @@ The initial process of joining a network involves a MAC level association where 
 
 Subsequently, a node in a 6LoWPAN mesh network initiates the _6LoWPAN Neighbor Discovery_ (6LoWPAN-ND) process. The neighbor discovery protocol handles address assignment including _Duplicate Address Detection_ (DAD) and registration with the edge router. The edge router keeps a whiteboard of all nodes that have joined the 6LoWPAN network. In a 6LoWPAN mesh, the registration process is repeated over multiple hops for routers or host devices that are not adjacent to the edge router. The RPL is only for the router.
 
-The last step, excluding anything above the RPL modules, is the RPL topology formation. The RPL DODAG formation is a multiphase process where the joining node actively attempts to find the best available parent to use for registration to the _6LoWPAN Border Router_ (6LBR).
+The last step, excluding anything above the RPL modules, is the RPL topology formation. The RPL DODAG formation is a multiphase process where the joining node actively attempts to find the best available parent to use for registration to the _6LoWPAN border router_ (6LBR).
 
 _Figure 1-7_ shows the _6LoWPAN Node_ (6LN) join process to a 6LBR using a _6LoWPAN Router_ (6LR) in a mesh topology configuration. In the illustration, the vertical axis represents time. The 6LN will typically receive multiple
 _Router Advertisement_ (RA) messages.
@@ -70,9 +70,7 @@ _Router Advertisement_ (RA) messages.
 
 _Figure 1-9_ shows the RPL layer registration and topology formation process message flow for a scenario where the joining node may use multiple hops from the 6LBR.
 
-**Note**
-
-The joining device can receive multiple DIO messages.
+<span class="notes">**Note**: The joining device can receive multiple DIO messages.</span>
 
 **Figure 1-9 RPL routing layer message flow for multiple hops**
 
@@ -88,9 +86,7 @@ The joining process for a node in a 6LoWPAN star network uses the same process a
 
 _Figure 1-11_ shows the _Wireless Personal Area Network_ (WPAN) node (6LN) join process to a 6LBR in a star topology configuration. In the illustration, the vertical axis represents time.
 
-**Note**
-
-Typically the 6LN will receive multiple RA messages.
+<span class="notes">**Note**: Typically the 6LN will receive multiple RA messages.</span>
 
 **Figure 1-11 6LoWPAN join process to a border router**
 
@@ -98,9 +94,7 @@ Typically the 6LN will receive multiple RA messages.
 
 Figure 1-12_ shows the RPL layer registration and topology formation process message sequence for a scenario where the joining node is a single hop from the 6LBR.
 
-**Note**
-
-The joining device can receive multiple DIO messages.
+<span class="notes">**Note**: The joining device can receive multiple DIO messages.</span>
 
 **Figure 1-12 The RPL layer registration formation process**
 
@@ -108,7 +102,7 @@ The joining device can receive multiple DIO messages.
 
 ## Network rejoin process
 
-If a device with the 6LoWPAN Stack is forced into sleep mode for an extended period of time so that its registration with the 6LBR has expired, the stack will automatically detect this and update its registration. The stack is then ready for communication without any further action from the application when the device wakes up.
+If a device with the 6LoWPAN stack is forced into sleep mode for an extended period of time so that its registration with the 6LBR has expired, the stack will automatically detect this and update its registration. The stack is then ready for communication without any further action from the application when the device wakes up.
 
 The exact time that it takes for the stack to refresh the registration depends on whether a full mesh network topology or a star topology is used. Additionally, in the mesh network scenario the exact location of the device (depth from the 6LBR to be specific) in the mesh has a small impact on the time when full networking capabilities are restored.
 
@@ -116,7 +110,7 @@ The exact time that it takes for the stack to refresh the registration depends o
 
 It is fairly common for the RF channel to change even if the physical location of the actual mesh network has not. The network must then adapt to the new channel immediately and with ease.
 
-The standards that the 6LoWPAN Stack uses provide feedback from multiple protocol layers, such as, the MAC, network, and routing layers. This multiple layer approach provides the stack with numerous sources of information that can be used to make automatic decisions as to when network reconfiguration can be initiated. It can also be delivered to other devices in the IP network using standard _Internet Control Message Protocol_ (ICMP)v6 messages. More specifically, these messages can either be ICMPv6 Destination Unreachable or No Route To Host types.
+The standards that the 6LoWPAN stack uses provide feedback from multiple protocol layers, such as, the MAC, network, and routing layers. This multiple layer approach provides the stack with numerous sources of information that can be used to make automatic decisions as to when network reconfiguration can be initiated. It can also be delivered to other devices in the IP network using standard _Internet Control Message Protocol_ (ICMP)v6 messages. More specifically, these messages can either be ICMPv6 Destination Unreachable or No Route To Host types.
 
 ### MAC layer
 

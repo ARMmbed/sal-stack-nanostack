@@ -1,8 +1,8 @@
 # Platform API
 
-Platform API is the base where the 6LoWPAN Stack runs. It is the separation between the actual hardware or operating system and the 6LoWPAN Stack itself. This is the first layer to study to port the 6LoWPAN Stack to a new platform.
+Platform API is the base where the 6LoWPAN stack runs. It is the separation between the actual hardware or operating system and the 6LoWPAN stack itself. This is the first layer to study to port the 6LoWPAN stack to a new platform.
 
-The most important parts of the Platform API are the timers and critical section functions. These are required for the event-based stack to start up and run.
+The most important parts of Platform API are the timers and critical section functions. These are required for the event-based stack to start up and run.
 
 ## API Headers
 
@@ -21,7 +21,7 @@ _Table 3-1_ lists the scopes of the Platform API functions.
 
 Scope|API responsibility
 -----|------------------
-Critical section|The 6LoWPAN Stack uses the Platform API to signal that a device is about to enter or exit a critical section where interruptions are not tolerated.<br><b>Functions:</b><br><code>platform_enter_critical()</code><br><code>platform_exit_critical()</code>
+Critical section|The 6LoWPAN stack uses the Platform API to signal that a device is about to enter or exit a critical section where interruptions are not tolerated.<br><b>Functions:</b><br><code>platform_enter_critical()</code><br><code>platform_exit_critical()</code>
 Idle and sleep functions|The 6LoWPAN stack signals a possible idle or sleep condition. This part of the API is used to manage the power consumption of a processor core and radio drivers.<br><b>Functions prefixed with:</b><br><code>eventOS_scheduler</code>
 Random number generation|The 6LoWPAN stack relies on platform drivers to generate random numbers.<br><b>Functions prefixed with:</b><br><code>platform_random</code>
 Timers|The eventing system requires timers to be implemented on platform drivers.<br><b>Functions prefixed with:</b><br><code>eventOS_event_timer</code>

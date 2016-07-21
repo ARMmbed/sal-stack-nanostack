@@ -406,7 +406,7 @@ uint16_t app_nvm_pana_update(pana_nvm_update_process_t update_type )
        }
 }
 ```
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Note:** The previous example assumes that the user provides the functions `store_server_key()`, `store_new_session()`, `update_session()`, `update_session_data()` and `remove_session()`.</span>
+<span class="notes">**Note:** The previous example assumes that the user provides the functions `store_server_key()`, `store_new_session()`, `update_session()`, `update_session_data()` and `remove_session()`.</span>
 
 When the server starts, it uses the following API to restore the previous server keys:
 

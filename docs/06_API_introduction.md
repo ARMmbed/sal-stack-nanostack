@@ -1,7 +1,7 @@
 API Introduction
 ============
 
-Thread protocol is a wrapping around the IPv6/6LoWPAN stack, and it is capable to work stand-alone in bare-metal implementations. In subsequent chapters of this manual, we walk through the base of the networking stack that is IPv6/6LoWPAN and proceed further to Thread. 
+Thread protocol is a wrapping around the IPv6/6LoWPAN stack, and it is capable to work stand-alone in bare-metal implementations. In subsequent chapters of this manual, we walk through the base of the networking stack that is IPv6/6LoWPAN and proceed further to Thread.
 
 **Figure 3-1 High level API interfaces over Networking stack**
 
@@ -27,7 +27,7 @@ The 6LoWPAN stack provides application designers with interfaces for sending and
 
 The 6LoWPAN stack relies on two interfaces that must be ported to run it on a specific platform. Platform API defines an abstraction layer of the underlying microcontrollers or operating system. For more information on the Platform API, see section _Platform API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
 
-PHY driver API is an abstraction between the driver and the 6LoWPAN stack and allows 6LoWPAN network to be formed on any 802.15.4 compatible or similar radio chip. The PHY driver API is not limited to only radio chips, even serial communication may be used. For more information on the PHY driver API, see section _Device driver API_ in chapter [_Porting 6LoWPAN Stack_](16_API_porting.md).
+PHY driver API is an abstraction between the driver and the 6LoWPAN stack and allows 6LoWPAN network to be formed on any 802.15.4 compatible or similar radio chip. The PHY driver API is not limited to only radio chips, even serial communication may be used. For more information on the PHY driver API, see [_Device Driver API_](driver_api.md).
 
 For more information on the 6LoWPAN stack architecture, and the protocol and application modules used by the 6LoWPAN stack, see [_ARM mbed 6LoWPAN Stack Overview_](01_overview.md).
 

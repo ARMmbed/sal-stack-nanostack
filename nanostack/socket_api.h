@@ -399,12 +399,10 @@ extern int8_t socket_read_session_address(int8_t socket, ns_address_t *address);
 /** Specify flow label for outgoing packets, as int32_t; valid values 0-0xfffff, or -1 for system default, or -2 to always autogenerate */
 #define SOCKET_IPV6_FLOW_LABEL              7
 
-#define SOCKET_BROADCAST_PAN                0xfc /** Internal use - transmit with IEEE 802.15.4 broadcast PAN ID */
-#define SOCKET_LINK_LAYER_SECURITY          0xfd /** Not standard enable or disable socket security at link layer (For 802.15.4). */
-
-#define SOCKET_INTERFACE_SELECT             0xfe /** Not standard socket interface ID. */
-/** Deprecated - use SOCKET_IPV6_ADDR_PREFERENCES instead. */
-#define SOCKET_IPV6_ADDRESS_SELECT          0xff /** Not standard Socket address mode. */
+#define SOCKET_BROADCAST_PAN                0xfc /**< Internal use - transmit with IEEE 802.15.4 broadcast PAN ID */
+#define SOCKET_LINK_LAYER_SECURITY          0xfd /**< Not standard enable or disable socket security at link layer (For 802.15.4). */
+#define SOCKET_INTERFACE_SELECT             0xfe /**< Not standard socket interface ID. */
+#define SOCKET_IPV6_ADDRESS_SELECT          0xff /**< Deprecated - use SOCKET_IPV6_ADDR_PREFERENCES instead. */
 ///@}
 
 /**

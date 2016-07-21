@@ -14,17 +14,17 @@ This chapter introduces the dynamic memory API of the 6LoWPAN stack. It contains
 
 ## About dynamic memory API
 
-This section introduces the dynamic memory API of the 6LoWPAN Stack. Using this API, the application can specify the size of the 6LoWPAN Stack heap to minimize the _Random Access Memory_ (RAM) usage.
+This section introduces the dynamic memory API of the 6LoWPAN stack. Using this API, the application can specify the size of the 6LoWPAN stack heap to minimize the _Random Access Memory_ (RAM) usage.
 
 It is not recommended to use heap size less than 2.5KB since the reliability of transmitting full-size packets will become compromised.
 
 Depending on the network configuration and topology, a higher heap size is recommended.
 
-The application can also allocate memory from the 6LoWPAN Stack heap and receive failure reports in case of usage errors.
+The application can also allocate memory from the 6LoWPAN stack heap and receive failure reports in case of usage errors.
 
 ## Initialization, allocation and freeing
 
-This section describes several APIs that allow you to initialize the 6LoWPAN Stack memory block and allocate memory from the initialized block.
+This section describes several APIs that allow you to initialize the 6LoWPAN stack memory block and allocate memory from the initialized block.
 
 ### Dynamic memory initialization
 
@@ -45,7 +45,7 @@ Parameter|Description
 
 ### Dynamic memory temporary allocation
 
-To allocate memory temporarily from the 6LoWPAN Stack heap, use the following function call:
+To allocate memory temporarily from the 6LoWPAN stack heap, use the following function call:
 
 ```
 void *ns_dyn_mem_temporary_alloc
@@ -66,7 +66,7 @@ Parameter|Description
 
 ### Dynamic memory long period allocation
 
-To allocate memory from the 6LoWPAN Stack heap for longer-term use, use the following function call:
+To allocate memory from the 6LoWPAN stack heap for longer-term use, use the following function call:
 
 ```
 void *ns_dyn_mem_alloc
@@ -102,11 +102,11 @@ Parameter|Description
 
 ## Failure callback and reporting 
 
-With the failure callback and delivered failure report, a developer can debug possible usage errors with the 6LoWPAN Stack dynamic memory.
+With the failure callback and delivered failure report, a developer can debug possible usage errors with the 6LoWPAN stack dynamic memory.
 
 ### Dynamic memory failure callback
 
-To set a callback function for the heap failure report of the 6LoWPAN Stack, use the following function:
+To set a callback function for the heap failure report of the 6LoWPAN stack, use the following function:
 
 ```
 void ns_dyn_mem_heap_fail_callback
