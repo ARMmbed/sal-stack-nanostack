@@ -17,7 +17,7 @@ retransmisson of the packet.
 
 ![Datarate](img/bw.png)
 
-<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Rule of thumb:** The bandwidth per node is divided by the number of nodes in the network and the number of hops.</span>
+<span style="background-color:#E6E6E6;border:1px solid #000;display:block; height:100%; padding:10px">**Rule of thumb:** The bandwidth, ***BW<sub>i</sub>***, per node is the overall bandwidth (or data rate), ***BW***, divided by the number of nodes, ***N***, in the network and the number of hops, ***hops<sub>i</sub>***.</span>
 
 ### FHSS
 
