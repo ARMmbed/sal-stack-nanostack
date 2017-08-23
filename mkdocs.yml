@@ -32,5 +32,8 @@ pages:
 - ['15_API_debug.md','API Reference Manual', 'Network Debug Statistics API']
 - ['thread_APIs.md','API Reference Manual', 'Thread Stack APIs']
 - ['16_API_porting.md','Porting a new platform to ARM mbed Networking Stack', 'Porting to the Stack']
+- ['18_warm_restart.md','Join the network fast','Warm restart feature']
+- ['mac_api.md','Stack MAC API','MAC API']
+
 
 copyright: © ARM Ltd. Copyright 2016 – ARM mbed IoT Device Platform
