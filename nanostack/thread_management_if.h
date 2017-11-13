@@ -379,7 +379,6 @@ int thread_management_device_certificate_set(int8_t interface_id, const unsigned
  * \param domain_certificate_len An array of lengths of domain certificates in chain.
  * \param priv_key_ptr A private key
  * \param priv_key_len Length of a private key
- * \param domain Thread domain string
  *
  * \return 0, OK.
  * \return <0 fail.
