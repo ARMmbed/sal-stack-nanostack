@@ -39,6 +39,23 @@ typedef int (thread_lowpower_resp_cb)(uint8_t *destination_address, int8_t inter
 /** \brief Send lowpower data request for requesting low power metrics
  *
  * \param interface_id Interface ID of the Thread network.
+ * \param address destination ll64 address
+ * \param series_id id of the query or series id
+ * \param series_flags query type 0 for single probe
+ * \param timeout Timeout for the query 0 for single probe
+ * \param metrics_ptr array of metrics to be measured
+ * \param metrics_len length of the metrics array
+ * \param response_cb callback function called to return values after execution
+ *
+ * \return 0 if data request successfully initiated.
+ *
+ */
+int thread_lowpower_metrics_management_request_send(int8_t interface_id, uint8_t *address, uint8_t series_id, uint8_t series_flags, uint16_t timeout,  uint8_t *metrics_ptr, uint8_t metrics_len, thread_lowpower_resp_cb response_cb);
+
+/** \brief DEPRECATED Send lowpower data request for requesting low power metrics
+ *
+ * use thread_lowpower_metrics_management_request_send instead
+ * \param interface_id Interface ID of the Thread network.
  * \param destination_address destination ll64 address
  * \param metrics_ptr array of metrics to be measured
  * \param metrics_len length of the metrics array
